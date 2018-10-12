@@ -1,0 +1,86 @@
+@import "~antd/lib/style/themes/default.less";
+@import '../index';
+.slider {
+  margin-right: 8px;
+  //box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
+  z-index: 10;
+  border: 1px solid @split-color;
+}
+
+.tabs {
+  //height: calc(~ "100% - 35px");
+  height: 100%;
+  :global {
+    & .ant-tabs-tab {
+      padding: 7px !important;
+    }
+    & .ant-tabs-nav-container {
+     background: #f4f7fc;
+    }
+    & .ant-tabs-content {
+      padding: 0 !important;
+      height:  100%;
+      border-left-color: transparent;
+      background: @component-background;
+    }
+  }
+}
+.side-right {
+  position: relative;
+  margin-left: 8px;
+  z-index: 1;
+  border: 1px solid @split-color;
+}
+.panel-zoom-in {
+  position: fixed;
+  top: 123px;
+  left: 50%;
+  z-index: 102;
+}
+.tabs-row {
+  height: 100%;
+  //height: calc(~ "100% - 35px");
+  background: transparent;
+  :global {
+    & .ant-tabs-nav-container {
+      margin-bottom: 8px;
+      padding-top: 3px;
+      height: auto !important;
+    }
+    & .ant-tabs-tab {
+      padding: 0 20px !important;
+      height: 32px;
+      line-height: 32px !important;
+      text-align: center;
+      background: @header-gradient-background !important;
+    }
+    & .ant-tabs-tab-active {
+      background: @tab-background !important;
+    }
+    & .anticon-close {
+      position: absolute;
+      top: 50%;
+      right: 6px;
+      margin-top: 2px;
+      transform: translateY(-50%);
+      //margin-left: 15px;
+      //margin-right: 20px;
+    }
+    & .ant-tabs-bar {
+      margin: 0;
+      height: auto !important;
+      border-bottom: none;
+      background: #fff;
+    }
+    & .ant-tabs-content {
+      height: 100% !important;
+      //height: calc(~ "100% - 35px");
+      padding: 0 !important;
+      background: #fff;
+      border-left-color: transparent;
+    }
+    & .ant-tabs-tabpane{
+      height: 100% ;
+    }
+  }
+}

@@ -1,0 +1,504 @@
+@import "~antd/lib/style/themes/default.less";
+@import "../../index";
+.header {
+  height: 50px;
+  line-height: 50px;
+  padding: 0 8px 0 0;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+  position: relative;
+}
+
+:global {
+  .ant-layout {
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+.logo {
+  width: 267px;
+  height: 33px;
+  line-height: 33px;
+  display: inline-block;
+  padding: 0 0 0 24px;
+  cursor: pointer;
+  font-size: 20px;
+  img {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+  }
+}
+
+.pop {
+  :global {
+    .ant-popover-inner {
+      background: @tab-background;
+    }
+    .ant-popover-arrow {
+      background: @tab-background;
+    }
+  }
+
+}
+.menu {
+  width: 160px;
+  border-right: 0;
+  //background: @tab-background;
+  :global(.anticon) {
+    margin-right: 8px;
+  }
+  :global(.ant-dropdown-menu-item) {
+    width: 180px;
+  }
+  & .important {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    & div{
+      color: @heading-color;
+    }
+  }
+  & li {
+    padding: 0 !important;
+  }
+  & .rate {
+    & div {
+      width: auto;
+      float: left;
+      padding: 0;
+      color: rgba(0, 0, 0, 0.65);
+    }
+    & ul {
+      display: flex;
+      justify-content: flex-end;
+      & li {
+        width: 22px;
+        height: 14px;
+        margin-right: 4px;
+        border-radius: 4px !important;
+        text-align: center;
+        line-height: 14px;
+      }
+    }
+  }
+}
+
+i.trigger {
+  font-size: 20px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: all .3s, padding 0s;
+  padding: 0 24px;
+  &:hover {
+    background: @primary-1;
+  }
+}
+
+.right {
+  float: right;
+  height: 100%;
+  .action {
+    cursor: pointer;
+    padding: 0 16px;
+    display: inline-block;
+    transition: all .3s;
+    height: 100%;
+    > i {
+      font-size: 16px;
+      vertical-align: middle;
+      color: @text-color;
+    }
+    &:hover, &:global(.ant-popover-open) {
+      //background: @primary-1;
+      background: #4191d8;
+    }
+  }
+  .search {
+    padding: 0;
+    margin: 0 12px;
+    &:hover {
+      background: transparent;
+    }
+  }
+  .account {
+    .avatar {
+      //margin: 20px 8px 20px 0;
+      color: @primary-color;
+      background: rgba(255, 255, 255, .85);
+      vertical-align: middle;
+    }
+    .userIcon{
+      width: 20px;
+      color: white;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .name{
+      color: white;
+      font-size: 14px;
+    }
+  }
+}
+
+@media only screen and (max-width: @screen-md) {
+  .header {
+    :global(.ant-divider-vertical) {
+      vertical-align: unset;
+    }
+    .name {
+      display: none;
+    }
+    i.trigger {
+      padding: 0 12px;
+    }
+    .logo {
+      padding-right: 12px;
+      position: relative;
+    }
+    .right {
+      position: absolute;
+      right: 12px;
+      top: 0;
+      background: #fff;
+      .account {
+        .avatar {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+
+.weather {
+  margin-right: 38px;
+  color: #fff;
+  cursor: pointer;
+  & img {
+    margin-right: 3px;
+    vertical-align: sub;
+  }
+}
+
+.weatherBack {
+  display: flex;
+  align-items: center;
+  & img {
+    width: 32px;
+    height: 32px;
+  }
+  & div {
+    margin: 0 11px 0 14px;
+    line-height: initial;
+    font-size: 36px;
+    color: #4892ff;
+    & i {
+      font-size: 12px;
+    }
+  }
+  & span {
+    align-self: flex-end;
+    margin-bottom: 3px;
+    font-size: 12px;
+    color: @text-color;
+  }
+}
+
+.weatherLine {
+  margin: 5px 0;
+}
+& .weatherTitle {
+  text-align: right;
+}
+& .weatherContent {
+  margin-left: 16px;
+}
+.weatherType {
+  display: flex;
+  justify-content: space-around;
+  margin: 8px 0;
+  font-size: 12px;
+  color: @text-color;
+
+  & div {
+    //width: 70px;
+    & span {
+      background: #5cbf4c;
+      display: inline-block;
+      border-radius: 5px;
+      color: #fff;
+      padding: 0 8px 0 5px;
+    }
+  }
+}
+
+.weatherFooter {
+  text-align: center;
+  & div {
+    display: inline-block;
+  }
+  & img {
+    width: 27px;
+    height: 26px;
+    margin: 0 5px;
+  }
+}
+
+.arrow {
+  transition: transform .4s @ease-in-out;
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  width: 10px;
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    vertical-align: baseline;
+    background: #fff;
+    //background-image: linear-gradient(to right, @menu-item-color, @menu-item-color);
+    width: 6px;
+    height: 1.5px;
+    border-radius: 2px;
+    transition: background .4s @ease-in-out, transform .4s @ease-in-out, top .4s @ease-in-out;
+  }
+  &:after {
+    transform: rotate(45deg) translateX(2px);
+  }
+  &:before {
+    transform: rotate(-45deg) translateX(-2px);
+  }
+}
+
+.open {
+  & .arrow {
+    transform: translateY(-2px);
+    &:before {
+      transform: rotate(45deg) translateY(2px);
+    }
+    &:after {
+      transform: rotate(-45deg) translateY(2px);
+    }
+  }
+}
+
+.skBack {
+  background-color: #b54eb5;
+  color: #fff;
+}
+
+.skBack:hover {
+  background-color: #b54eb5;
+  color: #fff;
+}
+
+.controlIcon {
+  height: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &>div:first-child{
+    color: #333;
+  }
+  .controlUl {
+    width: 76px;
+    & .ontrolList {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      & div {
+        width: 24px;
+        height: 14px;
+        line-height: 14px;
+        font-size: 12px;
+        text-align: center;
+        color: #333;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      & .skBack {
+        background-color: #3ea7e8;
+        color: #fff;
+      }
+    }
+  }
+  .selectStyle {
+    width: 80px;
+    height: 22px;
+    & div {
+      width: 100%;
+      height: auto;
+    }
+    &>div {
+      height: 22px;
+      border-top-width: 1px;
+      color: #333;
+    }
+    &>div>div {
+      margin: 0;
+      padding-right: 0;
+      padding-left: 9px;
+      line-height: 20px;
+    }
+    &>div>div>div {
+      padding-right: 14px;
+    }
+    & span {
+      right: 3px;
+    }
+  }
+}
+
+.comment {
+  width: 100%;
+  height: 25px;
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  & button {
+    width: 85px;
+    height: 25px;
+    padding: 0;
+    line-height: 25px;
+    font-size: 12px;
+    color: @text-color;
+    background-color: #f4f7fc;
+  }
+  & button:hover {
+    background-color: #f4f7fc;
+  }
+}
+
+.quit {
+  width: 100%;
+  height: 30px;
+  margin-top: 15px;
+  & button {
+    width: 100%;
+    height: 30px;
+    color: #333;
+  }
+}
+
+.pointIcon {
+  width: 20px;
+  margin: 0 16px;
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.close {
+  width: 20px;
+  margin: 0 16px;
+  font-size: 20px;
+  color: white;
+  vertical-align: middle;
+  &:hover {
+    //background: red;
+    //color: red
+  }
+}
+.minWarp {
+  display: inline-block;
+  cursor: pointer;
+  height: 100%;
+  &:hover {
+    background-color: #4191d8;
+  }
+}
+.closeWarp {
+    display: inline-block;
+  cursor: pointer;
+    height: 100%;
+  &:hover {
+    background-color: #f72335;
+  }
+}
+
+.showBack {
+  display: inline-block;
+  height: 100%;
+}
+.showBack:hover {
+  background-color: #4191d8;
+}
+.everydayTitle {
+  line-height: 16px;
+  font-size: 16px;
+  color: #333;
+}
+
+.everydaytime {
+  line-height: 26px;
+  font-size: 12px;
+  color: #333;
+}
+
+.everydayList {
+  padding-left: 0;
+  white-space: normal;
+  word-break: break-all;
+  //overflow: hidden;
+  width: 320px;
+  &>div {
+    //float: left;
+    display: flex;
+    //&>div:first-child {
+    //  color: red;
+    //  font-size: 60px;
+    //  line-height: 9px;
+    //}
+    &>div:last-child {
+      margin-left: 5px;
+      line-height: 20px;
+      font-size: 12px;
+      color: @text-color;
+    }
+  }
+}
+.accountInfo{
+  text-align: center;
+}
+
+.tableListForm {
+  :global {
+      .ant-form-item {
+          margin-bottom: 24px;
+          margin-right: 0;
+          display: flex;
+          >.ant-form-item-label {
+              width: auto;
+              line-height: 32px;
+              padding-right: 8px;
+          }
+          .ant-form-item-control {
+              line-height: 32px;
+          }
+      }
+      .ant-form-item-control-wrapper {
+          flex: 1;
+      }
+  }
+  .submitButtons {
+      white-space: nowrap;
+      margin-bottom: 24px;
+  }
+}
+
+@media screen and (max-width: @screen-lg) {
+  .tableListForm :global(.ant-form-item) {
+      margin-right: 24px;
+  }
+}
+
+@media screen and (max-width: @screen-md) {
+  .tableListForm :global(.ant-form-item) {
+      margin-right: 8px;
+  }
+}
+
+.modal {
+  height: 100%;
+  width: 80%;
+}

@@ -1,0 +1,22 @@
+@import "~antd/lib/style/themes/default.less";
+.trigger-left {
+  position: relative;
+  height: 35px;
+  line-height: 35px;
+  text-align: right;
+  color: @primary-color;
+  background: @component-background;
+  //box-shadow: @shadow-1-down;
+  border-bottom: 1px solid #eee;
+  z-index: 20;
+  & .title {
+    display: inline-block;
+    position: absolute;
+    left: 80px;
+  }
+  & .icon{
+    margin-right: 8px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+}

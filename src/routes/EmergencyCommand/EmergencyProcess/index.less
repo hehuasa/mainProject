@@ -1,0 +1,25 @@
+@import "~antd/lib/style/themes/default.less";
+@import "../../../index";
+.process{
+  height: 64px;
+  line-height: 64px;
+  border: 1px solid @border-color;
+  .btn{
+    margin-left: 18px;
+    & .arrow{
+      width: 50px;
+      margin-left: 20px;
+      background: url("../../../assets/emergency/arrow.png") no-repeat;
+    }
+    & button{
+      display: inline-block;
+    }
+    & .view{
+      box-shadow: -3px 4px 10px #666;
+      transform: scale(1.15);
+    }
+    & img{
+      margin: 0 12px;
+    }
+  }
+}

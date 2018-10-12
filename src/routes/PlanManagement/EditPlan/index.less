@@ -1,0 +1,24 @@
+.extra{
+  margin-top: -8px;
+  :global{
+    .ant-card-extra{
+      width: 300px;
+      height: 50px;
+      margin-top: -8px;
+    }
+    .ant-card-head{
+      height: 50px;
+    }
+    & .ant-table-tbody tr td{
+      max-width: 0;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      white-space: nowrap;
+      overflow: hidden;
+      position: relative;
+    }
+    & .ant-table-tbody tr td:hover{
+      white-space: normal;
+    }
+  }
+}

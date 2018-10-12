@@ -1,0 +1,40 @@
+@import "~antd/lib/style/themes/default.less";
+.footer{
+  margin-bottom: 100px;
+  text-align: center;
+  :global{
+    .ant-btn-primary{
+      margin: 0 8px;
+    }
+  }
+}
+.insertBtn{
+  margin-bottom: 50px;
+  margin-top: 16px;
+  text-align: center;
+}
+.commandList{
+  margin-top: -8px;
+  :global{
+    .ant-card-head{
+      height: 50px;
+    }
+    .ant-card-extra{
+      height: 50px;
+    }
+    .ant-table-tbody tr td{
+      max-width: 0;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      white-space: nowrap;
+      overflow: hidden;
+      position: relative;
+    }
+    .ant-table-tbody tr td:hover{
+      white-space: normal;
+    }
+  }
+}
+.extra{
+  margin-top: -8px;
+}

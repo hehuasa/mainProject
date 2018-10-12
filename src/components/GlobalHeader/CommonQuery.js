@@ -1,0 +1,265 @@
+import React, { PureComponent } from 'react';
+import { Form, Table, Row, Col, Input, Button, Modal, Select } from 'antd';
+import moment from 'moment';
+import styles from './index.less';
+
+const FormItem = Form.Item;
+const columnsTitle = () => {
+  return (
+    [{
+      title: '资源名称',
+      dataIndex: 'resourceName',
+      width: 200,
+    }, {
+      title: '上级资源',
+      dataIndex: 'parentCode',
+      width: 200,
+    }, {
+      title: '规格型号',
+      dataIndex: 'specification',
+      width: 200,
+    }, {
+      title: '所属专业',
+      dataIndex: 'specialties',
+      width: 200,
+    }, {
+      title: '工艺位号',
+      dataIndex: 'processNumber',
+      width: 200,
+    }, {
+      title: '安装位置',
+      dataIndex: 'installPosition',
+      width: 200,
+    }]
+  );
+};
+const columnsTitleWZ = () => {
+  return (
+    [{
+      title: '原料名称',
+      dataIndex: 'rawMaterialName',
+      width: 200,
+    }, {
+      title: '相对密度',
+      dataIndex: 'relativeDensity',
+      width: 200,
+    }, {
+      title: '相对蒸汽密度',
+      dataIndex: 'relativeSteamDensity',
+      width: 200,
+    }, {
+      title: '爆炸范围',
+      dataIndex: 'explosionRange',
+      width: 200,
+    }, {
+      title: '爆炸零界点',
+      dataIndex: 'explosionPoint',
+      width: 200,
+    }, {
+      title: '溶解性',
+      dataIndex: 'solubility',
+      width: 200,
+    }, {
+      title: '外观',
+      dataIndex: 'shape',
+      width: 200,
+    }, {
+      title: '健康危害',
+      dataIndex: 'healthHazards',
+      width: 200,
+    }, {
+      title: '物料类型',
+      dataIndex: 'rawType',
+      width: 200,
+    }]
+  );
+};
+const { Option } = Select;
+@Form.create()
+export default class CommonQuery extends PureComponent {
+  componentDidMount() {
+    // 获取专业系统列表
+    this.props.dispatch({
+      type: 'alarmDeal/professionList',
+    });
+  }
+  onhandleTableChange = (pagination, filtersArg, sorter) => {
+    if (!this.props.isUsePage) {
+      const { form } = this.props;
+      form.validateFields((err, fieldsValue) => {
+        if (err) return;
+        this.props.dispatch({
+          type: 'alarmDeal/getResourceQueryPage',
+          payload: {
+            pageNum: pagination.current,
+            pageSize: pagination.pageSize,
+            resourceName: fieldsValue.resourceName,
+            specialties: fieldsValue.specialties,
+            resourceClassify: fieldsValue.resourceClassify,
+            installPosition: fieldsValue.installPosition,
+          },
+        });
+      });
+
+      // const params = {
+      //   pageNum: pagination.current,
+      //   pageSize: pagination.pageSize,
+      //   featureValue: this.state.featureValue,
+      // };
+      // this.props.dispatch({
+      //   type: 'alarmDeal/getResourceQueryPage',
+      //   payload: params,
+      // });
+    }
+  }
+  onHandleSearch = (e) => {
+    e.preventDefault();
+    const { form, useChangePage } = this.props;
+    // useChangePage();
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      this.props.dispatch({
+        type: 'alarmDeal/getResourceQueryPage',
+        payload: {
+          pageNum: 1,
+          pageSize: 10,
+          resourceName: fieldsValue.resourceName,
+          profession: fieldsValue.profession,
+          resourceClassify: fieldsValue.resourceClassify,
+          installPosition: fieldsValue.installPosition,
+        },
+      });
+    });
+  };
+  onHandleFormReset = (e) => {
+    e.preventDefault();
+    const { form, useChangePage } = this.props;
+    // useChangePage();
+    form.setFieldsValue({
+      resourceName: '',
+      specialties: '',
+      resourceClassify: '',
+      installPosition: '',
+    });
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      this.props.dispatch({
+        type: 'alarmDeal/getResourceQueryPage',
+        payload: {
+          pageNum: 1,
+          pageSize: 10,
+        },
+      });
+    });
+  };
+
+  render() {
+    const { form } = this.props;
+    const alarmEventInfoData = {};
+    const { title, searchValue, whether, clickWhether, visible, onHandleOk,
+      onHandleCancel, rowSelection, alarmDeal } = this.props;
+    let columns = null;
+    let newPagination = {};
+    if (clickWhether === 1 || clickWhether === 2) {
+      columns = columnsTitle();
+    } else if (clickWhether === 3) {
+      columns = columnsTitleWZ();
+    }
+    if (!alarmDeal.pagination.current && !alarmDeal.pagination.pageSize && !alarmDeal.pagination.total) {
+      newPagination = {};
+    } else {
+      newPagination = alarmDeal.pagination;
+    }
+    return (
+      <div>
+        <Modal
+          title={title}
+          visible={visible}
+          onOk={onHandleOk}
+          onCancel={onHandleCancel}
+          mask={false}
+          style={{ position: 'absolute', left: 260 }}
+          destroyOnClose
+          width="80%"
+          zIndex="1002"
+          bodyStyle={{ maxHeight: 600, overflow: 'auto' }}
+        >
+          {
+            whether ? (
+              <div className={styles.tableListForm}>
+                <Form layout="inline" >
+                  <Row type="flex" gutter={{ md: 8, lg: 24, xl: 48 }} >
+                    <Col md={6} sm={24}>
+                      <FormItem
+                        labelCol={{ span: 7 }}
+                        wrapperCol={{ span: 15 }}
+                        label="资源名称"
+                      >
+                        {form.getFieldDecorator('resourceName', {
+                          initialValue: searchValue,
+                        })(
+                          <Input
+                            placeholder="请输入资源名称"
+                          />
+                        )}
+                      </FormItem>
+                    </Col>
+                    <Col md={6} sm={24}>
+                      <FormItem
+                        labelCol={{ span: 7 }}
+                        wrapperCol={{ span: 15 }}
+                        label="所属专业"
+                      >
+                        {form.getFieldDecorator('profession', {
+                        })(
+                          <Select placeholder="请选择" style={{ width: '100%' }}>
+                            <Option value="">请选择</Option>
+                            {alarmDeal.professionList.map(item => (
+                              <Option
+                                key={item.professionSystemID}
+                                value={item.professionSystemCode}
+                              >{item.professionSystemName}
+                              </Option>
+                            ))}
+                          </Select>
+                        )}
+                      </FormItem>
+                    </Col>
+                    <Col md={6} sm={24}>
+                      <FormItem
+                        labelCol={{ span: 7 }}
+                        wrapperCol={{ span: 15 }}
+                        label="安装位置"
+                      >
+                        {form.getFieldDecorator('installPosition', {
+                          initialValue: alarmEventInfoData.alarmStatue,
+                        })(
+                          <Input placeholder="请输入安装位置" />
+                        )}
+                      </FormItem>
+                    </Col>
+                    <Col >
+                      <Button type="primary" onClick={this.onHandleSearch}>搜索</Button>
+                      <Button style={{ marginLeft: 8 }} onClick={this.onHandleFormReset}>重置</Button>
+                    </Col>
+                  </Row>
+                </Form>
+              </div>
+            ) : null
+          }
+          <Table
+            columns={columns}
+            dataSource={alarmDeal.searchList}
+            pagination={newPagination}
+            rowSelection={rowSelection}
+            onChange={this.onhandleTableChange}
+            rowKey={record => record.gISCode}
+            scroll={{ y: 320 }}
+          />
+
+        </Modal>
+
+      </div>
+    );
+  }
+}

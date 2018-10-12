@@ -1,0 +1,100 @@
+@import "../../../index";
+@blue1: #7eb8f0;
+@blue2: #2f9ef3;
+@boder1: #d0d0d0;
+@bg1: #fff;
+@bg2: #f3f3f3;
+
+.warp {
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
+  background: @bg1;
+  & .deviceType {
+    color: @blue2;
+    font-size: 18px;
+    margin: 18px 0 16px 40px;
+  }
+  & .cardWarp {
+    text-align: center;
+    & .card {
+      display: inline-block;
+      position: relative;
+      margin-bottom: 8px;
+      width: 320px;
+      height: 160px;
+      border: 1px solid @boder1;
+      & .title {
+       margin: 0 5% 12px 4px;
+        padding: 0 4px;
+        height: 24px;
+        line-height: 24px;
+        text-align: left;
+        border-bottom: 1px solid @boder1;
+      }
+      & .text {
+        display: flex;
+        width: 50%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      & .quota1 {
+        padding: 4px 8px;
+        margin-top: 16px;
+        min-width: 80px;
+        border-radius: 3px;
+        background: @bg2;
+        & .value {
+          font-size: 18px;
+        }
+        & .units {
+          font-size: 12px;
+        }
+      }
+      & .quota2 {
+        padding: 4px 8px;
+        margin-bottom: 8px;
+        min-width: 80px;
+        border-radius: 3px;
+        background: @bg2;
+        & .value {
+          font-size: 18px;
+        }
+        & .units {
+          font-size: 12px;
+        }
+      }
+      & .circle {
+        position: absolute;
+        top: 30px;
+        right: 20px;
+        width: 120px;
+        height: 120px;
+        background-color: @blue1;
+        border-radius: 50%;
+      }
+      & .content {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        top: 6px;
+        right: 6px;
+        width: 108px;
+        height: 108px;
+        background-color: @bg1;
+        border-radius: 50%;
+        & .quota3 {
+          color: @blue2;
+          font-size: 24px;
+          & .units {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+
+}

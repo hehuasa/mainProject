@@ -1,0 +1,35 @@
+@import "../../../node_modules/antd/lib/style/themes/default.less";
+.text-carousel {
+  padding: 0 60px 0 30px;
+  height: 30px;
+  background: @item-active-bg;
+  //box-shadow: @shadow-1-down;
+  z-index: 1;
+  overflow: hidden;
+  & span {
+    height: 30px;
+    font-weight: 600;
+    line-height: 30px;
+    font-size: 12px;
+  }
+  
+}
+.text-warp {
+  float: left;
+  width: calc(~ "100% - 100px");
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  .content {
+    display: inline-block;
+    & div {
+      display: inline-block;
+      font-weight: 800;
+    }
+    & span {
+      margin-right: 24px;
+    }
+  }
+}
+
+
