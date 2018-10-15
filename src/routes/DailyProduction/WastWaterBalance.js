@@ -1,8 +1,8 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import Scrollbars from 'react-custom-scrollbars';
 import moment from 'moment';
-import { Table, Select, DatePicker } from 'antd';
+import { Table, DatePicker } from 'antd';
 import Waterfall from './chart/Waterfall';
 import styles from './index.less';
 
