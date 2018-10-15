@@ -29,14 +29,6 @@ const transData = (data, type) => {
   const newData = [];
   let key;
   let value;
-  // for (const item of data) {
-  //   item.dateFormat = moment(item.startDate).format('l');
-  //   item[cotTitle] = item.gasCount;
-  //   item[loadValueTitle] = item.mainTemperature;
-  //   newData.sort((a, b) => {
-  //     return a.startDate - b.startDate;
-  //   });
-  // }
   if (type === 0) {
     key = loadValueTitle;
     value = 'value0';
