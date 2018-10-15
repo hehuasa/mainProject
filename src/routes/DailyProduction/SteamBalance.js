@@ -85,27 +85,6 @@ export default class SteamBalance extends PureComponent {
       obj.key = index;
       obj.itemName = item.property;
       arr.push(obj);
-      // arr.push({
-      //   key: index,
-      //   itemName: item.property,
-      //   hotElectricity: data[item.value][0].collectValue || '/',
-      //   desuperheatInput: data[item.value][1].collectValue || '/',
-      //   desuperheatOut: data[item.value][2].collectValue || '/',
-      //   ethylene: data[item.value][3].collectValue || '/',
-      //   carbon: data[item.value][4].collectValue || '/',
-      //   eoeg: data[item.value][5].collectValue || '/',
-      //   butadiene: data[item.value][6].collectValue || '/',
-      //   aromatics: data[item.value][7].collectValue || '/',
-      //   mtbe: data[item.value][8].collectValue || '/',
-      //   hdpe: data[item.value][9].collectValue || '/',
-      //   lldpe: data[item.value][10].collectValue || '/',
-      //   stpp: data[item.value][11].collectValue || '/',
-      //   recycle: data[item.value][12].collectValue || '/',
-      //   air: data[item.value][13].collectValue || '/',
-      //   luhua: data[item.value][14].collectValue || '/',
-      //   other: data[item.value][15].collectValue || '/',
-      //   balance: data[item.value][16].collectValue || '/',
-      // });
     });
     this.setState({
       dataSource: arr,
