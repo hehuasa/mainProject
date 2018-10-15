@@ -113,7 +113,7 @@ export default class DissociationInfo extends PureComponent {
             <div className={styles.timeArea}>
               <div className={styles.creatTime}>制表时间:
                 <DatePicker
-                  value={this.state.dateTimes ? moment(this.state.dateTimes) : moment()}
+                  value={dateTimes ? moment(dateTimes) : moment()}
                   allowClear={false}
                   onChange={this.onChange}
                 />

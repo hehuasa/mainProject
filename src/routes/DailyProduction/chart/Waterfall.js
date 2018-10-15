@@ -1,10 +1,8 @@
 import React, { PureComponent } from 'react';
 import { Chart, Axis, Geom, Tooltip, Util, Shape, Legend } from 'bizcharts';
+import { Button, Card } from 'antd';
+import { progressColor, titleColor } from '../color/color';
 import styles from './index.less';
-
-const textColor = '#c0c0c0';
-const lineColor1 = '#6dc3ea';
-const lineColor2 = '#00e600';
 
 const getRectPath = (points) => {
   const path = [];
@@ -67,11 +65,14 @@ Shape.registerShape('interval', 'waterfall', {
 
 const transData = (data) => {
   const array = [];
+  console.log('data', data);
   for (const [index, item] of Object.entries(data)) {
-    if (typeof item === 'number') {
-      array.push({
-        type: index, value: item, origin: item,
-      });
+    if (item) {
+      if (typeof item.value === 'number') {
+        array.push({
+          type: item.title, value: item.value, origin: item.value,
+        });
+      }
     }
   }
   for (let i = 0; i < array.length; i += 1) {
@@ -94,14 +95,12 @@ const cols = {
 };
 export default class Waterfall extends PureComponent {
   render() {
-    const { data } = this.props;
+    const { data, click, name } = this.props;
     const newData = transData(data);
     return (
       <div className={styles.warp}>
-        <h2>标题</h2>
-        <div onClick={this.props.click}>关闭</div>
+        <Card title={name}>
         <Chart
-          height={400}
           data={newData}
           scale={cols}
           forceFit
@@ -110,8 +109,8 @@ export default class Waterfall extends PureComponent {
             custom={true}
             clickable={false}
             items={[
-              { value: '增项', marker: { symbol: 'square', fill: '#1890FF', radius: 5}},
-              { value: '减项', marker: { symbol: 'square', fill: '#8c8c8c', radius: 5}}
+              { value: '增项', marker: { symbol: 'square', fill: progressColor, radius: 5 }},
+              { value: '减项', marker: { symbol: 'square', fill: titleColor, radius: 5 }}
             ]}
           />
           <Axis name="type" />
@@ -125,7 +124,7 @@ export default class Waterfall extends PureComponent {
               if (origin < 0) {
                 return 'rgba(0, 0, 0, 0.65)';
               }
-              return '#1890FF';
+              return progressColor;
 },
             ]}
             tooltip={['type*value', (type, value) => {
@@ -142,6 +141,10 @@ export default class Waterfall extends PureComponent {
             }]}
           />
         </Chart>
+        </Card>
+        <div className={styles.footer}>
+          <Button onClick={click}>关闭</Button>
+        </div>
       </div>
     );
   }

@@ -6,25 +6,29 @@ import { Table, Select, DatePicker } from 'antd';
 import Waterfall from './chart/Waterfall';
 import styles from './index.less';
 
+const render = (value) => {
+  return value === null ? '/' : <span>{value.value}</span>;
+};
 const cols = [
-  { title: '蒸汽等级', dataIndex: 'itemName', width: 110 },
-  { title: '热电联产外送量', dataIndex: 'hotElectricity', width: 150 },
-  { title: '减温减压器(转换输入)', dataIndex: 'desuperheatInput', width: 180 },
-  { title: '减温减压器(转换输出)', dataIndex: 'desuperheatOut', width: 180 },
-  { title: '乙烯及裂解汽油加氢', dataIndex: 'ethylene', width: 180 },
-  { title: 'C5', dataIndex: 'carbon', width: 80 },
-  { title: 'EO/EG', dataIndex: 'eoeg', width: 100 },
-  { title: '丁二烯', dataIndex: 'butadiene', width: 100 },
-  { title: '芳烃抽提', dataIndex: 'aromatics', width: 120 },
-  { title: 'MTBE/丁烯-1', dataIndex: 'mtbe', width: 160 },
-  { title: 'HDPE', dataIndex: 'hdpe', width: 100 },
-  { title: 'LLDPE', dataIndex: 'lldpe', width: 100 },
-  { title: 'STPP/JPP', dataIndex: 'stpp', width: 120 },
-  { title: '一循/三循', dataIndex: 'recycle', width: 120 },
-  { title: '空分', dataIndex: 'air', width: 80 },
-  { title: '鲁华', dataIndex: 'luhua', width: 80 },
-  { title: '其他', dataIndex: 'other', width: 80 },
-  { title: '平衡差量', dataIndex: 'balance', width: 100 },
+  // { title: '蒸汽等级', dataIndex: 'itemName', width: 110, render },
+  { title: <div className={styles.center}><span>热电联产</span><br /><span> 外送量</span></div>, name: '热电联产外送量', dataIndex: 'hotElectricity', width: 100, render },
+  // { title: '热电联产外送量', dataIndex: 'hotElectricity', width: 120, render },
+  { title: <div className={styles.center}><span>减温减压器</span><br /><span> (转换输入)</span></div>, name: '减温减压器(转换输入)', dataIndex: 'desuperheatInput', width: 100, render },
+  { title: <div className={styles.center}><span>减温减压器</span><br /><span> (转换输出)</span></div>, name: '减温减压器(转换输出)', dataIndex: 'desuperheatOut', width: 100, render },
+  { title: <div className={styles.center}><span>乙烯及裂解</span><br /><span> 汽油加氢</span></div>, name: '乙烯及裂解汽油加氢', dataIndex: 'ethylene', width: 100, render },
+  { title: 'C5', dataIndex: 'carbon', width: 80, render },
+  { title: 'EO/EG', dataIndex: 'eoeg', width: 100, render },
+  { title: '丁二烯', dataIndex: 'butadiene', width: 100, render },
+  { title: '芳烃抽提', dataIndex: 'aromatics', width: 120, render },
+  { title: 'MTBE/丁烯-1', dataIndex: 'mtbe', width: 160, render },
+  { title: 'HDPE', dataIndex: 'hdpe', width: 100, render },
+  { title: 'LLDPE', dataIndex: 'lldpe', width: 100, render },
+  { title: 'STPP/JPP', dataIndex: 'stpp', width: 120, render },
+  { title: '一循/三循', dataIndex: 'recycle', width: 120, render },
+  { title: '空分', dataIndex: 'air', width: 80, render },
+  { title: '鲁华', dataIndex: 'luhua', width: 80, render },
+  { title: '其他', dataIndex: 'other', width: 80, render },
+  { title: '平衡差量', dataIndex: 'balance', width: 100, render },
 ];
 @connect(({ productionDaily, loading }) => ({
   steamBalance: productionDaily.steamBalance,
@@ -69,28 +73,39 @@ export default class SteamBalance extends PureComponent {
       { property: '低压蒸汽', value: 'lowPressure' },
     ];
     const arr = [];
+
     rawName.forEach((item, index) => {
-      arr.push({
-        key: index,
-        itemName: item.property,
-        hotElectricity: data[item.value][0].collectValue || '/',
-        desuperheatInput: data[item.value][1].collectValue || '/',
-        desuperheatOut: data[item.value][2].collectValue || '/',
-        ethylene: data[item.value][3].collectValue || '/',
-        carbon: data[item.value][4].collectValue || '/',
-        eoeg: data[item.value][5].collectValue || '/',
-        butadiene: data[item.value][6].collectValue || '/',
-        aromatics: data[item.value][7].collectValue || '/',
-        mtbe: data[item.value][8].collectValue || '/',
-        hdpe: data[item.value][9].collectValue || '/',
-        lldpe: data[item.value][10].collectValue || '/',
-        stpp: data[item.value][11].collectValue || '/',
-        recycle: data[item.value][12].collectValue || '/',
-        air: data[item.value][13].collectValue || '/',
-        luhua: data[item.value][14].collectValue || '/',
-        other: data[item.value][15].collectValue || '/',
-        balance: data[item.value][16].collectValue || '/',
-      });
+      const obj = {};
+      const temp = data[item.value];
+      for (const [index1, value] of cols.entries()) {
+        obj[value.dataIndex] = {};
+        obj[value.dataIndex].title = value.name || value.title;
+        obj[value.dataIndex].value = temp[index1].collectValue;
+      }
+      obj.key = index;
+      obj.itemName = item.property;
+      arr.push(obj);
+      // arr.push({
+      //   key: index,
+      //   itemName: item.property,
+      //   hotElectricity: data[item.value][0].collectValue || '/',
+      //   desuperheatInput: data[item.value][1].collectValue || '/',
+      //   desuperheatOut: data[item.value][2].collectValue || '/',
+      //   ethylene: data[item.value][3].collectValue || '/',
+      //   carbon: data[item.value][4].collectValue || '/',
+      //   eoeg: data[item.value][5].collectValue || '/',
+      //   butadiene: data[item.value][6].collectValue || '/',
+      //   aromatics: data[item.value][7].collectValue || '/',
+      //   mtbe: data[item.value][8].collectValue || '/',
+      //   hdpe: data[item.value][9].collectValue || '/',
+      //   lldpe: data[item.value][10].collectValue || '/',
+      //   stpp: data[item.value][11].collectValue || '/',
+      //   recycle: data[item.value][12].collectValue || '/',
+      //   air: data[item.value][13].collectValue || '/',
+      //   luhua: data[item.value][14].collectValue || '/',
+      //   other: data[item.value][15].collectValue || '/',
+      //   balance: data[item.value][16].collectValue || '/',
+      // });
     });
     this.setState({
       dataSource: arr,
@@ -125,7 +140,7 @@ export default class SteamBalance extends PureComponent {
           <div className={styles.text}>全厂蒸汽平衡表（吨/时）</div>
           <div className={styles.left} />
         </div>
-        {showChart ? <Waterfall title={title} data={record} click={this.rawClick} /> : (
+        {showChart ? <Waterfall title={title} data={record} click={this.rawClick}  name={record.itemName} /> : (
           <div className={styles.content}>
             <div className={styles.timeArea}>
               <div className={styles.creatTime}>制表时间:
@@ -146,7 +161,7 @@ export default class SteamBalance extends PureComponent {
                 dataSource={this.state.dataSource}
                 columns={cols}
                 pagination={false}
-                loading={this.props.loading.global}
+                // loading={this.props.loading.global}
                 scroll={{ x: this.state.scrollX }}
                 rowClassName={(record, index) => {
                   return index % 2 === 0 ? styles.blue : styles.blueRow;

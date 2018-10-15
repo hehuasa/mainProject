@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Chart, Axis, Geom, Tooltip, Legend } from 'bizcharts';
 import { connect } from 'dva';
 import { DataSet } from '@antv/data-set';
-import { textColor, lineColor1, lineColor2 } from '../color/color';
+import { textColor, lineColor1, lineColor2, titleColor } from '../color/color';
 // import MonthPick from './MonthPick';
 
 import styles from './index.less';
@@ -13,10 +13,14 @@ const monthOutCountTitle = '出厂量';
 const trunkCountTitle = '罐存';
 
 const cols = {
-  date: {
+  dateFormat: {
     alias: '日期',
     range: [0, 1],
     tickCount: 6,
+  },
+  value: {
+    alias: '单位：吨',
+    range: [0, 1],
   },
 };
 const transData = (data, type) => {
@@ -86,12 +90,12 @@ export default class OrganicProductInfoTrend extends PureComponent {
           >
             <Legend />
             <Axis
-              name="date"
+              name="dateFormat"
               title={{ position: 'end',
                 textStyle: {
                   fontSize: '16',
                   textAlign: 'right',
-                  fill: '#fff',
+                  fill: titleColor,
                   rotate: 0,
                 },
               }}
@@ -102,7 +106,7 @@ export default class OrganicProductInfoTrend extends PureComponent {
                 textStyle: {
                   fontSize: '16',
                   textAlign: 'right',
-                  fill: '#fff',
+                  fill: titleColor,
                   rotate: 0,
                 },
               }}
@@ -150,12 +154,12 @@ export default class OrganicProductInfoTrend extends PureComponent {
           >
             <Legend />
             <Axis
-              name="date"
+              name="dateFormat"
               title={{ position: 'end',
                 textStyle: {
                   fontSize: '16',
                   textAlign: 'right',
-                  fill: '#fff',
+                  fill: titleColor,
                   rotate: 0,
                 },
               }}
@@ -166,7 +170,7 @@ export default class OrganicProductInfoTrend extends PureComponent {
                 textStyle: {
                   fontSize: '16',
                   textAlign: 'right',
-                  fill: '#fff',
+                  fill: titleColor,
                   rotate: 0,
                 },
               }}

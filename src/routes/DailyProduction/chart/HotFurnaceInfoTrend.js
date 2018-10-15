@@ -4,39 +4,67 @@ import moment from 'moment';
 import { Chart, Axis, Geom, Tooltip, Legend } from 'bizcharts';
 import { connect } from 'dva';
 import { DataSet } from '@antv/data-set';
-
+import { textColor, lineColor1, lineColor2, titleColor } from '../color/color';
 import styles from './index.less';
 
-const textColor = '#c0c0c0';
-const lineColor1 = '#6dc3ea';
-const lineColor2 = '#00e600';
 const cotTitle = '产汽量（t/h）';
 const loadValueTitle = '主汽温度（℃）';
 
 const cols = {
-  date: {
+  dateFormat: {
     alias: '日期',
     range: [0, 1],
     tickCount: 6,
   },
+  value0: {
+    alias: '单位： ℃',
+    range: [0, 1],
+  },
+  value1: {
+    alias: '单位： t/h',
+    range: [0, 1],
+  },
 };
-const transData = (data) => {
+const transData = (data, type) => {
   const newData = [];
-  for (const item of data) {
-    item.dateFormat = moment(item.startDate).format('l');
-    item[cotTitle] = item.gasCount;
-    item[loadValueTitle] = item.mainTemperature;
-    newData.sort((a, b) => {
-      return a.startDate - b.startDate;
-    });
+  let key;
+  let value;
+  // for (const item of data) {
+  //   item.dateFormat = moment(item.startDate).format('l');
+  //   item[cotTitle] = item.gasCount;
+  //   item[loadValueTitle] = item.mainTemperature;
+  //   newData.sort((a, b) => {
+  //     return a.startDate - b.startDate;
+  //   });
+  // }
+  if (type === 0) {
+    key = loadValueTitle;
+    value = 'value0';
+    for (const item of data) {
+      item.dateFormat = moment(item.startDate).format('l');
+      item[loadValueTitle] = item.mainTemperature;
+      newData.sort((a, b) => {
+        return a.startDate - b.startDate;
+      });
+    }
+  } else {
+    key = cotTitle;
+    value = 'value1';
+    for (const item of data) {
+      item.dateFormat = moment(item.startDate).format('l');
+      item[cotTitle] = item.gasCount;
+      newData.sort((a, b) => {
+        return a.startDate - b.startDate;
+      });
+    }
   }
   const ds = new DataSet();
   const dv = ds.createView().source(data);
   dv.transform({
     type: 'fold',
-    fields: [cotTitle, loadValueTitle], // 展开字段集
+    fields: [key], // 展开字段集
     key: 'date', // key字段
-    value: 'value', // value字段
+    value, // value字段
   });
   return dv;
 };
@@ -44,7 +72,7 @@ const transData = (data) => {
 @connect(({ productionDaily, homepage }) => {
   return {
     history: productionDaily.history,
-    height: homepage.height,
+    height: homepage.mapHeight,
   };
 })
 export default class HotFurnaceInfoTrend extends PureComponent {
@@ -57,14 +85,16 @@ export default class HotFurnaceInfoTrend extends PureComponent {
   }
   render() {
     const { history, name, height, dateTimes, click } = this.props;
-    const newData = transData(history);
+    const chartHeight = Number(height) / 2 - 100;
+    const newData0 = transData(history, 0);
+    const newData1 = transData(history, 1);
     return (
       <div className={styles.warp}>
         <Card title={name}>
           <Chart
             padding={['auto', 50, 'auto', 'auto']}
-            height={height}
-            data={newData}
+            height={chartHeight}
+            data={newData0}
             scale={cols}
             forceFit
           >
@@ -75,7 +105,7 @@ export default class HotFurnaceInfoTrend extends PureComponent {
                                 textStyle: {
                                     fontSize: '16',
                                     textAlign: 'right',
-                                    fill: '#fff',
+                                    fill: titleColor,
                                     rotate: 0,
                                 },
                             }}
@@ -86,11 +116,11 @@ export default class HotFurnaceInfoTrend extends PureComponent {
                                 textStyle: {
                                     fontSize: '16',
                                     textAlign: 'right',
-                                    fill: '#fff',
+                                    fill: titleColor,
                                     rotate: 0,
                                 },
                             }}
-              name="value"
+              name="value0"
               line={{
                                 lineWidth: 1, // 设置线的宽度
                                 stroke: textColor, // 设置线的颜色
@@ -104,13 +134,69 @@ export default class HotFurnaceInfoTrend extends PureComponent {
             />
             <Geom
               type="line"
-              position="dateFormat*value"
+              position="dateFormat*value0"
               size={2}
               color={['date', [lineColor1, lineColor2]]}
             />
             <Geom
               type="point"
-              position="dateFormat*value"
+              position="dateFormat*value0"
+              size={4}
+              shape="circle"
+              color={['date', [lineColor1, lineColor2]]}
+              tooltip={null}
+            />
+          </Chart>
+          <Chart
+            padding={['auto', 50, 'auto', 'auto']}
+            height={chartHeight}
+            data={newData1}
+            scale={cols}
+            forceFit
+          >
+            <Legend />
+            <Axis
+              name="dateFormat"
+              title={{ position: 'end',
+                textStyle: {
+                  fontSize: '16',
+                  textAlign: 'right',
+                  fill: titleColor,
+                  rotate: 0,
+                },
+              }}
+            />
+            <Tooltip crosshairs={{ type: 'y' }} />
+            <Axis
+              title={{ position: 'end',
+                textStyle: {
+                  fontSize: '16',
+                  textAlign: 'right',
+                  fill: titleColor,
+                  rotate: 0,
+                },
+              }}
+              name="value1"
+              line={{
+                lineWidth: 1, // 设置线的宽度
+                stroke: textColor, // 设置线的颜色
+              }}
+              grid={{
+                type: 'line', // 网格的类型
+                lineStyle: {
+                  lineWidth: 0.1,
+                  stroke: '#333', // 网格线的颜色
+                } }}
+            />
+            <Geom
+              type="line"
+              position="dateFormat*value1"
+              size={2}
+              color={['date', [lineColor1, lineColor2]]}
+            />
+            <Geom
+              type="point"
+              position="dateFormat*value1"
               size={4}
               shape="circle"
               color={['date', [lineColor1, lineColor2]]}

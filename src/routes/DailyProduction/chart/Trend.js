@@ -3,11 +3,8 @@ import { Button, Card } from 'antd';
 import moment from 'moment';
 import { Chart, Axis, Geom, Tooltip, Legend } from 'bizcharts';
 import { connect } from 'dva';
+import { textColor, lineColor1, lineColor2, titleColor } from '../color/color';
 import styles from './index.less';
-
-const textColor = '#c0c0c0';
-const lineColor1 = '#6dc3ea';
-const lineColor2 = '#00e600';
 
 const cols = {
   value: {
@@ -107,7 +104,7 @@ export default class Trend extends PureComponent {
                 textStyle: {
                     fontSize: '16',
                     textAlign: 'right',
-                    fill: '#fff',
+                    fill: titleColor,
                     rotate: 0,
                 },
             }}
@@ -118,7 +115,7 @@ export default class Trend extends PureComponent {
                   textStyle: {
                       fontSize: '16',
                       textAlign: 'right',
-                      fill: '#fff',
+                      fill: titleColor,
                       rotate: 0,
                   },
               }}
