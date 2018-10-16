@@ -14,7 +14,8 @@ const modelNotExisted = (app, model) => (
   })
 );
 
-// wrapper of dynamic
+// wrapper of dynamic ..
+// 测试修改
 const dynamicWrapper = (app, models, component) => {
   // () => require('module')
   // transformed by babel-plugin-dynamic-import-node-sync
