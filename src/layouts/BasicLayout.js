@@ -622,11 +622,11 @@ class BasicLayout extends React.PureComponent {
                 message: '接收到新报警消息',
                 description: `设备名称: ${socketMessage.B.resourceName}`,
               });
-                if (alarm.alarmType) {
-                  if (alarm.alarmType.profession !== '107.901') {
-                      alarm.list.push(socketMessage.B);
-                  }
+              if (alarm.alarmType) {
+                if (alarm.alarmType.profession !== '107.901') {
+                  alarm.list.push(socketMessage.B);
                 }
+              }
 
               alarm.listWithFault.push(socketMessage.B);
             } else if (isUpdate) {
@@ -965,7 +965,7 @@ class BasicLayout extends React.PureComponent {
                   </Tabs>
                 </Sider>
                 <Layout>
-                  <Content style={{ marginBottom: ' 8px', height: contentHeight, position: 'relative' }}>
+                  <Content style={{ marginBottom: ' 8px', position: 'relative' }}>
                     <div ref={(ref) => { this.content = ref; }} style={{ width: '100%', position: 'absolute', zIndex: -20, visibility: 'hidden' }} />
                     <PanelZoom />
                     <Tabs
@@ -975,6 +975,7 @@ class BasicLayout extends React.PureComponent {
                       onTabClick={this.handleTabClick}
                       activeKey={tabs.activeKey}
                       className={styles['tabs-row']}
+                      style={{ height: contentHeight }}
                       hideAdd
                     >
                       {tabs.tabs.map((item) => {

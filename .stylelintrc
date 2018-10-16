@@ -21,7 +21,6 @@
     "selector-pseudo-element-colon-notation": null,
     "unit-no-unknown": null,
     "no-descending-specificity": null,
-    "value-list-max-empty-lines": null,
-    "linebreak-style": ["error", "windows"]
+    "value-list-max-empty-lines": null
   }
 }

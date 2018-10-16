@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Layout, Modal } from 'antd';
+import { Modal } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import ArcgisMap from '../ArcgisMap/ArcgisMap';
@@ -15,7 +15,6 @@ import { mapConstants } from '../../services/mapConstant';
 const dragEvent = {
   isDrag: false,
 };
-const { Content } = Layout;
 @connect(({ homepage, map, alarmDeal, flow, accessControl }) => {
   return {
     trueMapShow: map.trueMapShow,
@@ -25,27 +24,27 @@ const { Content } = Layout;
     alarmInfoConten: alarmDeal.alarmInfoConten,
     currentFlow: flow.currentFlow,
     mapHeight: homepage.mapHeight,
-      modalType: homepage.modalType,
+    modalType: homepage.modalType,
     accessControl,
     spaceQueryPop: map.spaceQueryPop,
   };
 })
 export default class HomePage extends PureComponent {
     state = {
-        modalZIndex: 1000,
+      modalZIndex: 1000,
     };
-//   componentDidMount() {
-//       editor.net = new G6.Net({
-//           container: this.flow,
-//           mode: 'drag',
-//           forceFit: true,
-//           fitView: 'autoSize',
-//           // width: 1200,
-//           height: this.props.mapHeight,
-//           grid: null,
-//       });
-//   }
-// ;
+  //   componentDidMount() {
+  //       editor.net = new G6.Net({
+  //           container: this.flow,
+  //           mode: 'drag',
+  //           forceFit: true,
+  //           fitView: 'autoSize',
+  //           // width: 1200,
+  //           height: this.props.mapHeight,
+  //           grid: null,
+  //       });
+  //   }
+  // ;
   hideModal = () => {
     this.props.dispatch({
       type: 'alarmDeal/saveDealModel',
@@ -53,10 +52,10 @@ export default class HomePage extends PureComponent {
     });
   };
     handleMouseDown = (e) => {
-        if (e.target.tagName === 'EMBED') {
-            e.stopPropagation();
-            return false;
-        }
+      if (e.target.tagName === 'EMBED') {
+        e.stopPropagation();
+        return false;
+      }
       if (e.target.title === 'spaceQueryTitle') {
         dragEvent.isDrag = true;
         dragEvent.start = {
@@ -68,7 +67,7 @@ export default class HomePage extends PureComponent {
     };
     handleMouseMove = (e) => {
       if (e.target.tagName === 'EMBED') {
-          e.stopPropagation();
+        e.stopPropagation();
         return false;
       }
       const { spaceQueryPop, dispatch } = this.props;
@@ -92,10 +91,10 @@ export default class HomePage extends PureComponent {
       }
     };
     handleMouseUp = (e) => {
-        if (e.target.tagName === 'EMBED') {
-            e.stopPropagation();
-            return false;
-        }
+      if (e.target.tagName === 'EMBED') {
+        e.stopPropagation();
+        return false;
+      }
       const { spaceQueryPop, dispatch } = this.props;
       if (spaceQueryPop) {
         const { style } = spaceQueryPop;
@@ -126,45 +125,41 @@ export default class HomePage extends PureComponent {
     );
   }
   render() {
-      const { modalZIndex } = this.state;
+    const { modalZIndex } = this.state;
     const { currentFlow, dealModel, deviceMonitor, mapHeight, dispatch, accessControl, modalType } = this.props;
     const { isDeal } = dealModel;
 
     return (
-      <Layout>
-        <Layout>
-          <Content>
-            {
-              currentFlow.show ? <StatusGraphic zIndex={ modalType === 'currentFlow' ? modalZIndex : -1 } /> : null
+      <div>
+        {
+              currentFlow.show ? <StatusGraphic zIndex={modalType === 'currentFlow' ? modalZIndex : -1} /> : null
             }
-            {
-              deviceMonitor.show ? <DeviceMonitor zIndex={ modalType === 'deviceMonitor' ? modalZIndex : -1 } mapHeight={mapHeight} dispatch={dispatch} deviceMonitor={deviceMonitor} currentFlow={currentFlow} /> : null
+        {
+              deviceMonitor.show ? <DeviceMonitor zIndex={modalType === 'deviceMonitor' ? modalZIndex : -1} mapHeight={mapHeight} dispatch={dispatch} deviceMonitor={deviceMonitor} currentFlow={currentFlow} /> : null
             }
-            <div className={styles.mapContent} onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp} onMouseLeave={this.handleMouseUp}>
-              <ArcgisMap />
-              <MapRelation />
-              {accessControl.show ? <AccessInfo dispatch={dispatch} accessControl={accessControl} /> : null}
-              <TrueMap />
-              <Modal
-                title={this.titleNodeText()}
-                footer={null}
-                style={{ position: 'absolute', left: 260 }}
-                zIndex="1002"
-                visible={isDeal}
-                mask={false}
-                width="60%"
-                onCancel={this.hideModal}
-                okText="确认"
-                cancelText="取消"
-                maskClosable={false}
-                destroyOnClose
-              >
-                <AlarmDeal />
-              </Modal>
-            </div>
-          </Content>
-        </Layout>
-      </Layout >
+        <div className={styles.mapContent} onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp} onMouseLeave={this.handleMouseUp}>
+          <ArcgisMap />
+          <MapRelation />
+          {accessControl.show ? <AccessInfo dispatch={dispatch} accessControl={accessControl} /> : null}
+          <TrueMap />
+          <Modal
+            title={this.titleNodeText()}
+            footer={null}
+            style={{ position: 'absolute', left: 260 }}
+            zIndex="1002"
+            visible={isDeal}
+            mask={false}
+            width="60%"
+            onCancel={this.hideModal}
+            okText="确认"
+            cancelText="取消"
+            maskClosable={false}
+            destroyOnClose
+          >
+            <AlarmDeal />
+          </Modal>
+        </div>
+      </div>
     );
   }
 }
