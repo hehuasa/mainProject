@@ -7,6 +7,15 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-563793119">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
   <component name="FileEditorManager">
     <splitter split-orientation="horizontal" split-proportion="0.7922794">
       <split-first>
@@ -566,7 +575,7 @@
       <workItem from="1539563446269" duration="19788000" />
       <workItem from="1539589307442" duration="2180000" />
       <workItem from="1539591688269" duration="83000" />
-      <workItem from="1539591788437" duration="10753000" />
+      <workItem from="1539591788437" duration="11352000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1539333231116</created>
@@ -613,7 +622,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16000" />
+    <option name="totallyTimeSpent" value="615000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
