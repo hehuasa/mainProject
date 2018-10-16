@@ -668,20 +668,22 @@ class BasicLayout extends React.PureComponent {
                 // 是否联动地图
                 switch (linkMap) {
                   case 0:
-                    view.goTo({
-                      center: that.props.map.searchDeviceArray[0].feature.geometry,
-                      scale: popupScale - 10,
-                    }).then(() => {
-                      alarmAnimation(
-                        {
-                          map: mainMap,
-                          layer: mainMap.findLayerById('报警动画'),
-                          alarm: socketMessage.B,
-                          geometry: that.props.map.searchDeviceArray[0].feature.geometry,
-                          iconObj: alarm.iconObj,
-                          dispatch,
-                        });
-                    });
+                    if (view.goTo) {
+                      view.goTo({
+                        center: that.props.map.searchDeviceArray[0].feature.geometry,
+                        scale: popupScale - 10,
+                      }).then(() => {
+                        alarmAnimation(
+                          {
+                            map: mainMap,
+                            layer: mainMap.findLayerById('报警动画'),
+                            alarm: socketMessage.B,
+                            geometry: that.props.map.searchDeviceArray[0].feature.geometry,
+                            iconObj: alarm.iconObj,
+                            dispatch,
+                          });
+                      });
+                    }
                     break;
                     // case 1:
                     //   const layer = mainMap.findLayerById('装置界区');
@@ -795,10 +797,12 @@ class BasicLayout extends React.PureComponent {
           });
 
           // 删除报警图标
-          delAlarmAnimation(mainMap,
-            socketMessage.B,
-            alarm.iconObj,
-            dispatch);
+          if (mainMap.findLayerById) {
+            delAlarmAnimation(mainMap,
+              socketMessage.B,
+              alarm.iconObj,
+              dispatch);
+          }
       }
     }
   };
@@ -965,7 +969,7 @@ class BasicLayout extends React.PureComponent {
                   </Tabs>
                 </Sider>
                 <Layout>
-                  <Content style={{ marginBottom: ' 8px', position: 'relative' }}>
+                  <Content style={{ marginBottom: ' 8px', position: 'relative', height: contentHeight }}>
                     <div ref={(ref) => { this.content = ref; }} style={{ width: '100%', position: 'absolute', zIndex: -20, visibility: 'hidden' }} />
                     <PanelZoom />
                     <Tabs
@@ -975,7 +979,7 @@ class BasicLayout extends React.PureComponent {
                       onTabClick={this.handleTabClick}
                       activeKey={tabs.activeKey}
                       className={styles['tabs-row']}
-                      style={{ height: contentHeight }}
+                      // style={{ height: contentHeight }}
                       hideAdd
                     >
                       {tabs.tabs.map((item) => {

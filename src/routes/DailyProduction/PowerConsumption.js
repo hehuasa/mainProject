@@ -1,10 +1,10 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import Scrollbars from 'react-custom-scrollbars';
 import { Table, Select, DatePicker } from 'antd';
 import moment from 'moment';
-import Waterfall from './chart/Waterfall';
 import styles from './index.less';
+import PowerConsumptionTrend from './chart/PowerConsumptionTrend';
 
 const { Option } = Select;
 @connect(({ productionDaily, loading }) => ({
@@ -20,6 +20,8 @@ export default class GasBalance extends PureComponent {
     showChart: false,
     record: {},
     dateTimes: null,
+    itemName: '',
+    chartName: '',
   };
   componentDidMount() {
     const { dispatch } = this.props;
@@ -98,9 +100,20 @@ export default class GasBalance extends PureComponent {
       dateTimes: data.startDate,
     });
   };
+  // 点击事件
+  rawClick = (record) => {
+    this.setState({
+      showChart: !this.state.showChart,
+      itemName: record.itemName,
+      chartName: record.itemName,
+    });
+  };
   // 按时间获取动力消耗信息
   onChange = (date) => {
     const startDate = date.valueOf();
+    this.setState({
+      dateTimes: startDate,
+    });
     // 按时间请求动力消耗数据
     this.props.dispatch({
       type: 'productionDaily/getPowerConsumption',
@@ -118,7 +131,7 @@ export default class GasBalance extends PureComponent {
     });
   };
   render() {
-    const { showChart, record } = this.state;
+    const { showChart, itemName, chartName, dateTimes } = this.state;
     const { title } = this.props;
     const cols = [
       {
@@ -190,7 +203,7 @@ export default class GasBalance extends PureComponent {
           <div className={styles.text}>{this.props.title}</div>
           <div className={styles.left} />
         </div>
-        {showChart ? <Waterfall title={title} data={record} click={this.rawClick} /> : (
+        {showChart ? <PowerConsumptionTrend title={title} itemName={itemName} click={this.rawClick} name={chartName} dateTimes={dateTimes} /> : (
           <div className={styles.content}>
             <div className={styles.timeArea}>
               <div className={styles.creatTime}>制表时间:

@@ -70,10 +70,9 @@ const transData = (data, type) => {
 export default class DissociationInfoTrend extends PureComponent {
   componentDidMount() {
     const { dispatch, sortIndex, dateTimes } = this.props;
-    debugger;
     dispatch({
       type: 'productionDaily/getDissociationHistoryData',
-      payload: { sortIndex, date: dateTimes },
+      payload: { sortIndex, dateTimes },
     });
   }
   render() {

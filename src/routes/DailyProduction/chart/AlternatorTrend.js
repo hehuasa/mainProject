@@ -66,7 +66,7 @@ export default class AlternatorTrend extends PureComponent {
     const { dispatch, sortIndex, dateTimes } = this.props;
     dispatch({
       type: 'productionDaily/getRptAlternatorHistoryData',
-      payload: { sortIndex, date: dateTimes },
+      payload: { sortIndex, dateTimes },
     });
   }
   render() {

@@ -72,7 +72,7 @@ export default class HotFurnaceInfoTrend extends PureComponent {
     const { dispatch, sortIndex, dateTimes } = this.props;
     dispatch({
       type: 'productionDaily/getRptHotFurnaceHistoryData',
-      payload: { sortIndex, date: dateTimes },
+      payload: { sortIndex, dateTimes },
     });
   }
   render() {

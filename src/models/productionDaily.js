@@ -2,7 +2,7 @@ import {
   getDeviceProduction, updateDeviceProduction, getCrackingFurnace, getPowerConsumption,
   updatePowerConsumption, updateCrackingFurnace, getRawMaterial, updateRawMaterial, getSteamBalance,
   getProductionStatus, updateProductionStatus, updateSteamBalance, getDailyProduction,
-  getRptAlternatorHistoryData, getRptHotFurnaceHistoryData, getOrganicProductHistoryData, getRptResinReportHistoryData, getProRptRawInfoHistoryData,
+  getRptAlternatorHistoryData, getRptHotFurnaceHistoryData, getOrganicProductHistoryData, getRptResinReportHistoryData, getProRptRawInfoHistoryData, getRptPowerConsumeHistoryData,
   getEquipmentProductInfoHistoryData, getDissociationHistoryData, getThermoelectricFurnace,
   getDynamotor, getOrganicProduct, getResinProduct, getSolidDefects,
   getTimeUsePre, productionStatusPage, getRecycledWater, getWasteWater,
@@ -342,6 +342,14 @@ export default {
     // 请求历史数据(树脂产品)
     *getRptResinReportHistoryData({ payload }, { put, call }) {
       const response = yield call(getRptResinReportHistoryData, payload);
+      yield put({
+        type: 'queryHistory',
+        payload: response.data,
+      });
+    },
+    // 请求历史数据(动力消耗)
+    *getRptPowerConsumeHistoryData({ payload }, { put, call }) {
+      const response = yield call(getRptPowerConsumeHistoryData, payload);
       yield put({
         type: 'queryHistory',
         payload: response.data,

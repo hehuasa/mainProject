@@ -2099,6 +2099,13 @@ export async function getRptResinReportHistoryData(params) {
     body: params,
   });
 }
+// 生成日报请求历史数据（动力消耗）report/proRptPowerConsumeValue/selectMonth
+export async function getRptPowerConsumeHistoryData(params) {
+  return request(`${path}/report/proRptPowerConsumeValue/selectMonth`, {
+    method: 'POST',
+    body: params,
+  });
+}
 // 实时数据（附带阈值.分组）
 export async function getNewsDataByGroup(params) {
   return request(`${path}/immediateData/immediateDataInfo/getDataByGroup`, {

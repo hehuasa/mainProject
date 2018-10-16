@@ -9,8 +9,6 @@ import { textColor, lineColor1, lineColor2 } from '../color/color';
 
 import styles from './index.less';
 
-const trunkCountTitle = '罐存';
-
 const cols = {
   date: {
     alias: '日期',
@@ -18,12 +16,10 @@ const cols = {
     tickCount: 6,
   },
 };
-const transData = (data) => {
-  let key;
-    key = trunkCountTitle;
+const transData = (data, itemName) => {
     for (const item of data) {
       item.dateFormat = moment(item.startDate).format('l');
-      item[trunkCountTitle] = item.trunckCount;
+      item[itemName] = item.collectValue;
       data.sort((a, b) => {
         return a.startDate - b.startDate;
       });
@@ -32,7 +28,7 @@ const transData = (data) => {
   const dv = ds.createView().source(data);
   dv.transform({
     type: 'fold',
-    fields: [key], // 展开字段集
+    fields: [itemName], // 展开字段集
     key: 'date', // key字段
     value: 'value', // value字段
   });
@@ -48,25 +44,29 @@ const transData = (data) => {
 export default class RawInfoTrend extends PureComponent {
 
   componentDidMount() {
-    const { dispatch, sortIndex, dateTimes } = this.props;
+    const { dispatch, itemName, dateTimes } = this.props;
     dispatch({
-      type: 'productionDaily/getProRptRawInfoHistoryData',
+      type: 'productionDaily/getRptPowerConsumeHistoryData',
       payload: {
-        sortIndex,
+        itemName,
         dateTimes,
       },
     });
   }
   render() {
-    const { history, name, height } = this.props;
-    const chartHeight = Number(height) / 2 - 100;
-    const newData0 = transData(history, 0);
+    const { history, name, itemName } = this.props;
+    const data = [
+      {"collectValue":"624.54","itemName":"用电量","powerConsumeEntryID":4,"powerConsumeItemID":1,"powerConsumeValueID":2234,
+        "proRptPowerConsumeEntry":{"entryName":"月累计","entryUnit":null,"powerConsumeEntryID":4},"proRptPowerConsumeItem":{"itemName":"用电量","powerConsumeItemID":1,"powerConsumetype":1,"unit":null},"startDate":1538323200000,"unit":"万千瓦时"},
+      {"collectValue":"324.54","itemName":"用电量","powerConsumeEntryID":4,"powerConsumeItemID":1,"powerConsumeValueID":2234,
+        "proRptPowerConsumeEntry":{"entryName":"月累计","entryUnit":null,"powerConsumeEntryID":4},"proRptPowerConsumeItem":{"itemName":"用电量","powerConsumeItemID":1,"powerConsumetype":1,"unit":null},"startDate":1539332871000,"unit":"万千瓦时"}
+        ];
+    const newData0 = transData(data, itemName);
     return (
       <div className={styles.warp}>
         <Card title={name}>
           <Chart
             padding={['auto', 50, 'auto', 'auto']}
-            // height={chartHeight}
             data={newData0}
             scale={cols}
             forceFit

@@ -69,7 +69,7 @@ export default class ResinReportInfoTrend extends PureComponent {
       type: 'productionDaily/getRptResinReportHistoryData',
       payload: {
         sortIndex,
-        date: dateTimes,
+        dateTimes,
       },
     });
   }

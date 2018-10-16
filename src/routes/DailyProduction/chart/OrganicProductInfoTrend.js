@@ -69,7 +69,7 @@ export default class OrganicProductInfoTrend extends PureComponent {
       type: 'productionDaily/getOrganicProductHistoryData',
       payload: {
         sortIndex,
-        date: dateTimes,
+        dateTimes,
       },
     });
   }
