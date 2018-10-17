@@ -32,7 +32,7 @@ import legend05 from '../assets/map/lengend/可燃气体探测设备.png';
 import legend06 from '../assets/map/lengend/手动报警按钮.png';
 import legend07 from '../assets/map/lengend/手提式.png';
 import legend08 from '../assets/map/lengend/推车式.png';
-import { constantlyModal } from '../services/constantlyModal';
+import { constantlyModal, infoPopsModal } from '../services/constantlyModal';
 
 // 地图图标
 const legendIcon = [
@@ -1990,7 +1990,7 @@ export const paSystemDetail = ({ view, map, layer, dispatch, paData }) => {
   });
 };
 // 环保地图
-export const envMap = ({ view, map, graphics, dispatch }) => {
+export const envMap = ({ view, map, graphics }) => {
   esriLoader.loadModules([
     'esri/layers/GraphicsLayer',
   ]).then(([GraphicsLayer]) => {
@@ -2137,35 +2137,29 @@ export const envMap = ({ view, map, graphics, dispatch }) => {
 export const switchAlarmIcon = ({ layer }) => {
   let graphicArray = [];
   let index = 0;
-  let testIndex = 0;
+  const emptySy = {
+    type: 'simple-marker',
+    style: 'circle',
+    color: 'rgba(0, 0, 0, 0)',
+    size: '32px',
+    outline: null,
+  };
   const changeIcon = () => {
     for (const graphic of mapConstants.alarmGraphics) {
-      let legendObj = {};
-      let normalIconObj = {};
       const alarmGraphicClone = graphic.clone();
-      const legendLayer = mapLayers.FeatureLayers.find(value => value.mapIcon === alarmGraphicClone.attributes.ctrlResourceType);
-      let layerName;
-      try {
-        layerName = legendLayer.mapLayerName + alarmGraphicClone.attributes.alarmType.dangerCoefficient;
-      } catch (e) {
+      const newSy = alarmGraphicClone.attributes.symbolObj.clone();
+      if (index === 0) {
+        alarmGraphicClone.symbol = emptySy;
+        graphic.symbol = emptySy;
+      } else {
+        alarmGraphicClone.symbol = newSy;
+        graphic.symbol = newSy;
       }
-      if (legendLayer) {
-        normalIconObj = mapLegendList.find(value => legendLayer.mapLayerName.indexOf(value.name) !== -1);
-        legendObj = mapLegendListWithAlarm.find(value => layerName.indexOf(value.name) !== -1);
-      }
-
-      const newSy = alarmGraphicClone.symbol;
-      try {
-        newSy.url = index === 0 ? '' : legendObj ? legendObj.url : normalIconObj.url;
-      } catch (e) {
-      }
-      alarmGraphicClone.symbol = newSy;
       graphicArray.push(alarmGraphicClone);
     }
     layer.graphics.addMany(graphicArray);
   };
   const timer = setInterval(() => {
-    testIndex += 1;
     index = index === 0 ? 1 : 0;
     layer.graphics.removeAll();
     graphicArray = [];
@@ -2173,7 +2167,7 @@ export const switchAlarmIcon = ({ layer }) => {
   }, 500);
 };
 // 删除警图标
-export const delAlarmAnimation = async (map, attr, iconObj, dispatch) => {
+export const delAlarmAnimation = async (map, attr) => {
   // 获取报警动画图层
   const alarmLayer = map.findLayerById('报警动画');
   // 删除报警 图标
@@ -2199,151 +2193,92 @@ export const delAlarmAnimation = async (map, attr, iconObj, dispatch) => {
   }
 };
 // 新建报警图标
-export const alarmAnimation = async ({ map, alarm, geometry }) => {
+export const alarmAnimation = async ({ alarm, geometry }) => {
   esriLoader.loadModules([
     'esri/symbols/PictureMarkerSymbol',
     'esri/Graphic']).then(([PictureMarkerSymbol, Graphic]) => {
-    let picUrl; const picIndex = 0;
-    switch (alarm.alarmType.profession) {
-      case '107.101': picUrl = [fire0, fire1]; break;
-      case '107.102': picUrl = [gas0, gas1]; break;
-      case '107.301': picUrl = [evr0, evr1]; break;
-      default: picUrl = [gas0, gas1];
-    }
     const legendLayer = mapLayers.FeatureLayers.find(value => value.mapIcon === alarm.ctrlResourceType);
-    const normalIconObj = mapLegendList.find(value => legendLayer.mapLayerName.indexOf(value.name) !== -1);
+    let normalIconObj = mapLegendList.find(value => legendLayer.mapLayerName.indexOf(value.name) !== -1);
+    console.log('mapLegendList', mapLegendList);
+    console.log('alarm', alarm);
+    let layerName = '';
+    try {
+      layerName = legendLayer.mapLayerName + alarm.alarmType.dangerCoefficient;
+    } catch (e) {
+    }
+    if (legendLayer) {
+      normalIconObj = mapLegendListWithAlarm.find(value => layerName.indexOf(value.name) !== -1);
+    }
     const pictureMarkerSymbol = new PictureMarkerSymbol({ url: normalIconObj.url, width: '32px', height: '32px', angle });
-    const alarmGraphic = new Graphic(geometry, pictureMarkerSymbol, alarm);
-    // for (const graphic of layer.graphics.items) {
-    //   if (graphic.attributes.alarmCode === alarm.alarmCode) {
-    //     layer.remove(graphic);
-    //     // 删除报警图标的定时事件
-    //     clearInterval(iconObj[alarm.alarmCode]);
-    //     if (iconObj[alarm.alarmCode]) {
-    //       delete iconObj[alarm.alarmCode];
-    //     }
-    //     dispatch({
-    //       type: 'alarm/queryIconObj',
-    //       payload: iconObj,
-    //     });
-    //   }
-    // }
+    const alarmGraphic = new Graphic(geometry, pictureMarkerSymbol, { ...alarm, symbolObj: pictureMarkerSymbol });
     // 新建报警图标
     mapConstants.alarmGraphics.push(alarmGraphic);
-    // layer.add(alarmGraphic);
-    // 切换图标达到动画目的
-    // if (alarm.displayAlarm.showTrip === 'true') {
-    // 存储 Interval ID
-    // iconObj[alarm.alarmCode] = setInterval(() => {
-    //   picIndex === 0 ? picIndex = 1 : picIndex = 0;
-    //   // 由于GraphicsLayer不自动更新， 手动进行图标的删除与新增
-    //   for (const graphic of layer.graphics.items) {
-    //     if (graphic.attributes.alarmCode === alarm.alarmCode) {
-    //       const alarmGraphicClone = graphic.clone();
-    //       pictureMarkerSymbol.url = picIndex === 0 ? '' : picUrl[picIndex];
-    //       // pictureMarkerSymbol.url = picUrl[picIndex];
-    //       // if (isHighLight) {
-    //       //   pictureMarkerSymbol.width = '35px';
-    //       //   pictureMarkerSymbol.height = '50px';
-    //       // }
-    //       alarmGraphicClone.symbol = pictureMarkerSymbol;
-    //       layer.remove(graphic);
-    //       layer.add(alarmGraphicClone);
-    //       break;
-    //     }
-    //   }
-    // }, 500);
-    // dispatch({
-    //   type: 'alarm/queryIconObj',
-    //   payload: iconObj,
-    // });
-    // }
   });
 };
 // 新建报警图标(传入PictureMarkerSymbol, Graphic)
 export const addAlarmAnimation = async ({ alarm, geometry, layer, PictureMarkerSymbol, Graphic }) => {
-  let picUrl; const picIndex = 0;
-  switch (alarm.alarmType.profession) {
-    case '107.101': picUrl = [fire0, fire1]; break;
-    case '107.102': picUrl = [gas0, gas1]; break;
-    case '107.301': picUrl = [evr0, evr1]; break;
-    default: picUrl = [gas0, gas1];
+  const legendLayer = mapLayers.FeatureLayers.find(value => value.mapIcon === alarm.ctrlResourceType);
+  let normalIconObj = mapLegendList.find(value => legendLayer.mapLayerName.indexOf(value.name) !== -1);
+  let layerName = '';
+  try {
+    layerName = `${legendLayer.mapLayerName}${alarm.alarmType.dangerCoefficient === 0 ? 1 : alarm.alarmType.dangerCoefficient}`;
+  } catch (e) {
   }
-  const pictureMarkerSymbol = new PictureMarkerSymbol({ url: picUrl[1], width: '32px', height: '32px', angle });
-  const alarmGraphic = new Graphic(geometry, pictureMarkerSymbol, alarm, layer.popupTemplate);
+  if (legendLayer) {
+    normalIconObj = mapLegendListWithAlarm.find(value => layerName.indexOf(value.name) !== -1);
+    if (normalIconObj === undefined) {
+      normalIconObj = mapLegendList.find(value => legendLayer.mapLayerName.indexOf(value.name) !== -1);
+    }
+  }
+  const pictureMarkerSymbol = new PictureMarkerSymbol({ url: normalIconObj.url, width: '32px', height: '32px', angle });
+  const alarmGraphic = new Graphic(geometry, pictureMarkerSymbol, { ...alarm, symbolObj: pictureMarkerSymbol }, layer.popupTemplate);
   mapConstants.alarmGraphics.push(alarmGraphic);
 };
-// 新建报警图标(暂时性的，只存一个)
-export const cacheAlarmAnimation = async ({ map, alarm, geometry, iconArray, dispatch, scale }) => {
-  esriLoader.loadModules([
-    'esri/layers/GraphicsLayer',
-    'esri/symbols/PictureMarkerSymbol',
-    'esri/Graphic']).then(([GraphicsLayer, PictureMarkerSymbol, Graphic]) => {
-    // 新建或获取报警动画图层
-    let alarmLayer = map.findLayerById('缓存报警动画');
-    if (!alarmLayer) {
-      alarmLayer = new GraphicsLayer({ id: '缓存报警动画', minScale: scale });
-      map.add(alarmLayer);
-    } else {
-      alarmLayer.graphics.removeAll();
-      clearInterval(iconArray[0]);
-    }
-    let picUrl; let picIndex = 0;
-    switch (alarm.alarmType.profession) {
-      case '107.101': picUrl = [fire0, fire1]; break;
-      case '107.102': picUrl = [gas0, gas1]; break;
-      case '107.301': picUrl = [evr0, evr1]; break;
-      default: picUrl = [gas0, gas1];
-    }
-    console.log('alarm', alarm);
-    const pictureMarkerSymbol = new PictureMarkerSymbol({ url: picUrl[1], width: '32px', height: '32px', angle });
-    const alarmGraphic = new Graphic(geometry, pictureMarkerSymbol, alarm);
-    // 新建报警图标
-    alarmLayer.add(alarmGraphic);
-    // 切换图标达到动画目的
-    // if (alarm.displayAlarm.showTrip === 'true') {
-    // 存储 Interval ID
-
-    iconArray[0] = setInterval(() => {
-      picIndex === 0 ? picIndex = 1 : picIndex = 0;
-      // 由于GraphicsLayer不自动更新， 手动进行图标的删除与新增
-      for (const graphic of alarmLayer.graphics.items) {
-        if (graphic.attributes.alarmCode === alarm.alarmCode) {
-          const alarmGraphicClone = graphic.clone();
-          pictureMarkerSymbol.url = picIndex === 0 ? '' : picUrl[picIndex];
-          // pictureMarkerSymbol.url = picUrl[picIndex];
-          alarmGraphicClone.symbol = pictureMarkerSymbol;
-          alarmLayer.remove(graphic);
-          alarmLayer.add(alarmGraphicClone);
-          break;
-        }
-      }
-    }, 500);
-    dispatch({
-      type: 'alarm/queryIconArray',
-      payload: iconArray,
-    });
-    // }
-  });
-};
 // 报警图标选中
-export const hoveringAlarm = ({ layer, geometry, alarm }) => {
+export const hoveringAlarm = ({ layer, geometry, alarm, infoPops, screenPoint, dispatch }) => {
   // 清空图标（只有一个）
   esriLoader.loadModules([
     'esri/Graphic',
   ]).then(([Graphic]) => {
     layer.graphics.removeAll();
     if (alarm) {
-      const legendLayer = mapLayers.FeatureLayers.find(value => value.mapIcon === alarm.ctrlResourceType);
-      const normalIconObj = mapLegendList.find(value => legendLayer.mapLayerName.indexOf(value.name) !== -1);
+      // 添加弹窗(地图单击产生的弹窗为唯一，所以key固定)
+      const index = infoPops.findIndex(value => value.key === 'alarmClick');
+      const index1 = infoPops.findIndex(value => Number(value.resourceCode) === Number(alarm.resourceCode));
+      const pop = {
+        show: true,
+        key: 'alarmClick',
+        resourceCode: alarm.resourceCode,
+        uniqueKey: Math.random() * new Date().getTime(),
+      };
+      if (index1 !== -1) {
+        return false;
+      }
+      if (index === -1) {
+        infoPops.push(pop);
+      } else {
+        infoPops.splice(index, 1, pop);
+      }
+      infoPopsModal.alarmClick = {
+        screenPoint, screenPointBefore: screenPoint, mapStyle: { width: mapConstants.view.width, height: mapConstants.view.height }, attributes: alarm, geometry, name: alarm.resourceName,
+      };
+      dispatch({
+        type: 'map/queryInfoPops',
+        payload: infoPops,
+      });
+      const obj = mapConstants.alarmGraphics.find(value => value.attributes.resourceCode === alarm.resourceCode);
+      let iconObj = {};
+      if (obj) {
+        iconObj = obj.attributes.symbolObj;
+      }
       const hoverSy = {
         type: 'picture-marker', // autocasts as new SimpleMarkerSymbol()
-        url: normalIconObj.url,
+        url: iconObj.url,
         width: '32px',
         height: '32px',
         angle,
       };
-      const hoverGraphic = new Graphic(geometry, hoverSy, alarm);
+      const hoverGraphic = new Graphic(geometry, iconObj, alarm);
       layer.graphics.add(hoverGraphic);
     }
   });

@@ -211,6 +211,7 @@ export default class ArcgisMap extends PureComponent {
                     type: 'map/mapPoint',
                     payload: e.mapPoint,
                   });
+                  // 首先清空报警选中
                   hoveringAlarm({ layer: mapConstants.mainMap.findLayerById('报警选中') });
                   // 获取当前点位，存储屏幕坐标及地理坐标
                   const screenPoint = { x: e.x, y: e.y };
@@ -242,12 +243,13 @@ export default class ArcgisMap extends PureComponent {
                     });
                   }
                   mapConstants.view.hitTest(e.screenPoint).then(({ results }) => {
+                    const { infoPops } = this.props;
                     current.graphic = results[0].graphic;
 
                     if (results.length > 0) {
                       const { graphic } = results[0];
                       if (graphic.layer === mapConstants.mainMap.findLayerById('报警动画')) {
-                        hoveringAlarm({ layer: mapConstants.mainMap.findLayerById('报警选中'), geometry: graphic.geometry, alarm: graphic.attributes });
+                        hoveringAlarm({ layer: mapConstants.mainMap.findLayerById('报警选中'), geometry: graphic.geometry, alarm: graphic.attributes, infoPops, screenPoint, dispatch });
                       }
                       // 环保地图单独处理
                       if (graphic.layer === mapConstants.mainMap.findLayerById('环保专题图')) {
@@ -274,7 +276,6 @@ export default class ArcgisMap extends PureComponent {
                           return false;
                         } else if (name) {
                           // 添加弹窗(地图单击产生的弹窗为唯一，所以key固定)
-                          const { infoPops } = this.props;
                           const index = infoPops.findIndex(value => value.key === 'mapClick');
                           const index1 = infoPops.findIndex(value => Number(value.gISCode) === Number(graphic.attributes.ObjCode));
                           const pop = {

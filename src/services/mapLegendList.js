@@ -22,6 +22,8 @@ const imgArray = [
   '消火栓',
   '有毒气体',
   '重大危险源',
+  '周界',
+  '环保在线仪表',
 ];
 
 const createList = () => {
@@ -42,16 +44,16 @@ const createList = () => {
     }
   }
   const cacheArray1 = [];
-    const cacheArray2 = [];
+  const cacheArray2 = [];
   for (const name of imgArray) {
     try {
       const item = require(`../assets/map/lengend/${name}.png`);
       if (item) {
         const item1 = mapLegendListWithAlarm.find(value => value.name === name + 1);
         if (item1) {
-            cacheArray1.push({ name, url: item });
+          cacheArray1.push({ name, url: item });
         } else {
-            cacheArray2.push({ name, url: item });
+          cacheArray2.push({ name, url: item });
         }
       }
     } catch (e) {

@@ -17,13 +17,13 @@ const cols = {
   },
 };
 const transData = (data, itemName) => {
-    for (const item of data) {
-      item.dateFormat = moment(item.startDate).format('l');
-      item[itemName] = item.collectValue;
-      data.sort((a, b) => {
-        return a.startDate - b.startDate;
-      });
-    }
+  for (const item of data) {
+    item.dateFormat = moment(item.startDate).format('l');
+    item[itemName] = item.collectValue;
+    data.sort((a, b) => {
+      return a.startDate - b.startDate;
+    });
+  }
   const ds = new DataSet();
   const dv = ds.createView().source(data);
   dv.transform({
@@ -42,7 +42,6 @@ const transData = (data, itemName) => {
   };
 })
 export default class RawInfoTrend extends PureComponent {
-
   componentDidMount() {
     const { dispatch, itemName, dateTimes } = this.props;
     dispatch({
@@ -55,13 +54,7 @@ export default class RawInfoTrend extends PureComponent {
   }
   render() {
     const { history, name, itemName } = this.props;
-    const data = [
-      {"collectValue":"624.54","itemName":"用电量","powerConsumeEntryID":4,"powerConsumeItemID":1,"powerConsumeValueID":2234,
-        "proRptPowerConsumeEntry":{"entryName":"月累计","entryUnit":null,"powerConsumeEntryID":4},"proRptPowerConsumeItem":{"itemName":"用电量","powerConsumeItemID":1,"powerConsumetype":1,"unit":null},"startDate":1538323200000,"unit":"万千瓦时"},
-      {"collectValue":"324.54","itemName":"用电量","powerConsumeEntryID":4,"powerConsumeItemID":1,"powerConsumeValueID":2234,
-        "proRptPowerConsumeEntry":{"entryName":"月累计","entryUnit":null,"powerConsumeEntryID":4},"proRptPowerConsumeItem":{"itemName":"用电量","powerConsumeItemID":1,"powerConsumetype":1,"unit":null},"startDate":1539332871000,"unit":"万千瓦时"}
-        ];
-    const newData0 = transData(data, itemName);
+    const newData0 = transData(history, itemName);
     return (
       <div className={styles.warp}>
         <Card title={name}>
@@ -110,14 +103,6 @@ export default class RawInfoTrend extends PureComponent {
               position="dateFormat*value"
               size={2}
               color={['date', [lineColor1, lineColor2]]}
-              // tooltip={['type*date*value', (type, day, value) => {
-              //             return {
-              //                 // 自定义 tooltip 上显示的 title 显示内容等。
-              //                 title: null,
-              //                 name: type,
-              //                 value: type === '月完成' ? history[0] ? value : history[0].monthPlan : '',
-              //             };
-              //         }]}
             />
             <Geom
               type="point"
@@ -129,7 +114,10 @@ export default class RawInfoTrend extends PureComponent {
             />
           </Chart>
           <div className={styles.footer}>
-            <Button onClick={() => { this.props.click({ startDate: this.props.dateTimes }); }}>关闭</Button>
+            <Button
+              onClick={() => { this.props.click({ startDate: this.props.dateTimes }); }}
+            >关闭
+            </Button>
           </div>
         </Card>
       </div>

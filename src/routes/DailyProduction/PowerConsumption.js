@@ -138,6 +138,19 @@ export default class GasBalance extends PureComponent {
         title: '项目',
         dataIndex: 'itemName',
         width: '24%',
+        render: (text, record) => {
+          return (
+            text ? (
+              <a
+                href="#"
+                title="点击查看图表"
+                className={styles.rawName}
+                onClick={() => this.rawClick(record)}
+              >{text}
+              </a>
+            ) : '/'
+          );
+        },
       }, {
         title: '用量',
         dataIndex: 'useCount',
@@ -216,15 +229,9 @@ export default class GasBalance extends PureComponent {
             </div>
             <Scrollbars>
               <Table
-                onRow={(item) => {
-                return {
-                  onClick: () => this.rawClick(item),
-                };
-              }}
                 dataSource={this.state.powerConsumption}
                 columns={cols}
                 pagination={false}
-                loading={this.props.loading.global}
                 scroll={{ x: this.state.scrollX }}
                 rowClassName={(record, index) => {
                   return index % 2 === 0 ? styles.blue : styles.blueRow;
@@ -233,15 +240,9 @@ export default class GasBalance extends PureComponent {
               />
               <div style={{ marginTop: -1 }}>
                 <Table
-                  onRow={(item) => {
-                    return {
-                      onClick: () => this.rawClick(item),
-                    };
-                  }}
                   dataSource={this.state.recycledWater}
                   columns={cycleCols}
                   pagination={false}
-                  loading={this.props.loading.global}
                   rowClassName={(record, index) => {
                   return index % 2 === 0 ? styles.blue : styles.blueRow;
                 }}

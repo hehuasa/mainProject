@@ -108,16 +108,16 @@ export default class GlobalHeader extends PureComponent {
       for (const arr of activeKeys) {
         newArr.push(arr.keys);
       }
+      if (!activeKeys.find(value => value.keys === key)) {
+        activeKeys.unshift({ name: boardType, uniqueKey: 0, keys: key, param: { title } });
+      }
       if (newArr.indexOf(boardType) === -1) {
         expandKeys.push(boardType);
         this.props.dispatch({
           type: 'panelBoard/queryList',
           payload: {
             expandKeys,
-            activeKeys: [
-              { name: boardType, uniqueKey: 0, keys: boardType, param: { title } },
-                ...activeKeys,
-            ],
+            activeKeys,
           },
         });
       } else if (expandKeys.indexOf(boardType) === -1) {
@@ -683,7 +683,7 @@ export default class GlobalHeader extends PureComponent {
           <Weather />
           <Popover placement="bottomRight" content={everydayWork} >
             <span className={styles.showBack} onClick={() => { onChangeSwitch(true); }}>
-              <Badge count={majorList.list ? majorLength : ''} offset={[-28, -4]} style={{ height: 20, backgroundColor: '#2fc5a1', border: 0 }}>
+              <Badge count={majorList.list ? majorLength : ''} offset={[-8, -3]} style={{ height: 20, backgroundColor: '#2fc5a1', border: 0 }}>
                 <img src={majorIcon} alt="major" className={styles.pointIcon} />
               </Badge>
             </span>

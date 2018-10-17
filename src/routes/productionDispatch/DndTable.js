@@ -3,54 +3,19 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import classnames from 'classnames';
 import styles from './index.less';
 
-// class selfRow extends PureComponent {
-//   render() {
-//     console.log('props', this.props);
-//   }
-//     return (
-//       <Draggable key={this.props['data-row-key']} draggableId={this.props['data-row-key']} index={this.props['data-row-key']}>
-//         {(draggableProvided, DraggableStateSnapshot) => (
-//           <tr
-//             // className={classnames({
-//             //   dragging: DraggableStateSnapshot.isDragging,
-//             // })}
-//             ref={draggableProvided.innerRef}
-//             // isDragging={DraggableStateSnapshot.isDragging}
-//             draggable={true}
-//             {...draggableProvided.draggableProps}
-//             {...draggableProvided.dragHandleProps}
-//             {...this.props}
-//           />
-//         )}
-//
-//       </Draggable>
-//     );
-//   }
-// }
-{ /* <Tables */ }
-{ /* // loading={loading} */ }
-{ /* rowKey={'concernID'} */ }
-{ /* dataSource={data.data} */ }
-{ /* // components={components} */ }
-{ /* columns={columns} */ }
-{ /* /> */ }
-// class BodyWrapper extends PureComponent {
-//   render() {
-//     return (
-//       <Droppable droppableId="droppable" >
-//         {(droppableProvided, droppableSnapshot) => (
-//           <tbody {...this.props} ref={droppableProvided.innerRef} />
-//         )}
-//       </Droppable>
-//
-//     );
-//   }
-// }
 class DndTable extends PureComponent {
+  OnDragEndHook = (a, b, c, d) => {
+    console.log('a', a);
+    console.log('b', b);
+    console.log('c', c);
+    console.log('d', d);
+  };
   render() {
     const { columns, dataSource, rowKey } = this.props;
     return (
-      <DragDropContext>
+      <DragDropContext
+        onDragEnd={this.OnDragEndHook}
+      >
         <div className={classnames('ant-table', 'ant-table-default', 'ant-table-scroll-position-left', 'ant-table-scroll-position-right')}>
           <div className="ant-table-content">
             <div className="ant-table-body">

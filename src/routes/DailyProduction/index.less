@@ -166,17 +166,15 @@
       color: @text-color-blue;
       font-size: @font-m;
       //background-image: url("../../assets/report/row-head.png");
-      background-repeat:no-repeat;
+      background-repeat: no-repeat;
       background-size: 100% 100%;
     }
     .ant-table-thead > tr > th {
       color: @text-color-blue !important;
+      border-bottom: 1px solid @border-black;
       background: none;
     }
-    .ant-table-thead > tr > th {
-      border-bottom: 1px solid @border-black;
-    }
-    .ant-table-thead > tr:first-child > th:first-child{
+    .ant-table-thead > tr:first-child > th:first-child {
       border-radius: 0;
     }
     .ant-table-thead > tr:first-child > th:last-child {
@@ -195,20 +193,27 @@
     .ant-table-bordered .ant-table-tbody > tr > td {
       border-right: 1px solid @border-black;
     }
-    .ant-table-wrapper{
+    .ant-table-wrapper {
       margin: 0 8px;
     }
   }
 }
 
-
-.equipment{
+.rowHover {
+  :global {
+    .ant-table-tbody > tr:hover > td {
+      color: #69c4f5;
+      cursor: pointer;
+    }
+  }
+}
+.equipment {
   padding-bottom: 50px;
   :global{
-    .ant-table-tbody tr td{
+    .ant-table-tbody tr td {
       padding: 4px 16px;
     }
-    .ant-table-thead tr th{
+    .ant-table-thead tr th {
       padding: 4px 16px;
     }
     .ant-table-tbody > tr {
@@ -219,13 +224,13 @@
     //}
   }
 }
-.onlyEquipment{
+.onlyEquipment {
   padding-bottom: 50px;
-  :global{
-    .ant-table-tbody tr td{
+  :global {
+    .ant-table-tbody tr td {
       padding: 4px 16px;
     }
-    .ant-table-thead tr th{
+    .ant-table-thead tr th {
       padding: 4px 16px;
     }
     .ant-table-tbody > tr:hover > td {

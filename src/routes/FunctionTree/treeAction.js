@@ -24,7 +24,7 @@ export const handleClick = (event, treeId, treeNode, that) => {
         type: 'panelBoard/queryList',
         payload: {
           expandKeys,
-          activeKeys: activeKeys,
+          activeKeys,
         },
       });
     }

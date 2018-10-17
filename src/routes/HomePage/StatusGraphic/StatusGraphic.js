@@ -10,19 +10,19 @@ const editor = { net: {} };
 
 let timer; // 定时器id
 let currentResourceID;
-@connect(({ flow, homepage, resourceTree }) => {
+@connect(({ flow, homepage, sysFunction }) => {
   return {
     currentFlow: flow.currentFlow,
     GraphiceDatas: flow.GraphiceDatas,
     mapHeight: homepage.mapHeight,
-      ztreeObj: resourceTree.ztreeObj,
+    ztreeObj: sysFunction.ztreeObj,
   };
 })
 export default class StatusGraphic extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.handleClose = this.handleClose.bind(this);
-    }
+  constructor(props) {
+    super(props);
+    this.handleClose = this.handleClose.bind(this);
+  }
   componentDidMount() {
     setTimeout(() => {
       editor.net = new G6.Net({
@@ -115,10 +115,9 @@ export default class StatusGraphic extends PureComponent {
     editor.net.destroy();
   }
   handleClose() {
-        const { ztreeObj, dispatch, currentFlow } = this.props;
-        const node = ztreeObj.getNodeByTId(currentFlow.treeNode.tId);
-        console.log('this.props.currentFlow', this.props.currentFlow);
-      ztreeObj.selectNode(node);
+    const { ztreeObj, dispatch, currentFlow } = this.props;
+    const node = ztreeObj.getNodeByTId(currentFlow.treeNode.tId);
+    ztreeObj.selectNode(node);
     // dispatch({
     //   type: 'flow/queryCurrentFlow',
     //   payload: { show: false, data: {} },
