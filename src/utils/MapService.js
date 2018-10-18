@@ -87,9 +87,21 @@ export const searchByAttr = async ({ searchText, layerIds = getLayerIds(), searc
       ]).then(([FindTask, FindParameters]) => {
       // 搜索完成的回调
       const ShowFindResult = (findTaskResult) => {
+        console.log('searchByAttr1', findTaskResult);
         findTaskResult.sort((a, b) => {
-          return Number(a.feature.attributes.ObjCode || a.feature.attributes['唯一编码']) - Number(b.feature.attributes.ObjCode || b.feature.attributes['唯一编码']) > 0 ? -1 : 1;
+          if (a.feature && b.feature) {
+            if (a.feature.attributes && b.feature.attributes) {
+              if (a.feature.attributes.ObjCode) {
+                return Number(a.feature.attributes.ObjCode || a.feature.attributes['唯一编码']) - Number(b.feature.attributes.ObjCode || b.feature.attributes['唯一编码']) > 0 ? -1 : 1;
+              }
+            } else {
+              return 0;
+            }
+          } else {
+            return 0;
+          }
         });
+        console.log('searchByAttr2', findTaskResult);
         resolve(findTaskResult.results);
       };
       // 创建属性查询对象
