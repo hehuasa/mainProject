@@ -88,12 +88,10 @@ export const searchByAttr = async ({ searchText, layerIds = getLayerIds(), searc
       // 搜索完成的回调
       const ShowFindResult = (findTaskResult) => {
         console.log('searchByAttr1', findTaskResult);
-        findTaskResult.sort((a, b) => {
+        findTaskResult.results.sort((a, b) => {
           if (a.feature && b.feature) {
             if (a.feature.attributes && b.feature.attributes) {
-              if (a.feature.attributes.ObjCode) {
                 return Number(a.feature.attributes.ObjCode || a.feature.attributes['唯一编码']) - Number(b.feature.attributes.ObjCode || b.feature.attributes['唯一编码']) > 0 ? -1 : 1;
-              }
             } else {
               return 0;
             }

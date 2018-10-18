@@ -103,7 +103,6 @@ class SearchResult extends PureComponent {
 
   render() {
     const { searchDeviceArray } = this.props;
-    console.log('searchDeviceArray', searchDeviceArray);
     return (
       searchDeviceArray !== null && searchDeviceArray.length > 0 ? (
         <div className={styles.searchResult}>
