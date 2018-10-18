@@ -4,7 +4,7 @@
 
 .warp {
   position: absolute;
-  background:#000;
+  background: #000;
   opacity: .8;
   z-index: 1000;
   border: 1px solid @border-access;
@@ -17,7 +17,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 16px 16px 16px ;
+    padding: 20px 16px 16px 16px;
     color: @bord-text-blue;
   }
   & .content {
@@ -29,6 +29,17 @@
       width: 100%;
       transition: opacity .5s;
     }
+  }
+}
+.rowContent {
+  position: relative;
+  width: 100%;
+  & .rowPage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: opacity .5s;
   }
 }
 .orgInfo {
