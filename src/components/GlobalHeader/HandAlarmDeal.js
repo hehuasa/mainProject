@@ -492,8 +492,9 @@ export default class HandAlarmDeal extends PureComponent {
             </FormItem>
           </Col>
         </Row>
-
-        <AddTemplate form={form} />
+        <Row>
+          <Col span={23} offset={1}><AddTemplate form={form} /></Col>
+        </Row>
         <CommonQuery
           {...this.state}
           dispatch={this.props.dispatch}

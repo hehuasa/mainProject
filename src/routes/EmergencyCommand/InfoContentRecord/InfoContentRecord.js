@@ -9,11 +9,12 @@ import styles from '../InfoJudgment/index.less';
 
 const { TabPane } = Tabs;
 
-const DisposalResearch = ({ onConfirm, emergency }) => {
+const DisposalResearch = ({ onConfirm, emergency, child }) => {
   return (
     <div>
+      <Button type="primary" style={{ marginRight: 16 }} onClick={() => child.onGenerateReport()}>1. 生成应急报告</Button>
       <Popconfirm placement="bottomRight" title="是否跳转到信息处置与研判流程？" onConfirm={onConfirm} okText="是" cancelText="否">
-        <Button disabled={!emergency.eventPosition || emergency.current > emergency.viewNode} >信息处置与研判</Button>
+        <Button disabled={!emergency.eventPosition || emergency.current > emergency.viewNode} >2. 信息处置与研判</Button>
       </Popconfirm>
     </div>
   );
@@ -38,7 +39,7 @@ export default class InfoContentRecord extends PureComponent {
     //   },
     // });
   }
-
+  // 进入下一流程
   onConfirm = () => {
     const { currentUser } = this.props;
     const { userID } = currentUser.baseUserInfo;
@@ -59,27 +60,33 @@ export default class InfoContentRecord extends PureComponent {
         payload: 2,
       });
     });
-  }
+  };
+  onRef = (ref) => {
+    this.child = ref;
+    console.log(777, ref);
+  };
 
   render() {
     return (
       <Tabs
         className={styles.infoJudgment}
+        defaultActiveKey="2"
         tabBarExtraContent={
           <DisposalResearch
             onConfirm={this.onConfirm}
+            child={this.child}
             emergency={this.props.emergency}
           />
         }
       >
-        <TabPane tab="事件信息记录" key="2">
+        <TabPane tab="事件信息记录" key="1">
           <Card bordered={false}>
             <InfoRecord />
           </Card>
         </TabPane>
-        <TabPane tab="信息接报" key="1">
+        <TabPane tab="信息接报" key="2">
           <Card bordered={false}>
-            <InfoContent />
+            <InfoContent onRef={this.onRef} />
           </Card>
         </TabPane>
       </Tabs>

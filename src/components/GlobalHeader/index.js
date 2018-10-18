@@ -618,7 +618,7 @@ export default class GlobalHeader extends PureComponent {
           <div className={styles.everydayList}>
             {
               majorList.list.data.map((item) => {
-                return item.statu === 1 ? <div key={item.concernID}><div>{`${item.indexNum}：`}</div><div>{`${item.content}`}</div></div> : null;
+                return item.statu === 1 ? <div key={item.concernID}><div>{`${item.sortIndex}：`}</div><div>{`${item.content}`}</div></div> : null;
               })
             }
           </div>

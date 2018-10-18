@@ -39,6 +39,7 @@ const RealEvent = Form.create()((props) => {
 @connect(({ alarmDeal, emergency, alarm }) => ({
   alarmInfo: alarmDeal.alarmInfo,
   alarmDealTypeList: alarmDeal.alarmDealTypeList,
+  isDrill: alarmDeal.isDrill,
   alarmDeal,
   emergency,
   alarm,
@@ -56,7 +57,7 @@ export default class AlarmDeal extends PureComponent {
   }
   // 保存报警处理信息
   save = (form, type, e) => {
-    e.preventDefault();
+    // e.preventDefault();
     const { dispatch, alarmInfo } = this.props;
     const { alarmId } = alarmInfo;
     form.validateFields((err, fieldsValue) => {

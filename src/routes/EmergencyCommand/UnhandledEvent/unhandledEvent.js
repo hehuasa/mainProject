@@ -6,8 +6,8 @@ import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import StandardTable from '../../../components/StandardTable';
 import { commonData } from '../../../../mock/commonData';
 import styles from './unhandledEvent.less';
-import {getBordStyle} from "../../../utils/MapService";
-import {mapConstants} from "../../../services/mapConstant";
+import { getBordStyle } from '../../../utils/MapService';
+import { mapConstants } from '../../../services/mapConstant';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -169,10 +169,29 @@ export default class Analysis extends PureComponent {
       }
     };
     openBoard('EventInfo');
-  }
+  };
+  getStatusName = (eventStatu) => {
+    switch (parseInt(eventStatu, 0)) {
+      case -1: return '未生成事件';
+      case 1: return '信息接报';
+      case 2: return '应急研判';
+      case 3: return '应急预警';
+      case 4: return '应急启动';
+      case 5: return '应急处理';
+      case 6: return '应急终止';
+      default: return '';
+    }
+  };
   render() {
     const { loading } = this.props.undoneEventList;
     const columns = [{
+      title: '事件状态',
+      dataIndex: 'eventStatu',
+      width: 120,
+      render: (text) => {
+        return this.getStatusName(text);
+      },
+    }, {
       title: '事件名称',
       dataIndex: 'eventName',
       width: 250,
@@ -236,10 +255,6 @@ export default class Analysis extends PureComponent {
       dataIndex: 'isDrill',
       width: 100,
     }, {
-      title: '事件状态',
-      dataIndex: 'eventStatu',
-      width: 100,
-    }, {
       title: '受伤人数',
       dataIndex: 'injured',
       width: 100,
@@ -289,7 +304,7 @@ export default class Analysis extends PureComponent {
                 pagination={{
                   pageSize: 10,
                 }}
-                scroll={{ x: 2820 }}
+                scroll={{ x: 2840 }}
               />
             </div>
           </div>

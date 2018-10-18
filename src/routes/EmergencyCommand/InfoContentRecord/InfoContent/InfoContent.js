@@ -38,12 +38,11 @@ export default class InfoContent extends PureComponent {
     };
   }
   componentDidMount() {
+    this.props.onRef(this);
     // 查询所有信息接报
     // this.props.dispatch({
     //   type: 'emergency/queryInfoContent',
     // })
-
-
   }
   // del
   onDelFeature = (id) => {
@@ -227,32 +226,33 @@ export default class InfoContent extends PureComponent {
             casualtiesData={emergency.casualties}
             form={form}
             isDisabled
+            hiddenAddButton
             addDisable={this.props.emergency.current === this.props.emergency.viewNode}
             isHidden
           />
         </div>
         {
-          !(emergency.current > emergency.viewNode) ? (
-            <div className={styles.footer}>
-              <Button type="primary" onClick={this.onGenerateReport}>生成应急报告</Button>
-              <Button onClick={this.onShowModal} >新增事件特征</Button>
-              <AddEventFeature
-                {...this.state}
-                mask={false}
-                onAddFeature={this.onAddFeature}
-                onHandleCancel={this.onHandleCancel}
-                onShowFeature={this.onShowFeature}
-                dispatch={this.props.dispatch}
-                classificationList={emergency.classificationList}
-                eventID={emergency.eventId}
-                existEventFeaturesList={emergency.existEventFeaturesList}
-                pagination={emergency.pagination}
-                onSearchFeature={this.onSearchFeature}
-                onhandleTableChange={this.onhandleTableChange}
-                onEnterCancel={this.onEnterCancel}
-              />
-            </div>
-          ) : null
+          // !(emergency.current > emergency.viewNode) ? (
+          //   <div className={styles.footer}>
+          //     <Button type="primary" onClick={this.onGenerateReport}>生成应急报告</Button>
+          //     <Button onClick={this.onShowModal} >新增事件特征</Button>
+          //     <AddEventFeature
+          //       {...this.state}
+          //       mask={false}
+          //       onAddFeature={this.onAddFeature}
+          //       onHandleCancel={this.onHandleCancel}
+          //       onShowFeature={this.onShowFeature}
+          //       dispatch={this.props.dispatch}
+          //       classificationList={emergency.classificationList}
+          //       eventID={emergency.eventId}
+          //       existEventFeaturesList={emergency.existEventFeaturesList}
+          //       pagination={emergency.pagination}
+          //       onSearchFeature={this.onSearchFeature}
+          //       onhandleTableChange={this.onhandleTableChange}
+          //       onEnterCancel={this.onEnterCancel}
+          //     />
+          //   </div>
+          // ) : null
         }
 
 

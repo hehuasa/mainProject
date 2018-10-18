@@ -16,7 +16,7 @@ export default {
     apparatusList: [], // 获取手动报警装置
     alarmInfoConten: {}, // 请求获取报警信息
     alarmDealTypeList: [], // 报警处理类型列表 码表104
-    isDrill: false, // 是否是应急演练
+    isDrill: 0, // 是否是应急演练
     professionList: [], // 所属专业
   },
 

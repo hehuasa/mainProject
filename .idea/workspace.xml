@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-<<<<<<< HEAD
     <list default="true" id="64dc24cc-655f-4586-889a-957b0aba54ba" name="Default" comment="another test" />
-=======
-    <list default="true" id="27ef6b5c-a6c3-4ad3-94d6-090d85a74fc1" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/yarn-error.log" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/.webpackrc.js" afterPath="$PROJECT_DIR$/.webpackrc.js" />
+      <change beforePath="$PROJECT_DIR$/src/components/GlobalHeader/HandAlarmDeal.js" afterPath="$PROJECT_DIR$/src/components/GlobalHeader/HandAlarmDeal.js" />
+      <change beforePath="$PROJECT_DIR$/src/components/GlobalHeader/index.js" afterPath="$PROJECT_DIR$/src/components/GlobalHeader/index.js" />
+      <change beforePath="$PROJECT_DIR$/src/models/alarmDeal.js" afterPath="$PROJECT_DIR$/src/models/alarmDeal.js" />
+      <change beforePath="$PROJECT_DIR$/src/routes/DailyProduction/UploadReport.js" afterPath="$PROJECT_DIR$/src/routes/DailyProduction/UploadReport.js" />
+      <change beforePath="$PROJECT_DIR$/src/routes/EmergencyCommand/AlarmDeal/AddTemplate/index.js" afterPath="$PROJECT_DIR$/src/routes/EmergencyCommand/AlarmDeal/AddTemplate/index.js" />
+      <change beforePath="$PROJECT_DIR$/src/routes/EmergencyCommand/AlarmDeal/index.js" afterPath="$PROJECT_DIR$/src/routes/EmergencyCommand/AlarmDeal/index.js" />
+      <change beforePath="$PROJECT_DIR$/src/routes/EmergencyCommand/InfoContentRecord/InfoContent/InfoContent.js" afterPath="$PROJECT_DIR$/src/routes/EmergencyCommand/InfoContentRecord/InfoContent/InfoContent.js" />
+      <change beforePath="$PROJECT_DIR$/src/routes/EmergencyCommand/InfoContentRecord/InfoContentRecord.js" afterPath="$PROJECT_DIR$/src/routes/EmergencyCommand/InfoContentRecord/InfoContentRecord.js" />
+      <change beforePath="$PROJECT_DIR$/src/routes/EmergencyCommand/UnhandledEvent/unhandledEvent.js" afterPath="$PROJECT_DIR$/src/routes/EmergencyCommand/UnhandledEvent/unhandledEvent.js" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" afterPath="$PROJECT_DIR$/yarn.lock" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
->>>>>>> 5d02d7c21a0551802d60184df6e71155038eef89
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-<<<<<<< HEAD
   <component name="FUSProjectUsageTrigger">
     <session id="-563793119">
       <usages-collector id="statistics.lifecycle.project">
@@ -518,30 +525,6 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="PUSH_TAGS">
       <GitPushTagMode />
-=======
-  <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name=".webpackrc.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.webpackrc.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="15" column="6" lean-forward="false" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="6" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/.webpackrc.js" />
-      </list>
->>>>>>> 5d02d7c21a0551802d60184df6e71155038eef89
     </option>
   </component>
   <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
@@ -550,31 +533,9 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-<<<<<<< HEAD
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
-=======
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="178" />
-    <option name="y" value="27" />
-    <option name="width" value="1181" />
-    <option name="height" value="1038" />
-  </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
-      <flattenPackages />
-      <showMembers />
-      <showModules />
-      <showLibraryContents />
-      <hideEmptyPackages />
-      <abbreviatePackageNames />
-      <autoscrollToSource />
-      <autoscrollFromSource ProjectPane="true" />
-      <sortByType />
-      <manualOrder />
->>>>>>> 5d02d7c21a0551802d60184df6e71155038eef89
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
@@ -585,7 +546,6 @@
               <item name="mainProject" type="b2602c69:ProjectViewProjectNode" />
               <item name="mainProject" type="462c0819:PsiDirectoryNode" />
             </path>
-<<<<<<< HEAD
             <path>
               <item name="mainProject" type="b2602c69:ProjectViewProjectNode" />
               <item name="mainProject" type="462c0819:PsiDirectoryNode" />
@@ -596,30 +556,80 @@
               <item name="mainProject" type="462c0819:PsiDirectoryNode" />
               <item name="tests" type="462c0819:PsiDirectoryNode" />
             </path>
-=======
->>>>>>> 5d02d7c21a0551802d60184df6e71155038eef89
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mainProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mainProject" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mainProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mainProject" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="EmergencyCommand" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mainProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mainProject" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="EmergencyCommand" type="462c0819:PsiDirectoryNode" />
+              <item name="AlarmDeal" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mainProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mainProject" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="EmergencyCommand" type="462c0819:PsiDirectoryNode" />
+              <item name="AlarmDeal" type="462c0819:PsiDirectoryNode" />
+              <item name="AlarmInfo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mainProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mainProject" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="EmergencyCommand" type="462c0819:PsiDirectoryNode" />
+              <item name="AlarmDeal" type="462c0819:PsiDirectoryNode" />
+              <item name="Footer" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mainProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mainProject" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="EmergencyCommand" type="462c0819:PsiDirectoryNode" />
+              <item name="InfoContentRecord" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mainProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mainProject" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="EmergencyCommand" type="462c0819:PsiDirectoryNode" />
+              <item name="InfoContentRecord" type="462c0819:PsiDirectoryNode" />
+              <item name="InfoContent" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mainProject" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mainProject" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="EmergencyCommand" type="462c0819:PsiDirectoryNode" />
+              <item name="InfoContentRecord" type="462c0819:PsiDirectoryNode" />
+              <item name="InfoRecord" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="Scope" />
-<<<<<<< HEAD
-    </panes>
   </component>
-=======
-      <pane id="Scratches" />
-    </panes>
-  </component>
-  <component name="PropertiesComponent">
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="HbShouldOpenHtmlAsHb" value="" />
-    <property name="node.js.path.for.package.eslint" value="project" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.selected.package.eslint" value="D:\huangjie\emgc_ui\mainProject\node_modules\eslint" />
-  </component>
->>>>>>> 5d02d7c21a0551802d60184df6e71155038eef89
   <component name="RunDashboard">
     <option name="ruleStates">
       <list>
@@ -632,18 +642,22 @@
       </list>
     </option>
   </component>
-<<<<<<< HEAD
-=======
+  <component name="RunManager">
+    <configuration name=".webpackrc.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-js-file=".webpackrc.js" working-dir="$PROJECT_DIR$" />
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="Node.js..webpackrc.js" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
->>>>>>> 5d02d7c21a0551802d60184df6e71155038eef89
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-<<<<<<< HEAD
       <changelist id="64dc24cc-655f-4586-889a-957b0aba54ba" name="Default" comment="" />
       <created>1537844691518</created>
       <option name="number" value="Default" />
@@ -701,29 +715,22 @@
       <option name="presentableId" value="LOCAL-00006" />
       <option name="project" value="LOCAL" />
       <updated>1539592311047</updated>
-=======
       <changelist id="27ef6b5c-a6c3-4ad3-94d6-090d85a74fc1" name="Default" comment="" />
       <created>1539656470704</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1539656470704</updated>
-      <workItem from="1539656471942" duration="1406000" />
->>>>>>> 5d02d7c21a0551802d60184df6e71155038eef89
+      <workItem from="1539656471942" duration="29858000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-<<<<<<< HEAD
     <option name="totallyTimeSpent" value="615000" />
-=======
-    <option name="totallyTimeSpent" value="1406000" />
->>>>>>> 5d02d7c21a0551802d60184df6e71155038eef89
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-<<<<<<< HEAD
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7613883" visible="true" weight="0.18177028" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="npm" order="2" sideWeight="0.23861171" side_tool="true" visible="true" weight="0.18177028" />
@@ -773,44 +780,102 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="232">
           <caret line="234" selection-start-line="234" selection-end-line="234" />
-=======
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24973656" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-    </layout>
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
-  </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager />
-    <watches-manager />
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.webpackrc.js">
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes/EmergencyCommand/InfoContentRecord/InfoContentRecord.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="15" column="6" lean-forward="false" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="6" />
+        <state relative-caret-position="133">
+          <caret line="83" column="18" lean-forward="false" selection-start-line="83" selection-start-column="18" selection-end-line="83" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#45#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes/EmergencyCommand/InfoContentRecord/InfoRecord/InfoRecord.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="58" column="23" lean-forward="true" selection-start-line="58" selection-start-column="23" selection-end-line="58" selection-end-column="23" />
           <folding />
->>>>>>> 5d02d7c21a0551802d60184df6e71155038eef89
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes/EmergencyCommand/InfoContentRecord/InfoRecord/Casualties.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="426">
+          <caret line="79" column="17" lean-forward="true" selection-start-line="79" selection-start-column="17" selection-end-line="79" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes/EmergencyCommand/AlarmDeal/AddTemplate/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26">
+          <caret line="403" column="20" lean-forward="false" selection-start-line="403" selection-start-column="20" selection-end-line="403" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/GlobalHeader/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="673" column="19" lean-forward="false" selection-start-line="673" selection-start-column="19" selection-end-line="673" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/GlobalHeader/HandAlarmDeal.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="501">
+          <caret line="495" column="69" lean-forward="true" selection-start-line="495" selection-start-column="69" selection-end-line="495" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes/EmergencyCommand/AlarmDeal/Footer/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="12" column="36" lean-forward="false" selection-start-line="12" selection-start-column="28" selection-end-line="12" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/common/router.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#38#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/models/alarmDeal.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="18" column="11" lean-forward="false" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="11" />
+          <folding>
+            <element signature="e#0#218#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes/EmergencyCommand/AlarmDeal/AlarmInfo/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="337">
+          <caret line="31" column="47" lean-forward="false" selection-start-line="31" selection-start-column="42" selection-end-line="31" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes/EmergencyCommand/AlarmDeal/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="66" column="48" lean-forward="false" selection-start-line="66" selection-start-column="48" selection-end-line="66" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

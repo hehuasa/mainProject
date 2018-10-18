@@ -275,10 +275,10 @@ export default class AddTemplate extends PureComponent {
               placeholder="已有数据id"
             />
           )}
-          <Col span={5} offset={1}>
+          <Col span={5}>
             <FormItem
               formItemLayout
-              label="伤亡人员位置"
+              label="伤亡位置"
               required={false}
             >
               {getFieldDecorator(`location[${k}]`, {
@@ -349,7 +349,7 @@ export default class AddTemplate extends PureComponent {
               placeholder="选择报告人"
             />
           )}
-          <Col span={4}>
+          <Col span={3}>
             <FormItem
               formItemLayout1
               label="报告人"
@@ -367,10 +367,24 @@ export default class AddTemplate extends PureComponent {
               )}
             </FormItem>
           </Col>
+          <Col span={3}>
+            <FormItem
+              formItemLayout1
+              label="电话"
+              required={false}
+            >
+              {getFieldDecorator(`reportUserPhone[${k}]`, {
+                validateTrigger: ['onChange', 'onBlur'],
+                initialValue: casualtiesData[index] ? casualtiesData[index].reportUserPhone : null,
+              })(
+                <Input placeholder="报告人电话" disabled />
+              )}
+            </FormItem>
+          </Col>
           <Col span={6}>
             <FormItem
               formItemLayout1
-              label="记录时间"
+              label="时间"
               required={false}
               style={{ width: '100%' }}
             >
@@ -387,7 +401,7 @@ export default class AddTemplate extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={2}>
+          <Col md={1}>
             {
               !isDisabled ?
                 (
@@ -426,7 +440,7 @@ export default class AddTemplate extends PureComponent {
           {
             isHidden ? (
               <Row>
-                <Col span={5} offset={1}>
+                <Col span={5}>
                   总共受伤：{this.state.sumSnjured || injuredSum} {' '}总共死亡：{this.state.sumDeaths || deathSum}
                 </Col>
               </Row>
@@ -436,14 +450,17 @@ export default class AddTemplate extends PureComponent {
             {formItems}
           </div>
           <FormItem {...formItemLayoutWithOutLabel}>
-            <Button
-              type="dashed"
-              onClick={this.add}
-              disabled={this.props.current !== this.props.viewNode}
-              style={{ width: '60%' }}
-            >
-              <Icon type="plus" /> 新增伤亡人员
-            </Button>
+            { this.props.hiddenAddButton ? null : (
+              <Button
+                type="dashed"
+                onClick={this.add}
+                disabled={this.props.current !== this.props.viewNode}
+                style={{ width: '60%' }}
+              >
+                <Icon type="plus" /> 新增伤亡人员
+              </Button>
+            )
+            }
           </FormItem>
         </Form>
         <Modal

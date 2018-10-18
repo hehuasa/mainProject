@@ -8,16 +8,15 @@ import styles from './index.less';
 const { Option } = Select;
 const { Dragger } = Upload;
 const cols = [
-  {title: '文件名',dataIndex: 'fileName',width: '20%'},
-  {title: '上传人',dataIndex: 'userName',width: '15%'},
-  {title: '上传时间',dataIndex: 'uploadTime',width: '65%'},
+  { title: '文件名', dataIndex: 'fileName', width: '20%' },
+  { title: '上传人', dataIndex: 'userName', width: '15%' },
+  { title: '上传时间', dataIndex: 'uploadTime', width: '65%' },
 ];
 @connect(({ productionDaily }) => ({
   rawMaterial: productionDaily.rawMaterial,
 }))
 export default class UploadReport extends PureComponent {
   componentDidMount() {
-
   }
   beforeUpload = (file) => {
     const isXlsx = file.name.indexOf('.xlsx') > 0;
@@ -35,6 +34,7 @@ export default class UploadReport extends PureComponent {
     const props = {
       name: 'fileName',
       multiple: false,
+      // action: 'emgc/report/proRptReportInfo/dealExcle',
       action: 'emgc/report/proRptReportInfo/dealExcle',
       showUploadList: false,
       onChange(info) {
