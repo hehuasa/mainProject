@@ -148,10 +148,10 @@ export default class ConstructMonitor extends PureComponent {
     // const { list, groupingList } = this.state;
     const title = () => {
       switch (type) {
-        case 'bar': return '作业监控统计（装置区域）';
-        case 'bar1': return '作业监控统计（作业类型）';
-        case 'table': return '作业监控统计（列表）';
-        default: return '作业监控统计（装置区域）';
+        case 'bar': return '作业监控看板（装置区域）';
+        case 'bar1': return '作业监控看板（作业类型）';
+        case 'table': return '作业监控看板（列表）';
+        default: return '作业监控看板（装置区域）';
       }
     };
     // this.switchList(list, groupingList, range);

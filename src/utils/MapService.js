@@ -87,6 +87,9 @@ export const searchByAttr = async ({ searchText, layerIds = getLayerIds(), searc
       ]).then(([FindTask, FindParameters]) => {
       // 搜索完成的回调
       const ShowFindResult = (findTaskResult) => {
+        findTaskResult.sort((a, b) => {
+          return Number(a.feature.attributes.ObjCode || a.feature.attributes['唯一编码']) - Number(b.feature.attributes.ObjCode || b.feature.attributes['唯一编码']) > 0 ? -1 : 1;
+        });
         resolve(findTaskResult.results);
       };
       // 创建属性查询对象
@@ -1681,12 +1684,12 @@ export const addDoorIcon = async ({ map, view, data, graphics }) => {
         symbolTextIn.text = `进${doorData.inNUm}`;
         symbolTextOut.text = `出${doorData.outNum}`;
         symbolTextDoorName.text = doorData.doorName;
-        const e = new Graphic(point, symbolDoor, {});
+        // const e = new Graphic(point, symbolDoor, {});
         const a = new Graphic(point, symbolBox, { index: doorInfoIndex });
         const b = new Graphic(point, symbolTextIn, { index: doorInfoIndex });
         const c = new Graphic(point, symbolTextOut, { index: doorInfoIndex });
         const f = new Graphic(point, symbolTextDoorName, { gISCode: item.attributes.ObjCode, index: doorInfoIndex, isBox: true });
-        doorLayer.graphics.addMany([a, b, c, e, f]);
+        doorLayer.graphics.addMany([a, b, c, f]);
       }
     }
   });
@@ -1708,7 +1711,7 @@ export const addConstructIcon = ({ map, layer, list, dispatch }) => {
       size: '40px', // pixels
       outline: { // autocasts as new SimpleLineSymbol()
         color: '#fff',
-        width: 1, // points
+        width: '1px',
       },
     };
     const constructLayer = new GraphicsLayer({ id: '作业监控专题图' });
@@ -1729,16 +1732,16 @@ export const addConstructIcon = ({ map, layer, list, dispatch }) => {
           const textSymbol = {
             type: 'text', // autocasts as new TextSymbol()
             color: 'white',
-            haloColor: 'black',
-            haloSize: '1px',
+            // haloColor: 'black',
+            // haloSize: '1px',
             angle,
             text: item.count,
             xoffset: '-5px',
             yoffset: '-2px',
-            font: { // autocast as new Font()
-              size: 12,
-              family: 'sans-serif',
-              weight: 'bold',
+            font: {
+              size: '12px',
+              family: '微软雅黑',
+              // weight: 'bold',
             },
           };
           const cirGraphic = new Graphic({
@@ -2031,7 +2034,7 @@ export const envMap = ({ view, map, graphics }) => {
     //     e.stopPropagation();
     //   });
     // });
-    const array = [16008, 15875, 15876, 15811]; //  国控点，特殊处理，做个偏移
+    const array = [16008, 15875, 15876, 15811]; //  国控点，特殊处理，做个偏移 74c01f
     const simpleMarkerSymbol = {
       type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
       style: 'circle',
@@ -2064,12 +2067,11 @@ export const envMap = ({ view, map, graphics }) => {
           // data.value = datas.findIndex(value => value.gISCode === data.gISCode);
           // console.log('data.value', data.value);
           const isInRange = data.value > parseFloat(data.baseConditionExpressShowInfoVOS[0].startValue) && data.value < parseFloat(data.baseConditionExpressShowInfoVOS[0].endValue);
-          simpleMarkerSymbol.color = isInRange ? '#d12b2b' : '#74c01f';
+          simpleMarkerSymbol.color = isInRange ? '#e6111d' : '#74c01f';
           // simpleMarkerSymbol.color = '#d12b2b';
           simpleTextSymbol1.text = parseFloat(data.value).toFixed(2);
           // simpleTextSymbol1.color = isInRange ? '#d12b2b' : '#74c01f';
           // 国控点，特殊处理，做个偏移
-
           const index = array.findIndex(value => value === item.attributes.ObjCode);
           if (index !== -1) {
             switch (item.attributes.ObjCode) {
@@ -2088,8 +2090,8 @@ export const envMap = ({ view, map, graphics }) => {
               case 15876:
                 simpleMarkerSymbol.xoffset = -7;
                 simpleMarkerSymbol.yoffset = 24;
-                simpleTextSymbol1.xoffset = -7;
-                simpleTextSymbol1.yoffset = 24;
+                simpleTextSymbol1.xoffset = -10;
+                simpleTextSymbol1.yoffset = 23.5;
                 break;
               case 16008:
                 simpleMarkerSymbol.xoffset = 8.5;

@@ -314,6 +314,10 @@ export default class ArcgisMap extends PureComponent {
                           // 作业监控 单独处理
                           dispatch({
                             type: 'resourceTree/saveCtrlResourceType',
+                            payload: '',
+                          });
+                          dispatch({
+                            type: 'resourceTree/saveCtrlResourceType',
                             payload: 'constructMonitor',
                           });
                           dispatch({

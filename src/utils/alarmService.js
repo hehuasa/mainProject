@@ -39,36 +39,40 @@ export const groupingByOverview = (
     const { alarmType } = alarm;
     if (alarmType) {
       const profession = alarmType.profession.substr(4, 3);
-      switch (profession) {
-        // 安全报警与
-        case '101':
-          if (para.showSafety) {
-            newList.count.safetyCount += 1; newList.list.push(alarm);
-          }
-          break;
-        case '102':
-          if (para.showSafety) {
-            newList.count.safetyCount += 1; newList.list.push(alarm);
-          }
-          break;
-        case '103':
-          if (para.showSafety) {
-            newList.count.safetyCount += 1; newList.list.push(alarm);
-          }
-          break;
+      if (alarm.areaGisCode) {
+        switch (profession) {
+          // 安全报警与
+          case '101':
+            if (para.showSafety) {
+              newList.count.safetyCount += 1; newList.list.push(alarm);
+            }
+            break;
+          case '102':
+            if (para.showSafety) {
+              newList.count.safetyCount += 1; newList.list.push(alarm);
+            }
+            break;
+          case '103':
+            if (para.showSafety) {
+              newList.count.safetyCount += 1; newList.list.push(alarm);
+            }
+            break;
           // 环保报警
-        case '301':
-          if (para.showEnv) {
-            newList.count.envCount += 1; newList.list.push(alarm);
-          }
-          break;
-        case '901':
-          if (para.showFault) {
-            newList.count.faultCount += 1;
-            newList.list.push(alarm);
-          }
-          break;
-        default: break;
+          case '301':
+            if (para.showEnv) {
+              newList.count.envCount += 1; newList.list.push(alarm);
+            }
+            break;
+          case '901':
+            if (para.showFault) {
+              if (alarm.areaGisCode) {
+                newList.count.faultCount += 1;
+                newList.list.push(alarm);
+              }
+            }
+            break;
+          default: break;
+        }
       }
     }
   }

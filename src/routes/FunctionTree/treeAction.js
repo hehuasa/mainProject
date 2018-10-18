@@ -290,30 +290,30 @@ export const handleCheck = (event, treeId, treeNode, that) => {
     switch (treeNode.checkClickFunTemplate) {
       // 'AlarmCounting', '报警统计看板'
       case 'AlarmMaping': // 聚合
-      {
-        if (treeNode.checkFunctionCode === '') {
-          return false;
-        }
-
-        if (treeNode.checked) {
-          const { overviewShow, clusterRes, alarmIconObj } = that.props;
-          switch (Number(treeNode.checkFunctionCode)) {
-            case 1:
-              overviewShow.showSafety = true; break;
-            case 2:
-              overviewShow.showEnv = true; break;
-            case 3:
-              overviewShow.showFault = true; break;
-            default: break;
+        {
+          if (treeNode.checkFunctionCode === '') {
+            return false;
           }
-          that.props.dispatch({
-            type: 'alarm/filter',
-            payload: {
-              historyList: that.props.groupByOverview.list,
-              alarms: that.props.listWithFault,
-              para: overviewShow,
-            },
-          }).then(() => {
+
+          if (treeNode.checked) {
+            const { overviewShow, clusterRes, alarmIconObj } = that.props;
+            switch (Number(treeNode.checkFunctionCode)) {
+              case 1:
+                overviewShow.showSafety = true; break;
+              case 2:
+                overviewShow.showEnv = true; break;
+              case 3:
+                overviewShow.showFault = true; break;
+              default: break;
+            }
+            that.props.dispatch({
+              type: 'alarm/filter',
+              payload: {
+                historyList: that.props.groupByOverview.list,
+                alarms: that.props.listWithFault,
+                para: overviewShow,
+              },
+            }).then(() => {
               const subLayer = subLayers[0];
               subLayer.visiable = true;
               const query = subLayer.createQuery();
@@ -329,26 +329,26 @@ export const handleCheck = (event, treeId, treeNode, that) => {
                 ztreeObj.setChkDisabled(treeNode, false);
               });
             }
-          );
-        } else {
-          const { overviewShow, clusterRes, alarmIconObj } = that.props;
-          switch (Number(treeNode.checkFunctionCode)) {
-            case 1:
-              overviewShow.showSafety = false; break;
-            case 2:
-              overviewShow.showEnv = false; break;
-            case 3:
-              overviewShow.showFault = false; break;
-            default: break;
-          }
-          dispatch({
-            type: 'alarm/filter',
-            payload: {
-              historyList: that.props.groupByOverview.list,
-              alarms: that.props.listWithFault,
-              para: overviewShow,
-            },
-          }).then(() => {
+            );
+          } else {
+            const { overviewShow, clusterRes, alarmIconObj } = that.props;
+            switch (Number(treeNode.checkFunctionCode)) {
+              case 1:
+                overviewShow.showSafety = false; break;
+              case 2:
+                overviewShow.showEnv = false; break;
+              case 3:
+                overviewShow.showFault = false; break;
+              default: break;
+            }
+            dispatch({
+              type: 'alarm/filter',
+              payload: {
+                historyList: that.props.groupByOverview.list,
+                alarms: that.props.listWithFault,
+                para: overviewShow,
+              },
+            }).then(() => {
               const subLayer = subLayers[0];
               subLayer.visiable = true;
               const query = subLayer.createQuery();
@@ -364,9 +364,9 @@ export const handleCheck = (event, treeId, treeNode, that) => {
                 ztreeObj.setChkDisabled(treeNode, false);
               });
             }
-          );
+            );
+          }
         }
-      }
         return false;
       // case 'ConstantlyMap': // 实时数据图
       //   {
@@ -427,40 +427,40 @@ export const handleCheck = (event, treeId, treeNode, that) => {
               type: 'resourceTree/getClusterRes',
               payload: clusterRes,
             }).then(() => {
-                // 聚合图标
-                const subLayer = baseLayer.findSublayerById(mapLayers.FeatureLayers.find(value => value.isArea).id);
-                subLayer.visiable = true;
-                const query = subLayer.createQuery();
-                query.outFields = ['*'];
-                subLayer.queryFeatures(query).then((res) => {
-                  clustering({
-                    view,
-                    dispatch,
-                    alarms: that.props.groupByOverview.list,
-                    graphics: res.features,
-                    overviewShow,
-                    clusterRes,
-                    popupScale,
-                    resourceGroupByArea,
-                  });
+              // 聚合图标
+              const subLayer = baseLayer.findSublayerById(mapLayers.FeatureLayers.find(value => value.isArea).id);
+              subLayer.visiable = true;
+              const query = subLayer.createQuery();
+              query.outFields = ['*'];
+              subLayer.queryFeatures(query).then((res) => {
+                clustering({
+                  view,
+                  dispatch,
+                  alarms: that.props.groupByOverview.list,
+                  graphics: res.features,
+                  overviewShow,
+                  clusterRes,
+                  popupScale,
+                  resourceGroupByArea,
                 });
-                // // 地图报警图标
-                // for (const alarm of that.props.groupByOverview.list) {
-                //   searchByAttr({ searchText: alarm.resourceGisCode, searchFields: ['ObjCode'] }).then(
-                //     (res) => {
-                //       if (res.length > 0) {
-                //         if (that.props.groupByOverview.list.length === 1) {
-                //           view.goTo({ center: res[0].feature.geometry, scale: popupScale - 10 }).then(() => {
-                //             alarmAnimation(mainMap, alarm.alarmType, res[0].feature.geometry, alarm, {}, dispatch, popupScale);
-                //           });
-                //         } else {
-                //           alarmAnimation(mainMap, alarm.alarmType, res[0].feature.geometry, alarm, {}, dispatch, popupScale);
-                //         }
-                //       }
-                //     }
-                //   );
-                // }
-              }
+              });
+              // // 地图报警图标
+              // for (const alarm of that.props.groupByOverview.list) {
+              //   searchByAttr({ searchText: alarm.resourceGisCode, searchFields: ['ObjCode'] }).then(
+              //     (res) => {
+              //       if (res.length > 0) {
+              //         if (that.props.groupByOverview.list.length === 1) {
+              //           view.goTo({ center: res[0].feature.geometry, scale: popupScale - 10 }).then(() => {
+              //             alarmAnimation(mainMap, alarm.alarmType, res[0].feature.geometry, alarm, {}, dispatch, popupScale);
+              //           });
+              //         } else {
+              //           alarmAnimation(mainMap, alarm.alarmType, res[0].feature.geometry, alarm, {}, dispatch, popupScale);
+              //         }
+              //       }
+              //     }
+              //   );
+              // }
+            }
             );
           }
         } else {
@@ -470,96 +470,96 @@ export const handleCheck = (event, treeId, treeNode, that) => {
             type: 'resourceTree/getClusterRes',
             payload: clusterRes,
           }).then(() => {
-              const subLayer = baseLayer.findSublayerById(mapLayers.FeatureLayers.find(value => value.isArea).id);
-              const query = subLayer.createQuery();
-              query.outFields = ['*'];
-              subLayer.queryFeatures(query).then((res) => {
-                clustering({ view, dispatch, alarms: that.props.groupByOverview.list, graphics: res.features, overviewShow, clusterRes, popupScale, resourceGroupByArea });
-              });
-            }
+            const subLayer = baseLayer.findSublayerById(mapLayers.FeatureLayers.find(value => value.isArea).id);
+            const query = subLayer.createQuery();
+            query.outFields = ['*'];
+            subLayer.queryFeatures(query).then((res) => {
+              clustering({ view, dispatch, alarms: that.props.groupByOverview.list, graphics: res.features, overviewShow, clusterRes, popupScale, resourceGroupByArea });
+            });
+          }
           );
         }
         return false;
       // 门禁专题
       case 'AccessControlConstantly':
-      {
-        const spaceTime = Number(treeNode.checkFunctionCode);
-        if (treeNode.checked) {
+        {
+          const spaceTime = Number(treeNode.checkFunctionCode);
+          if (treeNode.checked) {
           // 关掉聚合图
-          view.goTo({ extent: mapConstants.accessInfoExtent }).then(() => {
+            view.goTo({ extent: mapConstants.accessInfoExtent }).then(() => {
             // 停止地图事件
-            dispatch({
-              type: 'map/queryStopPropagation',
-              payload: true,
-            });
-            // const obj = JSON.parse(JSON.stringify(that.props.clusterPopup));
-            // dispatch({
-            //   type: 'map/queryClusterPopup',
-            //   payload: { show: obj.show, load: false, data: obj.data },
-            // });
-            dispatch({
-              type: 'accessControl/switch',
-              payload: true,
-            });
-            dispatch({
-              type: 'accessControl/querySpaceTime',
-              payload: spaceTime,
-            });
-            // 写死四个点，作为看板的坐标
-            constantlyModal[treeNode.checkClickFunTemplate + treeNode.treeID] = { data: [], mapData: [] };
-            const graphics = [];
-            const graphicsLoad = { index: 0, loaded: false };
-            // 获取看板的坐标
-            getBordStyle(view).then((style) => {
               dispatch({
-                type: 'accessControl/queryStyle',
-                payload: style,
+                type: 'map/queryStopPropagation',
+                payload: true,
               });
-              for (const subLayer of subLayers) {
+              // const obj = JSON.parse(JSON.stringify(that.props.clusterPopup));
+              // dispatch({
+              //   type: 'map/queryClusterPopup',
+              //   payload: { show: obj.show, load: false, data: obj.data },
+              // });
+              dispatch({
+                type: 'accessControl/switch',
+                payload: true,
+              });
+              dispatch({
+                type: 'accessControl/querySpaceTime',
+                payload: spaceTime,
+              });
+              // 写死四个点，作为看板的坐标
+              constantlyModal[treeNode.checkClickFunTemplate + treeNode.treeID] = { data: [], mapData: [] };
+              const graphics = [];
+              const graphicsLoad = { index: 0, loaded: false };
+              // 获取看板的坐标
+              getBordStyle(view).then((style) => {
+                dispatch({
+                  type: 'accessControl/queryStyle',
+                  payload: style,
+                });
+                for (const subLayer of subLayers) {
                 // subLayer.visible = true;
                 // 找到图元
-                const query = subLayer.createQuery();
-                query.outFields = ['*'];
-                subLayer.queryFeatures(query).then((res) => {
-                  const { features } = res;
-                  graphics.push(...features);
-                  graphicsLoad.loaded = true;
-                });
-              }
-              const a = setInterval(() => {
-                if (graphicsLoad.loaded) {
-                  clearInterval(a);
-                  dispatch({
-                    type: 'accessControl/getAllDoorCount',
-                    payload: { map: mainMap, view, layer: subLayers[0], graphics },
+                  const query = subLayer.createQuery();
+                  query.outFields = ['*'];
+                  subLayer.queryFeatures(query).then((res) => {
+                    const { features } = res;
+                    graphics.push(...features);
+                    graphicsLoad.loaded = true;
                   });
-                  loopObj[deviceArrayIndex] = setInterval(() => {
+                }
+                const a = setInterval(() => {
+                  if (graphicsLoad.loaded) {
+                    clearInterval(a);
                     dispatch({
                       type: 'accessControl/getAllDoorCount',
                       payload: { map: mainMap, view, layer: subLayers[0], graphics },
                     });
-                  }, spaceTime);
-                }
-              }, 100);
+                    loopObj[deviceArrayIndex] = setInterval(() => {
+                      dispatch({
+                        type: 'accessControl/getAllDoorCount',
+                        payload: { map: mainMap, view, layer: subLayers[0], graphics },
+                      });
+                    }, spaceTime);
+                  }
+                }, 100);
+              });
             });
-          });
-        } else {
-          delLayer(mainMap, ['门禁专题图'], dispatch);
-          // 恢复地图事件
-          dispatch({
-            type: 'map/queryStopPropagation',
-            payload: false,
-          });
-          dispatch({
-            type: 'accessControl/switch',
-            payload: false,
-          });
-          clearInterval(loopObj[treeNode.checkClickFunTemplate + treeNode.treeID]);
-          loopObj[treeNode.checkClickFunTemplate + treeNode.treeID] = null;
-          // 清除实时专题组件及数据
-          delete constantlyModal[treeNode.checkClickFunTemplate + treeNode.treeID];
+          } else {
+            delLayer(mainMap, ['门禁专题图'], dispatch);
+            // 恢复地图事件
+            dispatch({
+              type: 'map/queryStopPropagation',
+              payload: false,
+            });
+            dispatch({
+              type: 'accessControl/switch',
+              payload: false,
+            });
+            clearInterval(loopObj[treeNode.checkClickFunTemplate + treeNode.treeID]);
+            loopObj[treeNode.checkClickFunTemplate + treeNode.treeID] = null;
+            // 清除实时专题组件及数据
+            delete constantlyModal[treeNode.checkClickFunTemplate + treeNode.treeID];
+          }
         }
-      }
         return false;
       // 作业监控
       case 'ConstructMontior':

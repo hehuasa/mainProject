@@ -102,9 +102,7 @@ export default {
             return alarm;
         });
         const listIndex = list.findIndex(value => value.alarmCode === payload.alarm.alarmCode);
-        console.log('listIndex', listIndex);
         const listWithFaultIndex = listWithFault.findIndex(value => value.alarmCode === payload.alarm.alarmCode);
-        console.log('listWithFaultIndex', listWithFaultIndex);
         if (listIndex !== -1) {
             list.splice(listIndex, 1);
         }

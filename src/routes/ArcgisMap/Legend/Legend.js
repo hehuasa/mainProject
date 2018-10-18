@@ -11,7 +11,7 @@ export default class Legend extends React.PureComponent {
     );
     return (
       <div className={styles.warp} style={{ zIndex: legendIndex }}>
-        <Scrollbars style={{ width: '100%', height: mapHeight - 90 }}>
+        <Scrollbars style={{ width: '100%', height: mapHeight - 130 }}>
           <h3>图例</h3>
           { lists }
         </Scrollbars>

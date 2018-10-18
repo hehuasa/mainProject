@@ -51,7 +51,7 @@ export default class ConstructMontior extends PureComponent {
     };
     const param = { title: '作业监控看板' };
     openBoard(param, 'ConstructMontiorPanel');
-  }
+  };
   render() {
     const { list, mapHeight, orgList } = this.props;
     const content = list.list.length > 0 ? (
@@ -73,7 +73,7 @@ export default class ConstructMontior extends PureComponent {
           <div className={styles.panelContent}>
             <Collapse
               bordered={false}
-              defaultActiveKey={list.keys}
+              activeKey={list.keys}
             >
               { list.list.map((item) => {
                 return (

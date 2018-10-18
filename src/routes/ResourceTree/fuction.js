@@ -13,6 +13,16 @@ export const ajaxDataFilter = (treeId, parentNode, responseData) => {
       });
     }
     const newAttr = responseData.data.filter(value => Number(value.treeType) !== 1 && Number(value.treeType) !== 2);
+    if (newAttr[0].ctrlResourceType.indexOf('101.102.101.101.103') !== -1) {
+      newAttr.sort((a, b) => {
+        if (a.resourceName > b.resourceName) {
+          return 1;
+        } else {
+          return -1;
+        }
+      }
+      );
+    }
     for (const node of newAttr) {
       node.name = node.treeName || node.resourceName || node.orgnizationName || node.areaName;
       // 单选节点
@@ -68,8 +78,10 @@ export const ajaxDataFilter = (treeId, parentNode, responseData) => {
       }
       if (node.resourceID) {
         node.isParent = false;
-        if (node.ctrlResourceType !== '101.102.101.101.103') {
-            node.name = `${node.processNumber}_${node.name}`;
+        if (node.ctrlResourceType.indexOf('101.102.101.101.103') === -1) {
+          node.name = `${node.processNumber}_${node.name}`;
+        } else {
+          console.log('node.ctrlResourceType', node.ctrlResourceType);
         }
       }
       // 判断分区与组织，若有,修改相应属性
@@ -171,7 +183,6 @@ export const ajaxDataFilter = (treeId, parentNode, responseData) => {
     }
     return newAttr;
   }
-
 };
 // 实时专题图
 export const func = ({ treeNode, view, baseLayer, searchFields, ctrlResourceType, dispatch, mainMap, constantlyComponents, spaceTime, scale, loopObj }) => {

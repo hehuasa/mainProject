@@ -9,6 +9,7 @@ import { mapConstants } from '../../../../services/mapConstant';
 
 const mapStateToProps = ({ map, resourceTree }) => {
   const { searchText, searchDeviceArray, mapBoardShow, isRecenter } = map;
+  console.log('searchDeviceArray', searchDeviceArray);
   return {
     searchText,
     searchDeviceArray,

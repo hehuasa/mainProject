@@ -44,9 +44,12 @@ export default class ConstructMonitor extends PureComponent {
   };
   render() {
     const { data } = this.props;
+    data.sort((a, b) => {
+     return b.count - a.count;
+    });
     const scales = getCols(data[0].count);
     return (
-      <Chart height={400} data={data} forceFit onPlotClick={this.handleClick} onGetG2Instance={(chart) => { this.chart = chart; }} scale={scales}>
+      <Chart height={400} data={data} forceFit onPlotClick={this.handleClick} onGetG2Instance={(chart) => { this.chart = chart; }} scale={scales} animate={false}>
         <Axis
           name="areaName"
           label={{

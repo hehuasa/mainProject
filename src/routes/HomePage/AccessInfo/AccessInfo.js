@@ -47,7 +47,7 @@ export default class AccessInfo extends PureComponent {
         showIndex += 1;
       }
       this.setState({ showIndex });
-    }, 10000);
+    }, 5000);
     const a = setInterval(() => {
       if (this.props.accessControl.spaceTime !== null) {
         timerId.getData = setInterval(() => {
@@ -102,15 +102,19 @@ export default class AccessInfo extends PureComponent {
         </div>
         <div className={styles.content}>
           <div style={{ opacity: showIndex === 0 ? 1 : 0 }}>
+            <div style={{ color: 'red' }}>今日在场人数</div>
             <OrgInfo doorOrgCount={doorOrgCount} onWheel={onWheel} style={style} />
           </div>
           <div style={{ opacity: showIndex === 1 ? 1 : 0 }}>
+            <div style={{ color: 'red' }}>实时进出情况</div>
             <FactoryInfo doorCount={doorCount} onWheel={onWheel} style={style} />
           </div>
           <div style={{ opacity: showIndex === 2 ? 1 : 0 }}>
+            <div style={{ color: 'red' }}>本周入场情况</div>
             <SmoothDay countByDay={countByDay} style={style} />
           </div>
           <div style={{ opacity: showIndex === 3 ? 1 : 0 }}>
+            <div style={{ color: 'red' }}>当日入场情况</div>
             <SmoothWeek countByTime={countByTime} style={style} />
           </div>
         </div>
