@@ -472,7 +472,15 @@ export default {
       const response = yield call(undoneEventList, payload);
       yield put({
         type: 'saveUndoneEventList',
-        payload: response.data,
+        payload: response.data.filter(item => item.isDrill !== 1),
+      });
+    },
+    // 获取未完成的演练list
+    * undoneDrillList({ payload }, { call, put }) {
+      const response = yield call(undoneEventList, payload);
+      yield put({
+        type: 'saveUndoneEventList',
+        payload: response.data.filter(item => item.isDrill === 1),
       });
     },
     // 获取应急组织机构人员

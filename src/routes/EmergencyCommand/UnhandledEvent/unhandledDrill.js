@@ -34,7 +34,7 @@ export default class Analysis extends PureComponent {
     const { dispatch, videoFooterHeight, videoPosition, rightCollapsed } = this.props;
     this.props.dispatch({
       type: 'tabs/del',
-      payload: { key: '/command/emergencyEvent', title: '应急事件' },
+      payload: { key: '/command/emergencyEvent', title: '演练事件' },
     });
     setTimeout(() => this.confirm(record, 1, 'command/emergencyEvent', '应急事件'), 0);
     // 折叠
@@ -173,12 +173,12 @@ export default class Analysis extends PureComponent {
   getStatusName = (eventStatu) => {
     switch (parseInt(eventStatu, 0)) {
       case 0: return '事件未开始';
-      case 1: return '信息接报';
-      case 2: return '应急研判';
-      case 3: return '应急预警';
-      case 4: return '应急启动';
-      case 5: return '应急处理';
-      case 6: return '应急终止';
+      case 1: return '演练接报';
+      case 2: return '演练研判';
+      case 3: return '演练预警';
+      case 4: return '演练启动';
+      case 5: return '演练处理';
+      case 6: return '演练终止';
       default: return '';
     }
   };
