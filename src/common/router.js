@@ -265,6 +265,10 @@ export const getRouterData = (app) => {
     '/command/unHandledEvent': {
       component: dynamicWrapper(app, ['emergency', 'user'], () => import('../routes/EmergencyCommand/UnhandledEvent/unhandledEvent')),
     },
+    // 未处理的演练事件列表
+    '/emgcDrill/unHandledDrill': {
+      component: dynamicWrapper(app, ['emergency', 'user'], () => import('../routes/EmergencyCommand/UnhandledEvent/unhandledEvent')),
+    },
     '/emgcManage/planManagement': {
       component: dynamicWrapper(app, ['user', 'planManagement'], () => import('../routes/PlanManagement/PlanManagement')), // 预案管理
     },

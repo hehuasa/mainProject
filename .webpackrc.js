@@ -13,8 +13,7 @@ export default
   },
   "proxy": {
     "/emgc": {
-      // "target": "http://10.157.24.13:8080/",
-      "target": "http://10.157.5.25:8888/",
+      "target": "http://10.157.24.13:8080/",
       "changeOrigin": true,
       "pathRewrite": { "^/emgc": "" }
     },

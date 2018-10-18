@@ -499,6 +499,53 @@ export default class Trees extends PureComponent {
         },
       });
     }
+    if (title === '应急演练事件') {
+      dispatch({
+        type: 'emergency/undoneDrillList',
+      });
+    } else if (title === '演练接报') {
+      dispatch({
+        type: 'emergency/undoneDrillList',
+        payload: {
+          eventStatu: 1,
+        },
+      });
+    } else if (title === '演练研判') {
+      dispatch({
+        type: 'emergency/undoneDrillList',
+        payload: {
+          eventStatu: 2,
+        },
+      });
+    } else if (title === '应急预警') {
+      dispatch({
+        type: 'emergency/undoneDrillList',
+        payload: {
+          eventStatu: 3,
+        },
+      });
+    } else if (title === '演练启动') {
+      dispatch({
+        type: 'emergency/undoneDrillList',
+        payload: {
+          eventStatu: 4,
+        },
+      });
+    } else if (title === '演练处理') {
+      dispatch({
+        type: 'emergency/undoneDrillList',
+        payload: {
+          eventStatu: 5,
+        },
+      });
+    } else if (title === '演练终止') {
+      dispatch({
+        type: 'emergency/undoneDrillList',
+        payload: {
+          eventStatu: 6,
+        },
+      });
+    }
     if (tabs.tabs.find(value => value.key === `/${key}`)) {
       // 更新tabs的title
       dispatch({
