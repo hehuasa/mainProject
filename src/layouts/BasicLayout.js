@@ -772,37 +772,41 @@ class BasicLayout extends React.PureComponent {
               break;
             }
           }
-          dispatch({
-            type: 'alarm/del',
-            payload: { alarm: socketMessage.B },
-          }).then(() => {
+          const needDelAlarm = alarm.list.find(value => value.alarmCode === socketMessage.B.alarmCode);
+          if (needDelAlarm) {
             dispatch({
-              type: 'alarm/filter',
-              payload: {
-                historyList: this.props.alarm.groupByOverview.list,
-                alarms: this.props.alarm.listWithFault,
-                para: this.props.alarm.overviewShow,
-              },
+              type: 'alarm/del',
+              payload: { alarm: socketMessage.B },
             }).then(() => {
-              const { resourceGroupByArea, clusterRes } = this.props;
-              // 更新报警聚合
-              const area = mapLayers.AreaLayers[0];
-              const subLayer = mapConstants.baseLayer.findSublayerById(area.id);
-              const queryArea = subLayer.createQuery();
-              queryArea.outFields = ['*'];
-              subLayer.queryFeatures(queryArea).then((res) => {
-                clustering({ view, dispatch, alarms: this.props.alarm.groupByOverview.list, graphics: res.features, overviewShow: that.props.alarm.overviewShow, clusterRes, popupScale, resourceGroupByArea });
+              dispatch({
+                type: 'alarm/filter',
+                payload: {
+                  historyList: this.props.alarm.groupByOverview.list,
+                  alarms: this.props.alarm.listWithFault,
+                  para: this.props.alarm.overviewShow,
+                },
+              }).then(() => {
+                const { resourceGroupByArea, clusterRes } = this.props;
+                // 更新报警聚合
+                const area = mapLayers.AreaLayers[0];
+                const subLayer = mapConstants.baseLayer.findSublayerById(area.id);
+                const queryArea = subLayer.createQuery();
+                queryArea.outFields = ['*'];
+                subLayer.queryFeatures(queryArea).then((res) => {
+                  clustering({ view, dispatch, alarms: this.props.alarm.groupByOverview.list, graphics: res.features, overviewShow: that.props.alarm.overviewShow, clusterRes, popupScale, resourceGroupByArea });
+                });
               });
             });
-          });
 
-          // 删除报警图标
-          if (mainMap.findLayerById) {
-            delAlarmAnimation(mainMap,
-              socketMessage.B,
-              alarm.iconObj,
-              dispatch);
+            // 删除报警图标
+            if (mainMap.findLayerById) {
+              delAlarmAnimation(mainMap,
+                socketMessage.B,
+                alarm.iconObj,
+                dispatch);
+            }
           }
+
       }
     }
   };
