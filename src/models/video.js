@@ -93,8 +93,8 @@ export default {
       const ptzPower = yield select(({ global }) => {
         return global.ptzPower;
       });
-      console.log('payload', payload);
       payload.Power = ptzPower;
+      console.log('播放视频的JSON:', payload);
       const a = setInterval(() => {
         if (SocketVideo.socket) {
           clearInterval(a);
