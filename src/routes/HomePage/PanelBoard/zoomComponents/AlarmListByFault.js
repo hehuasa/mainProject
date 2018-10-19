@@ -56,7 +56,7 @@ const columns = [
 @connect(({ alarm }) => ({
   alarm,
 }))
-class AlarmCounting extends PureComponent {
+export default class AlarmListByFault extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -85,7 +85,7 @@ class AlarmCounting extends PureComponent {
           columns={columns}
           bordered
           rowClassName={styles.cursorStyle}
-          dataSource={alarm.list}
+          dataSource={alarm.listByFault}
           size="small"
           scroll={{ x: 450 }}
           pagination={{ pageSize: 10 }}
@@ -100,6 +100,4 @@ class AlarmCounting extends PureComponent {
     );
   }
 }
-
-export default AlarmCounting;
 

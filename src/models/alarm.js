@@ -16,12 +16,13 @@ export default {
     },
     list: [],
     listWithFault: [], // 业务需求，将有故障报警的列表单独列出来
+    listByFault: [], // 故障报警列表
     groupByType: {},
     groupByArea: {},
     groupByOverview: { list: [], historyList: [] },
     iconObj: {}, // 报警图标的Interval 的Id 集合
     iconArray: [], // 缓存报警图标的Interval 的Id 集合
-      drawing: false, // 是否在画图标
+    drawing: false, // 是否在画图标
   },
   effects: {
     // 获取报警类型
@@ -46,6 +47,13 @@ export default {
           return false;
         }
       });
+      const listByFault = response.data.filter((value) => {
+        if (value.alarmType) {
+          return (Number(value.alarmType.alarmLevel > 0 && value.alarmType.profession === '107.901'));
+        } else {
+          return false;
+        }
+      });
       const group = groupingByType({ alarms: list });
       const area = groupingByArea({ alarms: list });
       // 报警列表（原始数值-- 不包含故障）
@@ -63,11 +71,16 @@ export default {
         type: 'queryArea',
         payload: area,
       });
+      // 报警列表（只包含故障）
+      yield put({
+        type: 'queryListByFault',
+        payload: listByFault,
+      });
     },
     *filter({ payload }, { put }) {
       const { para, alarms, historyList } = payload;
       const overView = groupingByOverview({ para, alarms });
-        overView.historyList = historyList;
+      overView.historyList = historyList;
       // 报警列表（按总览分类）
       yield put({
         type: 'queryOverView',
@@ -78,10 +91,10 @@ export default {
       const group = groupingByType({ alarms: payload.list });
       const area = groupingByArea({ alarms: payload.list });
       // 报警列表（原始数值）
-        yield put({
-            type: 'queryListWithFault',
-            payload: payload.listWithFault,
-        });
+      yield put({
+        type: 'queryListWithFault',
+        payload: payload.listWithFault,
+      });
       yield put({
         type: 'queryList',
         payload: { list: payload.list, count: payload.list.length },
@@ -98,24 +111,24 @@ export default {
       });
     },
     *del({ payload }, { put, select }) {
-        const { list, listWithFault } = yield select(({ alarm }) => {
-            return alarm;
-        });
-        const listIndex = list.findIndex(value => value.alarmCode === payload.alarm.alarmCode);
-        const listWithFaultIndex = listWithFault.findIndex(value => value.alarmCode === payload.alarm.alarmCode);
-        if (listIndex !== -1) {
-            list.splice(listIndex, 1);
-        }
-        if (listWithFaultIndex !== -1) {
-            listWithFault.splice(listWithFaultIndex, 1);
-        }
+      const { list, listWithFault } = yield select(({ alarm }) => {
+        return alarm;
+      });
+      const listIndex = list.findIndex(value => value.alarmCode === payload.alarm.alarmCode);
+      const listWithFaultIndex = listWithFault.findIndex(value => value.alarmCode === payload.alarm.alarmCode);
+      if (listIndex !== -1) {
+        list.splice(listIndex, 1);
+      }
+      if (listWithFaultIndex !== -1) {
+        listWithFault.splice(listWithFaultIndex, 1);
+      }
       const group = groupingByType({ alarms: list });
       const area = groupingByArea({ alarms: list });
       // 报警列表（原始数值）
-        yield put({
-            type: 'queryListWithFault',
-            payload: listWithFault,
-        });
+      yield put({
+        type: 'queryListWithFault',
+        payload: listWithFault,
+      });
       yield put({
         type: 'queryList',
         payload: { list, count: list.length },
@@ -158,6 +171,12 @@ export default {
         listWithFault: payload,
       };
     },
+    queryListByFault(state, { payload }) {
+      return {
+        ...state,
+        listByFault: payload,
+      };
+    },
     queryGroup(state, { payload }) {
       return {
         ...state,
@@ -196,11 +215,11 @@ export default {
         linkMap: payload,
       };
     },
-      queryDrawing(state, { payload }) {
-          return {
-              ...state,
-              drawing: payload,
-          };
-      },
+    queryDrawing(state, { payload }) {
+      return {
+        ...state,
+        drawing: payload,
+      };
+    },
   },
 };

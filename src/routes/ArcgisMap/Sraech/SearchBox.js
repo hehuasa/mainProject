@@ -182,7 +182,7 @@ class SearchBox extends PureComponent {
     // 延缓失焦函数运行
     onblur = setTimeout(() => {
       this.setState({
-        showOption: false,
+        showOption: true,
         opacity: 0,
       });
     }, 200);

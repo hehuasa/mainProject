@@ -3,12 +3,12 @@ export default {
 
   state: {
     activeId: '',
-    title:'',
+    title: '',
     zoomData: {},
   },
 
   effects: {
-    *zoomIn({ payload }, { call, put }) {
+    *zoomIn({ payload }, { put }) {
       yield put({
         type: 'zoomInPanel',
         payload,

@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { autoContentHeight, getBrowserStyle } from '../../../utils/utils';
 import AlarmCounting from './zoomComponents/AlarmList';
-import EntranceGuardList from './zoomComponents/EntranceGuard/EntranceGuardList';
+import AlarmListByFault from './zoomComponents/AlarmListByFault';
 import ConstructMonitor from './zoomComponents/ConstructMonitor/ConstructMonitor';
 import VOCSGovernList from './zoomComponents/VOCSGovern/VOCSGovernList';
 import LiquidPot from './zoomComponents/LiquidPot/LiquidPot';
@@ -12,7 +12,6 @@ import CalzadaFreight from './zoomComponents/calzadaFreight/CalzadaFreight';
 import RailwayFreight from './zoomComponents/railwayFreight/RailwayFreight';
 import AccessControl from './zoomComponents/AccessControl/AccessControl';
 import styles from './index.less';
-import { constantlyInfo } from '../../../utils/MapService';
 
 const mapStateToProps = ({ sidebar }) => {
   return {
@@ -185,6 +184,7 @@ class PanelZoom extends PureComponent {
       case 7: dom = <CalzadaFreight />; break;
       case 8: dom = <RailwayFreight />; break;
       case 10: dom = <ConstructMonitor />; break;
+      case 11: dom = <AlarmListByFault />; break;
       default: return null;
     }
     return (

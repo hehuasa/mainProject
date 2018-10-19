@@ -1,5 +1,4 @@
-import { addMajorInfo, deleteMajorInfo, majorInfoPage, updateMajorrInfo, majorInfoPageList } from '../services/api';
-import { commonData } from '../../mock/commonData';
+import { addMajorInfo, deleteMajorInfo, majorInfoPage, updateMajorrInfo, majorInfoPageList, majorInfoChangeIndex } from '../services/api';
 import { checkCode } from '../utils/utils';
 
 export default {
@@ -13,22 +12,37 @@ export default {
       data: [],
     },
     toggle: true,
+    sortSuccess: false,
   },
   effects: {
-    *page(payload, { call, put }) {
+    * page(payload, { call, put }) {
       const response = yield call(majorInfoPage, payload.payload);
       yield put({
         type: 'save',
         payload: response,
       });
     },
-    *add(payload, { call, put }) {
+    * add(payload, { call }) {
       const response = yield call(addMajorInfo, payload.payload);
       checkCode(response);
     },
-    *delete(payload, { call, put }) {
+    * delete(payload, { call }) {
       const response = yield call(deleteMajorInfo, { id: payload.payload });
       checkCode(response);
+    },
+    * reSort({ payload }, { call, put }) {
+      const response = yield call(majorInfoChangeIndex, payload);
+      if (response.code === 1001) {
+        yield put({
+          type: 'querySortSuccess',
+          payload: true,
+        });
+      } else {
+        yield put({
+          type: 'querySortSuccess',
+          payload: false,
+        });
+      }
     },
     // *get(payload, { call, put }) {
     //   const response = yield call(getUserInfo, payload.payload);
@@ -39,11 +53,11 @@ export default {
     //     });
     //   }
     // },
-    *update(payload, { call, put }) {
+    * update(payload, { call, put }) {
       const response = yield call(updateMajorrInfo, payload.payload);
       checkCode(response);
     },
-    *queryMajorContent(_, { call, put }) {
+    * queryMajorContent(_, { call, put }) {
       const list = yield call(majorInfoPageList);
       yield put({
         type: 'saveList',
@@ -60,6 +74,7 @@ export default {
           data: action.payload.data.result,
           pagination: {
             current: action.payload.data.pageNum,
+            pageNum: action.payload.data.pageNum,
             pageSize: action.payload.data.pageSize,
             total: action.payload.data.sumCount,
           },
@@ -73,6 +88,12 @@ export default {
         list: action.payload,
       };
     },
+    querySortSuccess(state, { payload }) {
+      return {
+        ...state,
+        sortSuccess: payload,
+      };
+    },
     // user(state, action) {
     //   return {
     //     ...state,
@@ -81,3 +102,4 @@ export default {
     // },
   },
 };
+

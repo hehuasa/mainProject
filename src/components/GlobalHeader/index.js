@@ -62,9 +62,7 @@ export default class GlobalHeader extends PureComponent {
       type: 'resourceTree/getResourceGroupByArea',
     });
     // setInterval(() => {
-    this.props.dispatch({
-      type: 'majorList/queryMajorContent',
-    });
+
     // 请求视频权限
     this.props.dispatch({
       type: 'global/getPtzPower',

@@ -181,7 +181,7 @@ const CreateForm = Form.create()((props) => {
 }))
 
 @Form.create()
-export default class Analysis extends PureComponent {
+export default class MajorList extends PureComponent {
   state = {
     // 弹框的显示控制
     modalVisible: false,
@@ -192,6 +192,9 @@ export default class Analysis extends PureComponent {
     //  修改还是新增
     isAdd: true,
     clickRow: null,
+    dataSource: { data: [], pagination: { ...commonData.pageInitial, statu: 1, isQuery: true, fuzzy: true } },
+    pagination: { ...commonData.pageInitial, statu: 1, isQuery: true, fuzzy: true },
+    sorting: false,
     statuData: [
       {
         id: 0,
@@ -213,15 +216,22 @@ export default class Analysis extends PureComponent {
     ],
   };
   componentDidMount() {
-    const { dispatch } = this.props;
-    this.page({ ...commonData.pageInitial, statu: 1, isQuery: true, fuzzy: true });
+    this.page(this.pagination);
   }
   // 获取分页数据
   page = (page) => {
+    const { pagination } = this.state;
+    const newPagination = { ...pagination, ...page };
     const { dispatch } = this.props;
+    newPagination.pageNum = newPagination.pageNum || newPagination.current;
     dispatch({
       type: 'majorList/page',
-      payload: page,
+      payload: newPagination,
+    }).then(() => {
+      this.setState({
+        dataSource: this.props.majorList.data,
+        pagination: this.props.majorList.data.pagination,
+      });
     });
   };
   // 翻页 排序函数
@@ -415,10 +425,9 @@ export default class Analysis extends PureComponent {
       clickRow: record,
     });
   };
-
   renderForm() {
     const { getFieldDecorator } = this.props.form;
-    const { selectedRows, modalVisible, statuData } = this.state;
+    const { statuData } = this.state;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -471,16 +480,77 @@ export default class Analysis extends PureComponent {
       </Form>
     );
   }
-  render() {
-    const { majorList: { data }, majorList: { list }, loading } = this.props;
-    const { selectedRows, modalVisible, isAdd, clickRow, statuData } = this.state;
-
-    const columns = [
-      {
-        title: '序号',
-        dataIndex: 'indexNum',
-        width: 80,
+  handleDragEnd = (draObj) => {
+    if (
+      !draObj.destination ||
+      draObj.destination.index === draObj.source.index
+    ) {
+      return;
+    }
+    if (draObj.destination.index === draObj.source.index) {
+      return;
+    }
+    const { dataSource, pagination } = this.state;
+    const { current, pageSize } = pagination;
+    const { dispatch } = this.props;
+    const { data } = dataSource;
+    // 缓存数组
+    const newData = Array.from(data);
+    const sourceIndex = draObj.source.index;
+    const targetIndex = draObj.destination.index;
+    // 找到拖动前与拖动后的位置
+    const sortIndex = newData[targetIndex].sortIndex;
+    const beforIndex = newData[sourceIndex].sortIndex;
+    // 改变缓存数组
+    const [removed] = newData.splice(sourceIndex, 1);
+    newData.splice(targetIndex, 0, removed);
+    this.setState({
+      sorting: true,
+    });
+    this.setState({
+      dataSource: { data: newData },
+    });
+    dispatch({
+      type: 'majorList/reSort',
+      payload: {
+        concernID: removed.concernID,
+        sortIndex,
+        beforIndex,
+        pageNum: current,
+        pageSize,
       },
+    }).then(() => {
+      // 判断服务器是否排序成功
+      if (this.props.majorList.sortSuccess) {
+        this.setState({
+          sorting: false,
+        });
+        this.props.dispatch({
+          type: 'majorList/queryMajorContent',
+        });
+      } else {
+        this.setState({
+          dataSource: { data },
+          sorting: false,
+        });
+      }
+    });
+  };
+  render() {
+    const { modalVisible, isAdd, clickRow, statuData, dataSource, pagination, sorting } = this.state;
+    const { data } = dataSource;
+    const columns = [
+      // {
+      //   title: '序号',
+      //   dataIndex: 'sortIndex',
+      //   width: 80,
+      //   render: (text, b, c) => {
+      //     console.log('text', text);
+      //     console.log('b', b);
+      //     console.log('c', c);
+      //     return text
+      //   },
+      // },
       {
         title: '标题名称',
         dataIndex: 'title',
@@ -541,6 +611,7 @@ export default class Analysis extends PureComponent {
       {
         title: '操作',
         width: 180,
+        dataIndex: 'operation',
         fixed: 'right',
         render: (text, record) => {
           // 获取该行的id，可以获取的到，传到函数里的时候打印直接把整个表格所有行id全部打印了
@@ -568,11 +639,15 @@ export default class Analysis extends PureComponent {
               {this.renderForm()}
             </div>
             <DndTable
-            // loading={loading}
               rowKey="concernID"
-              dataSource={data.data}
-            // components={components}
+              draggableId="concernID"
+              dragIndex="sortIndex"
+              dataSource={data}
+              pagination={pagination}
               columns={columns}
+              sorting={sorting}
+              onDragEnd={this.handleDragEnd}
+              handlePageChange={this.page}
             />
           </div>
         </Card>

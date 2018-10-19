@@ -59,8 +59,16 @@ export default class TextCarousel extends PureComponent {
     }
   }
   componentDidMount() {
+    const { spaceTime, dispatch } = this.props;
+    const a = setInterval(() => {
+      dispatch({
+        type: 'majorList/queryMajorContent',
+      }).then(() => {
+        this.screenChange();
+      });
+    }, spaceTime);
+
     // window.addEventListener('resize', () => { this.screenChange() });
-    this.screenChange();
   }
 
   componentWillReceiveProps(a, b) {
@@ -88,6 +96,11 @@ export default class TextCarousel extends PureComponent {
 
   render() {
     const carouselValue = this.props.majorList.list;
+    if (carouselValue) {
+      carouselValue.data.sort((a, b) => {
+        return a.sortIndex - b.sortIndex < 0 ? -1 : 1;
+      });
+    }
     const { onClickCarousel } = this.props;
     return (
       <div className={styles['text-carousel']} style={this.props.boolean ? { display: 'block' } : { display: 'none' }}>
@@ -96,14 +109,14 @@ export default class TextCarousel extends PureComponent {
           <span ref={(nede) => { this.carouselContent = nede; }} className={styles.content}>
             {
               carouselValue ? carouselValue.data.map((item, index) => {
-                return item.statu === 1 ? <span key={item.concernID}><div>{`${item.indexNum}：`}</div>{`${item.content}；`}</span> : null;
+                return item.statu === 1 ? <span key={item.concernID}><div>{`${index + 1}：`}</div>{`${item.content}`}</span> : null;
                 }) : null
             }
           </span>
-          <span ref={nede => this.carouselCopy = nede} className={styles.content} style={this.state.toggleShow ? { visibility: 'visible' } : { visibility: 'hidden' }}>
+          <span ref={(nede) => { this.carouselCopy = nede; }} className={styles.content} style={this.state.toggleShow ? { visibility: 'visible' } : { visibility: 'hidden' }}>
             {
               carouselValue ? carouselValue.data.map((item, index) => {
-                  return item.statu === 1 ? <span key={item.concernID}><div>{`${item.indexNum}：`}</div>{`${item.content}；`}</span> : null;
+                  return item.statu === 1 ? <span key={item.concernID}><div>{`${index + 1}：`}</div>{`${item.content}`}</span> : null;
               }) : null
             }
           </span>

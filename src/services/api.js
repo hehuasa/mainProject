@@ -461,7 +461,13 @@ export async function addMajorInfo(params) {
 export async function majorInfoPageList() {
   return request(`${path}/production/proConcern/focusList`);
 }
-
+// 重点关注排序
+export async function majorInfoChangeIndex(params) {
+  return request(`${path}/production/proConcern/changeIndex`, {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function sendList() {
   return request(`${path}/system/baseShortMsg/list`);
 }

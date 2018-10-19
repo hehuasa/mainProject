@@ -621,6 +621,7 @@ class BasicLayout extends React.PureComponent {
               notification.warning({
                 message: '接收到新报警消息',
                 description: `设备名称: ${socketMessage.B.resourceName}`,
+                placement: 'bottomRight',
               });
               if (alarm.alarmType) {
                 if (alarm.alarmType.profession !== '107.901') {
@@ -633,6 +634,7 @@ class BasicLayout extends React.PureComponent {
               notification.warning({
                 message: '报警消息有更新',
                 description: `设备名称: ${socketMessage.B.resourceName}`,
+                placement: 'bottomRight',
               });
             }
             dispatch({
@@ -764,6 +766,7 @@ class BasicLayout extends React.PureComponent {
           notification.info({
             message: '报警已处理或取消',
             description: `设备名称: ${socketMessage.B.resourceName}`,
+            placement: 'bottomRight',
           });
           // 删除报警消息
           for (const item of alarm.list) {
@@ -806,7 +809,6 @@ class BasicLayout extends React.PureComponent {
                 dispatch);
             }
           }
-
       }
     }
   };
@@ -881,10 +883,6 @@ class BasicLayout extends React.PureComponent {
       map,
       accessControlShow,
     } = this.props;
-      // notification.info({
-      //     message: '浏览器尺寸',
-      //     description: `width: ${getBrowserStyle().winWidth};  height: ${getBrowserStyle().winHeight}`,
-      // });
     const { showDrpScreen } = this.state;
     const { view } = mapConstants;
     const handleClick = () => {
@@ -940,7 +938,7 @@ class BasicLayout extends React.PureComponent {
                 />
               </Header>
               <Header style={{ padding: 0, background: 'transparent', height: 'auto', lineHeight: 'auto' }}>
-                <TextCarousel {...this.state} onClickCarousel={this.onClickCarousel} />
+                <TextCarousel {...this.state} onClickCarousel={this.onClickCarousel} spaceTime={60000} />
               </Header>
               <Layout style={{ height: warpContentHeight }}>
                 <Sider

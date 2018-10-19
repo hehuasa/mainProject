@@ -13,6 +13,9 @@ export const panelData = {
   AlarmList: {
     name: 'AlarmList', id: 1, iconStyle: [1], component: dynamicWrapper(() => import('./components/AlarmList')),
   },
+  AlarmListByFault: {
+    name: 'AlarmListByFault', id: 11, iconStyle: [1], component: dynamicWrapper(() => import('./components/AlarmListByFault/AlarmListByFault')),
+  },
   // 柱状图报警统计看板
   AlarmCountingPanel: {
     name: 'AlarmCountingPanel', id: 2, iconStyle: [3, 4, 2], component: dynamicWrapper(() => import('./components/AlarmCounting/AlarmCountingPanel')),

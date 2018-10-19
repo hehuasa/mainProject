@@ -10,31 +10,32 @@
 //  box-shadow: 0 1px 3px rgba(0,0,0,.3);
 //  border-radius: 3px;
 //}
-.searchBox{
+.searchBox {
   position: absolute;
   top: 8px;
   left: 8px;
   width: 316px;
   z-index: 200;
   //padding: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.3);
-  background: @component-background;
-  :global{
+
+  :global {
     .ant-input {
-      height: 30px;
+      height: 32px;
     }
     .ant-btn {
-      height: 30px;
+      height: 32px;
     }
   }
-  & input{
+  & input {
     border-radius: 0;
   }
-  & button{
+  & button {
     border-radius: 0;
   }
   & .option {
     transition: opacity .8s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+    background: @component-background;
     & .groups {
       margin-top: 8px;
       margin-bottom: 8px;
@@ -56,7 +57,7 @@
         }
       }
     }
-    :global{
+    :global {
       .ant-divider-horizontal {
         margin: 0;
       }
@@ -69,7 +70,7 @@
         height: 35px;
         line-height: 35px;
         cursor: pointer;
-        & span{
+        & span {
           margin-left: 8px;
         }
         &:hover {
@@ -79,10 +80,11 @@
     }
   }
 }
+
 .searchResult {
   margin-top: 8px;
   margin-bottom: 8px;
-  & >div {
+  & > div {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -91,7 +93,7 @@
     &:hover {
       background: #eee;
     }
-    & .img{
+    & .img {
       position: relative;
       margin-right: 16px;
       margin-left: 8px;
@@ -103,11 +105,11 @@
         color: #fff;
       }
     }
-    & .resultName{
+    & .resultName {
       color: @primary-color;
     }
   }
-  :global{
+  :global {
     .ant-pagination {
       margin-top: 8px;
     }
