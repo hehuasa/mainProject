@@ -36,7 +36,7 @@ export default class Analysis extends PureComponent {
       type: 'tabs/del',
       payload: { key: '/command/emergencyEvent', title: '应急事件' },
     });
-    setTimeout(() => this.confirm(record, 1, 'command/emergencyEvent', '应急事件'), 0);
+    setTimeout(() => this.confirm(record, 1, 'command/emergencyEvent', record.eventName), 0);
     // 折叠
     dispatch({
       type: 'global/changeRightCollapsed',

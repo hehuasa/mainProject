@@ -18,7 +18,7 @@ export default
       "pathRewrite": { "^/emgc": "" }
     },
     "/mapApi": {
-        "target": "http://192.168.0.26:8080/arcgis/arcgis_js_api/library/4.9",
+        "target": "http://10.157.5.25:8888/arcgis/arcgis_js_api/library/4.9",
         "changeOrigin": true,
         "pathRewrite": { "^/mapApi": "" }
     },

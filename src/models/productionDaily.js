@@ -2,10 +2,11 @@ import {
   getDeviceProduction, updateDeviceProduction, getCrackingFurnace, getPowerConsumption,
   updatePowerConsumption, updateCrackingFurnace, getRawMaterial, updateRawMaterial, getSteamBalance,
   getProductionStatus, updateProductionStatus, updateSteamBalance, getDailyProduction,
-  getRptAlternatorHistoryData, getRptHotFurnaceHistoryData, getOrganicProductHistoryData, getRptResinReportHistoryData, getProRptRawInfoHistoryData, getRptPowerConsumeHistoryData,
+  getRptAlternatorHistoryData, getRptHotFurnaceHistoryData, getOrganicProductHistoryData, getRptResinReportHistoryData,
+  getProRptRawInfoHistoryData, getRptPowerConsumeHistoryData,
   getEquipmentProductInfoHistoryData, getDissociationHistoryData, getThermoelectricFurnace,
   getDynamotor, getOrganicProduct, getResinProduct, getSolidDefects,
-  getTimeUsePre, productionStatusPage, getRecycledWater, getWasteWater,
+  getTimeUsePre, productionStatusPage, getRecycledWater, getWasteWater, uploadHistoryPage,
 } from '../services/api';
 import { checkCode } from '../utils/utils';
 
@@ -45,6 +46,11 @@ export default {
     startTimes: null,
     history: [],
     productionStatusPage: {
+      data: [],
+      pagination: {},
+    },
+    // 生产日报上传历史
+    uploadHistoryPage: {
       data: [],
       pagination: {},
     },
@@ -299,30 +305,30 @@ export default {
         payload: response.data,
       });
     },
-      // 请求历史数据(裂解炉)
-      *getDissociationHistoryData({ payload }, { put, call }) {
-          const response = yield call(getDissociationHistoryData, payload);
-          yield put({
-              type: 'queryHistory',
-              payload: response.data,
-          });
-      },
-      // 请求历史数据(热电炉)
-      *getRptHotFurnaceHistoryData({ payload }, { put, call }) {
-          const response = yield call(getRptHotFurnaceHistoryData, payload);
-          yield put({
-              type: 'queryHistory',
-              payload: response.data,
-          });
-      },
-      // 请求历史数据(发电机)
-      *getRptAlternatorHistoryData({ payload }, { put, call }) {
-          const response = yield call(getRptAlternatorHistoryData, payload);
-          yield put({
-              type: 'queryHistory',
-              payload: response.data,
-          });
-      },
+    // 请求历史数据(裂解炉)
+    *getDissociationHistoryData({ payload }, { put, call }) {
+      const response = yield call(getDissociationHistoryData, payload);
+      yield put({
+        type: 'queryHistory',
+        payload: response.data,
+      });
+    },
+    // 请求历史数据(热电炉)
+    *getRptHotFurnaceHistoryData({ payload }, { put, call }) {
+      const response = yield call(getRptHotFurnaceHistoryData, payload);
+      yield put({
+        type: 'queryHistory',
+        payload: response.data,
+      });
+    },
+    // 请求历史数据(发电机)
+    *getRptAlternatorHistoryData({ payload }, { put, call }) {
+      const response = yield call(getRptAlternatorHistoryData, payload);
+      yield put({
+        type: 'queryHistory',
+        payload: response.data,
+      });
+    },
     // 请求历史数据(原材料)
     *getProRptRawInfoHistoryData({ payload }, { put, call }) {
       const response = yield call(getProRptRawInfoHistoryData, payload);
@@ -360,6 +366,14 @@ export default {
       const response = yield call(getSolidDefects, payload);
       yield put({
         type: 'saveSolidDefects',
+        payload: response.data,
+      });
+    },
+    // 请求上传历史
+    *uploadHistoryPage({ payload }, { put, call }) {
+      const response = yield call(uploadHistoryPage, payload);
+      yield put({
+        type: 'saveUploadHistory',
         payload: response.data,
       });
     },
@@ -471,6 +485,19 @@ export default {
       return {
         ...state,
         productionStatusPage: {
+          data: payload.result,
+          pagination: {
+            current: payload.pageNum,
+            pageSize: payload.pageSize,
+            total: payload.sumCount,
+          },
+        },
+      };
+    },
+    saveUploadHistory(state, { payload }) {
+      return {
+        ...state,
+        uploadHistoryPage: {
           data: payload.result,
           pagination: {
             current: payload.pageNum,

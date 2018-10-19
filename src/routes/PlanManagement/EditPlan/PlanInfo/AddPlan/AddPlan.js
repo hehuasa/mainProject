@@ -240,7 +240,9 @@ export default class AddPlan extends PureComponent {
             >
               {form.getFieldDecorator('emgcOrgID', {
                 initialValue: isAdd ? null : `${planBasicInfo.emgcOrgID}`,
-                rules: [],
+                rules: [
+                  { required: true, message: '应急组织必选' },
+                ],
               })(
                 <TreeSelect
                   showSearch
