@@ -2223,3 +2223,17 @@ export async function getWasteWater(params) {
     body: params,
   });
 }
+// 请求生产日报 上传历史记录
+export async function uploadHistoryPage(params) {
+  return request(`${path}/report/proRptReportFileUploadRecord/page`, {
+    method: 'POST',
+    body: params,
+  });
+}
+// 查询事件所关联的预案 params eventID
+export async function getPlansByEventID(params) {
+  return request(`${path}/emgc/emgcEventExecutePlan/selectPlanInfo`, {
+    method: 'POST',
+    body: params,
+  });
+}

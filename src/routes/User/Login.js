@@ -18,6 +18,7 @@ const close = document.getElementById('close');
 export default class LoginPage extends Component {
   state = {
     type: 'account',
+    visible: false,
   };
   componentDidMount() {
     close.addEventListener('click', () => {
@@ -69,6 +70,11 @@ export default class LoginPage extends Component {
         },
       }).then(() => {
         close.style.zIndex = -1;
+        if (this.props.login.code !== '1001') {
+          this.setState({
+            visible: true,
+          });
+        }
       });
     }
     // const obj = {
@@ -80,10 +86,14 @@ export default class LoginPage extends Component {
     //   console.log('res1', res1);
     // });
   };
-
+close = () => {
+  this.setState({
+    visible: false,
+  });
+};
   renderMessage = (content) => {
     return (
-      <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
+      <Alert style={{ marginBottom: 24 }} message={content} closable onClose={this.close} type="error" showIcon />
     );
   };
 
@@ -101,20 +111,20 @@ export default class LoginPage extends Component {
 
           <VideoSocket onmessage={this.onmessage1} />
           <div key="account" tab="用户登录">
-            {
-              login.code !== undefined &&
-              login.code !== '' &&
-              login.code !== 1001 &&
-              !login.submitting &&
-              this.renderMessage(msg)
-            }
             <div className={styles.loginTitle}>用户登录</div>
-            <UserName name="login" placeholder="请输入用户名" />
-            <Password name="password" placeholder="请输入密码" />
+            <UserName name="login" placeholder="请输入用户名" onChange={this.close} />
+            <Password name="password" placeholder="请输入密码" onChange={this.close} />
           </div>
-          <div>
-          </div>
+          <div />
           <Submit loading={submitting}>登录</Submit>
+          {
+            login.code !== undefined &&
+            login.code !== '' &&
+            login.code !== 1001 &&
+            !login.submitting &&
+            this.state.visible &&
+            this.renderMessage(msg)
+          }
         </Login>
       </div>
     );

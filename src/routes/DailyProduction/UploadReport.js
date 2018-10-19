@@ -9,15 +9,28 @@ const { Option } = Select;
 const { Dragger } = Upload;
 const cols = [
   { title: '文件名', dataIndex: 'fileName', width: '20%' },
-  { title: '上传人', dataIndex: 'userName', width: '15%' },
-  { title: '上传时间', dataIndex: 'uploadTime', width: '65%' },
+  { title: '上传人', dataIndex: 'uploadUserName', width: '15%' },
+  { title: '上传时间',
+    dataIndex: 'uploadTime',
+    width: '65%',
+    render: (text) => {
+      return moment(text).format('YYYY-MM-DD HH:mm:ss');
+    },
+  },
 ];
 @connect(({ productionDaily }) => ({
-  rawMaterial: productionDaily.rawMaterial,
+  uploadHistoryPage: productionDaily.uploadHistoryPage,
 }))
 export default class UploadReport extends PureComponent {
   componentDidMount() {
+    this.page(1, 5);
   }
+  page = (pageNum, pageSize) => {
+    this.props.dispatch({
+      type: 'productionDaily/uploadHistoryPage',
+      payload: { pageSize, pageNum },
+    });
+  };
   beforeUpload = (file) => {
     const isXlsx = file.name.indexOf('.xlsx') > 0;
     const isXls = file.name.indexOf('.xls') > 0;
@@ -37,13 +50,15 @@ export default class UploadReport extends PureComponent {
       // action: 'emgc/report/proRptReportInfo/dealExcle',
       action: 'emgc/report/proRptReportInfo/dealExcle',
       showUploadList: false,
-      onChange(info) {
+      onChange: (info) => {
         const { status } = info.file;
         if (status !== 'uploading') {
           console.log(info.file, info.fileList);
         }
         if (status === 'done') {
           message.success(`${info.file.name} 文件上传成功.`);
+          const { current, pageSize } = this.props.uploadHistoryPage.pagination;
+          this.page(current, pageSize);
         } else if (status === 'error') {
           message.error(`${info.file.name} 文件上传失败.`);
         }
@@ -66,7 +81,15 @@ export default class UploadReport extends PureComponent {
           <p className="ant-upload-text">单击或拖动文件到该区域上传</p>
           <p className="ant-upload-hint">支持单个Excel文件上传。</p>
         </Dragger>
-        <Table className={styles.fileTable} dataSource={[]} columns={cols} />
+        <Table
+          className={styles.fileTable}
+          pagination={{
+            ...this.props.uploadHistoryPage.pagination,
+            onChange: this.page,
+          }}
+          dataSource={this.props.uploadHistoryPage.data}
+          columns={cols}
+        />
       </Card>
     );
   }
