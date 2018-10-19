@@ -60,6 +60,11 @@ export default class TextCarousel extends PureComponent {
   }
   componentDidMount() {
     const { spaceTime, dispatch } = this.props;
+    dispatch({
+      type: 'majorList/queryMajorContent',
+    }).then(() => {
+      this.screenChange();
+    });
     const a = setInterval(() => {
       dispatch({
         type: 'majorList/queryMajorContent',
