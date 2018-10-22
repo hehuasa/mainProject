@@ -15,6 +15,7 @@ const { TabPane } = Tabs;
   currentUser: user.currentUser,
   annexPage: emergency.annexPage,
   executeList: emergency.executeList,
+  eventPlanList: emergency.eventPlanList,
 }))
 export default class InfoJudgment extends PureComponent {
   componentDidMount() {
@@ -121,7 +122,6 @@ export default class InfoJudgment extends PureComponent {
     const text = '确认进入预警 ? ';
     const text1 = '确认进入应急响应 ? ';
     const { current, viewNode } = this.props;
-    console.log(123, this.props);
     const tabBarExtraContent = (
       <div className={styles.extraBtn}>
         <Popconfirm placement="bottomRight" title={text} onConfirm={() => this.confirm(3)} okText="确认" cancelText="取消">
@@ -145,7 +145,7 @@ export default class InfoJudgment extends PureComponent {
         <TabPane tab="预案选择" key="2" disabled={this.props.viewNode !== this.props.current}>
           <SelectPlan planList={planList} />
         </TabPane>
-        <TabPane tab="编辑实施方案" key="3" disabled={this.props.viewNode !== this.props.current}>
+        <TabPane tab="编辑实施方案" key="3" disabled={this.props.viewNode !== this.props.current || !this.props.eventPlanList.length > 0}>
           <EditPlan />
         </TabPane>
       </Tabs>

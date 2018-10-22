@@ -349,8 +349,8 @@ export default class InsertCommand extends PureComponent {
                         >
                           { this.props.commandReceiver.map(item => (
                             <TreeNode
-                              value={this.postionName}
-                              title={this.postionName}
+                              value={item.postionName}
+                              title={item.postionName}
                               key={item.postionID}
                             />
                             ))

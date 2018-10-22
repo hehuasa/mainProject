@@ -23,7 +23,7 @@ import {
   selectExecutePlanInfo, getPlanInfo, mergeAlarm, ifFromPlan, getCommandStatusList, annexPage,
   annexDelete, getPlanAnnexPage, getDealCard, getImplPicture, getExecuteList, resourcePage,
   materialPage, resMaterialPage,
-  addFeature,
+  addFeature, getPlansByEventID,
 } from '../services/api';
 import { checkCode, formatDuring } from '../utils/utils';
 
@@ -116,6 +116,7 @@ export default {
     implOrgAnnexList: [], // 实施方案 组织机构信息
     implEmgcAnnex: [], // 实施方案 应急流程信息
     executeList: [], // 实施方案列表
+    eventPlanList: [], // 某事件已关联的预案信息
   },
 
   effects: {
@@ -819,6 +820,14 @@ export default {
         payload: response.data,
       });
     },
+    //  通过事件ID获取事件关联的所有预案信息
+    *getPlansByEventID({ payload }, { call, put }) {
+      const response = yield call(getPlansByEventID, payload);
+      yield put({
+        type: 'saveEventPlanList',
+        payload: response.data,
+      });
+    },
 
   },
   reducers: {
@@ -1265,6 +1274,12 @@ export default {
       return {
         ...state,
         resMaterialPage: payload,
+      };
+    },
+    saveEventPlanList(state, { payload }) {
+      return {
+        ...state,
+        eventPlanList: payload,
       };
     },
   },

@@ -222,10 +222,15 @@ export default class CommandList extends PureComponent {
       </div>
     );
     const { current, viewNode } = this.props;
+    const title = (
+      <div className={styles.insertBtn}>
+        <Button disabled={viewNode < current} type="primary" onClick={this.openInsert}>插入新指令</Button>
+      </div>
+    );
     return (
       <div className={styles.commandList}>
         { !isInsert ? (
-          <Card extra={extra} bordered={false}>
+          <Card title={title} extra={extra} bordered={false}>
             <Table
               // rowKey={record => record.cmdExecID}
               rowKey="cmdExecID"
@@ -234,7 +239,6 @@ export default class CommandList extends PureComponent {
               pagination={{ pageSize: 5 }}
               scroll={{ x: 1300 }}
             />
-            <div className={styles.insertBtn}><Button disabled={viewNode < current} type="primary" onClick={this.openInsert}>插入指令</Button></div>
           </Card>
     ) : (
       <InsertCommand />

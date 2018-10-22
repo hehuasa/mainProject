@@ -271,7 +271,7 @@ export default class AlarmEventInfo extends PureComponent {
             >
               {form.getFieldDecorator('eventName', {
                 initialValue: ((alarmInfoConten.alarmWay === 1) ? '自动报警' : '人工报警') +
-                  (alarmInfoConten.org ? `${alarmInfoConten.org.orgnizationName}` : null) +
+                  (alarmInfoConten.org ? `${alarmInfoConten.org.orgnizationName}` : '') +
                   moment().format('YYYY-MM-DD HH:mm'),
                 rules: [
                   { required: isEvent, message: '事件名称不能为空' },

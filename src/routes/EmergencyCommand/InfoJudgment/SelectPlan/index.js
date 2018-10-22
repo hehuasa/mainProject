@@ -80,6 +80,7 @@ const SearchForm = Form.create()((props) => {
   planInfoPage: emergency.planInfoPage,
   annexPage: emergency.annexPage,
   eventInfo: emergency.eventInfo,
+  eventPlanList: emergency.eventPlanList,
 }))
 export default class SelectPlan extends PureComponent {
   state = {
@@ -93,6 +94,7 @@ export default class SelectPlan extends PureComponent {
     total: '',
     isQuery: true,
     fuzzy: false,
+    selectedPlanID: '',
   };
   componentDidMount() {
     const { dispatch } = this.props;
@@ -107,6 +109,13 @@ export default class SelectPlan extends PureComponent {
     dispatch({
       type: 'emergency/getPlanTypeList',
       payload: 558,
+    });
+    //  获取预案类别
+    dispatch({
+      type: 'emergency/getPlansByEventID',
+      payload: { eventID: this.props.eventID },
+    }).then(() => {
+      this.getPlanID(this.props.eventPlanList);
     });
   }
   page = (pageNum, pageSize) => {
@@ -182,6 +191,13 @@ export default class SelectPlan extends PureComponent {
       type: 'emergency/copyPlan',
       payload: { jsonData },
     }).then(() => {
+      //  获取预案类别
+      this.props.dispatch({
+        type: 'emergency/getPlansByEventID',
+        payload: { eventID: this.props.eventID },
+      }).then(() => {
+        this.getPlanID(this.props.eventPlanList);
+      });
       // 根据eventID获取预案基本信息
       this.props.dispatch({
         type: 'emergency/getPlanBaseInfo',
@@ -233,6 +249,13 @@ export default class SelectPlan extends PureComponent {
     })
     );
   };
+  // 获取信息研判阶段的模板预案
+  getPlanID = (plans) => {
+    const planInfo = plans[0] || {};
+    this.setState({
+      selectedPlanID: planInfo.planInfoID,
+    });
+  };
   render() {
     const { current, viewNode, planLevelList, planTypeList, planInfoPage } = this.props;
     const columns = [
@@ -266,9 +289,9 @@ export default class SelectPlan extends PureComponent {
         width: '15%',
         dataIndex: 'action',
         render: (text, record) => {
-          return current === viewNode ? (
-            <a onClick={() => this.setTemplete(record)} href="javascript:;">设为模板</a>
-          ) : null;
+          return this.state.selectedPlanID === record.planInfoID ? '当前模板' : (
+            current === viewNode ? <a onClick={() => this.setTemplete(record)} href="javascript:;">设为模板</a> : ''
+          );
         },
       }];
 
