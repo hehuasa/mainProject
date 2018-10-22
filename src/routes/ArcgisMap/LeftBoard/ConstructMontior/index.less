@@ -1,13 +1,15 @@
 @import "~antd/lib/style/themes/default.less";
 @import "../../../../index";
-.warp{
+
+.warp {
   background-color: @component-background;
-  & .header{
+  font-size: 12px;
+  & .header {
     height: 30px;
     background-color: @primary-6;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
-    & .name{
+    & .name {
       width: 200px;
       height: 30px;
       margin-left: 2em;
@@ -16,25 +18,25 @@
       float: left;
       // 超出显示省略号
       overflow: hidden;
-      text-overflow:ellipsis;
+      text-overflow: ellipsis;
       white-space: nowrap;
     }
-    & .close{
+    & .close {
       float: right;
-      & button{
+      & button {
         height: 30px;
       }
     }
   }
-  & .item{
+  & .item {
     margin: 8px 8px 0 8px;
     float: left;
     cursor: pointer;
-    &:hover{
+    &:hover {
       background-color: #f3f3f3 !important;
     }
   }
-  & .img{
+  & .img {
     display: inline-block;
     float: left;
     width: 20px;
@@ -42,49 +44,54 @@
     margin-left: 8px;
 
   }
-  & .content{
+  & .content {
     display: inline-block;
     float: left;
     height: 170px;
     margin-left: 8px;
-    & div{
+    & div {
       line-height: 22px;
     }
-    & .alarmType{
-      font-size: @font-size-lg ;
+    & .alarmType {
+      font-size: @font-size-lg;
       color: @primary-6;
     }
-    .star{
+    .star {
       color: #ff3d3d;
     }
   }
 }
-.type{
-  font-size: @font-size-sm ;
+
+.type {
+  font-size: @font-size-sm;
   color: @primary-6;
   margin-right: 8px;
 }
-.info{
+
+.info {
   height: 108px;
   margin: 8px 8px 0 8px;
   background-color: @component-background;
-  & .title{
-    font-size: @font-size-lg ;
+  & .title {
+    font-size: @font-size-lg;
     color: @primary-6;
   }
 }
-.btn{
+
+.btn {
   margin-bottom: 10px;
   border-top: 1px dashed @border-color-base;
-  & button{
+  & button {
     margin: 8px 0 0 8px;
   }
 }
-.panelHeader{
-  font-size: @font-size-base ;
+
+.panelHeader {
+  font-size: @font-size-base;
   color: @primary-6;
   border: 0;
 }
+
 .checkList {
   margin: 0;
   padding: 0;
@@ -93,10 +100,10 @@
   & li {
     padding: 8px;
     border-bottom: 1px solid @border-color;
-    &>span {
+    & > span {
       text-align: center;
     }
-    &>span:nth-child(2) {
+    & > span:nth-child(2) {
       display: inline-block;
       width: 60px;
       text-align: center;
@@ -110,15 +117,16 @@
     background: @tab-background;
   }
 }
-.panelContent{
-  :global{
+
+.panelContent {
+  :global {
     .ant-collapse-item {
       border: none;
     }
     .ant-collapse-item-active {
       border-bottom: 1px solid @border-color;
     }
-    .ant-collapse-header{
+    .ant-collapse-header {
       border-bottom: 1px solid @border-color;
     }
     //.ant-collapse-content-box:hover{
@@ -126,8 +134,9 @@
     //}
   }
 }
+
 .alarmList {
-  :global{
+  :global {
     .ant-collapse-header {
       padding: 8px 0 8px 36px !important;
     }

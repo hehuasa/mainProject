@@ -9,7 +9,6 @@ import { switchCode } from '../../services/statusCode';
 import VideoSocket from '../Websocket/VideoSocket';
 
 const { UserName, Password, Submit } = Login;
-const close = document.getElementById('close');
 // const jsEncrypt = new window.JSEncrypt();
 @connect(({ login, loading }) => ({
   login,
@@ -21,22 +20,6 @@ export default class LoginPage extends Component {
     visible: false,
   };
   componentDidMount() {
-    close.addEventListener('click', () => {
-      const that = this;
-      Modal.confirm({
-        title: '请确认',
-        content: '将关闭窗口',
-        okText: '确认',
-        okType: 'danger',
-        cancelText: '取消',
-        onOk() {
-          that.props.dispatch({
-            type: 'video/devTools',
-            payload: { CmdCode: 'EXIT' },
-          });
-        },
-      });
-    });
     // 请求公钥
     // $.ajax('/local/getPubKey').then((pubKey) => {
     //   jsEncrypt.setPublicKey(pubKey);
@@ -69,7 +52,6 @@ export default class LoginPage extends Component {
           ...values,
         },
       }).then(() => {
-        close.style.zIndex = -1;
         if (this.props.login.code !== '1001') {
           this.setState({
             visible: true,

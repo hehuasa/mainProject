@@ -29,8 +29,6 @@ export default class GlobalHeader extends PureComponent {
     };
   }
   componentDidMount() {
-    const close = document.getElementById('close');
-    close.style.zIndex = -1;
     // 请求未完成的报警事件
     this.props.dispatch({
       type: 'emergency/undoneEventList',

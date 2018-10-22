@@ -789,52 +789,56 @@ export const handleCheck = (event, treeId, treeNode, that) => {
             payload: { ctrlType: treeNode.ctrlResourceType },
           }).then(() => {
             // 请求状态
-            dispatch({ type: 'paSystem/fetchDeviceStatus' }).then(() => {
-              const array = [];
-              const { devices, deviceStatus } = that.props.paSystem;
-              for (const device of devices) {
-                const status = deviceStatus.find(value => value.resourceID === device.resourceID);
-                const index = array.findIndex(value => value.areaGISCode === device.area.gISCode);
-                if (index === -1) {
-                  array.push({ areaGISCode: device.area.gISCode, area: device.area, devices: [{ device, state: status ? status.state : 'none' }] });
-                } else {
-                  array[index].devices.push({ device, state: status ? status.state : 'none' });
-                }
+            const array = [];
+            const { devices } = that.props.paSystem;
+            // console.log('devices', devices);
+            for (const device of devices) {
+              // const status = deviceStatus.find(value => value.resourceID === device.resourceID);
+              const index = array.findIndex(value => value.areaGISCode === device.area.gISCode);
+              if (index === -1) {
+                // array.push({ areaGISCode: device.area.gISCode, area: device.area, devices: [{ device, state: status ? status.state : 'none' }] });
+                array.push({ areaGISCode: device.area.gISCode, area: device.area, devices: [{ device }] });
+              } else {
+                array[index].devices.push({ device });
               }
-              dispatch({
-                type: 'paSystem/queryPASystemInfo',
-                payload: array,
-              });
-              paSystemDetail({ map: mainMap, view, layer: subLayer, dispatch, paData: array });
-            });
-          });
-          loopObj.PAsystem = setInterval(() => {
-            // 请求资源
+            }
+            // console.log('array', array);
             dispatch({
-              type: 'paSystem/fetchAllDevice',
-              payload: { ctrlType: treeNode.ctrlResourceType },
-            }).then(() => {
-              // 请求状态
-              dispatch({ type: 'paSystem/fetchDeviceStatus' }).then(() => {
-                const array = [];
-                const { devices, deviceStatus } = that.props.paSystem;
-                for (const device of devices) {
-                  const status = deviceStatus.find(value => value.resourceID === device.resourceID);
-                  const index = array.findIndex(value => value.areaGISCode === device.area.gISCode);
-                  if (index === -1) {
-                    array.push({ areaGISCode: device.area.gISCode, area: device.area, devices: [{ device, state: status ? status.state : 'none' }] });
-                  } else {
-                    array[index].devices.push({ device, state: status ? status.state : 'none' });
-                  }
-                }
-                dispatch({
-                  type: 'paSystem/queryPASystemInfo',
-                  payload: array,
-                });
-                paSystemDetail({ map: mainMap, view, layer: subLayer, dispatch, paData: array });
-              });
+              type: 'paSystem/queryPASystemInfo',
+              payload: array,
             });
-          }, 3000);
+            paSystemDetail({ map: mainMap, view, layer: subLayer, dispatch, paData: array });
+            // dispatch({ type: 'paSystem/fetchDeviceStatus' }).then(() => {
+            //
+            // });
+          });
+          // loopObj.PAsystem = setInterval(() => {
+          //   // 请求资源
+          //   dispatch({
+          //     type: 'paSystem/fetchAllDevice',
+          //     payload: { ctrlType: treeNode.ctrlResourceType },
+          //   }).then(() => {
+          //     // 请求状态
+          //     dispatch({ type: 'paSystem/fetchDeviceStatus' }).then(() => {
+          //       const array = [];
+          //       const { devices, deviceStatus } = that.props.paSystem;
+          //       for (const device of devices) {
+          //         const status = deviceStatus.find(value => value.resourceID === device.resourceID);
+          //         const index = array.findIndex(value => value.areaGISCode === device.area.gISCode);
+          //         if (index === -1) {
+          //           array.push({ areaGISCode: device.area.gISCode, area: device.area, devices: [{ device, state: status ? status.state : 'none' }] });
+          //         } else {
+          //           array[index].devices.push({ device, state: status ? status.state : 'none' });
+          //         }
+          //       }
+          //       dispatch({
+          //         type: 'paSystem/queryPASystemInfo',
+          //         payload: array,
+          //       });
+          //       paSystemDetail({ map: mainMap, view, layer: subLayer, dispatch, paData: array });
+          //     });
+          //   });
+          // }, 3000);
         } else {
           clearInterval(loopObj.PAsystem);
           delLayer(mainMap, ['扩音对讲专题图', '扩音对讲标注专题图'], dispatch);

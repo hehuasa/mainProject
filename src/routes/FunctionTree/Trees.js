@@ -24,7 +24,7 @@ const setStyle = (node, array) => {
     node.style[item[0]] = item[1];
   }
 };
-@connect(({ sysFunction, user, loading, tabs, resourceTree, emergency, panelBoard, homepage, video, alarm, map, constructMonitor, global }) => {
+@connect(({ sysFunction, user, loading, tabs, resourceTree, emergency, panelBoard, homepage, video, alarm, map, constructMonitor, paSystem, global }) => {
   return {
     treeData: sysFunction.treeData,
     contextMenu: sysFunction.contextMenu,
@@ -53,6 +53,7 @@ const setStyle = (node, array) => {
     loading,
     tabs,
     video,
+    paSystem,
     constructMonitor,
     videoPosition: video.position,
     videoShow: video.show,

@@ -347,13 +347,19 @@ export default class MajorList extends PureComponent {
         ...fieldsValue,
       };
       const search = {};
-      const pagination = {
-        ...commonData.pageInitial,
-        isQuery: true,
-        fuzzy: true,
-      };
-      Object.assign(search, pagination, values);
-      this.page(search);
+      // const pagination = {
+      //   ...commonData.pageInitial,
+      //   isQuery: true,
+      //   fuzzy: true,
+      // };
+      // Object.assign(search, pagination, values);
+      // search.pageNum = search.current;
+      const { pagination } = this.state;
+      // this.setState({
+      //   dataSource: this.props.majorList.data,
+      //   pagination: this.props.majorList.data.pagination,
+      // });
+      this.page(pagination);
     });
   };
   doAdd = (fields) => {
@@ -371,9 +377,10 @@ export default class MajorList extends PureComponent {
   };
   // 修改函数
   doUpdate = (fields) => {
+    const { clickRow } = this.state;
     this.props.dispatch({
       type: 'majorList/update',
-      payload: fields,
+      payload: { ...fields, sortIndex: clickRow.sortIndex },
     }).then(() => {
       this.setState({
         modalVisible: false,
@@ -501,6 +508,8 @@ export default class MajorList extends PureComponent {
     // 找到拖动前与拖动后的位置
     const sortIndex = newData[targetIndex].sortIndex;
     const beforIndex = newData[sourceIndex].sortIndex;
+    newData[targetIndex].sortIndex = beforIndex;
+    newData[sourceIndex].sortIndex = sortIndex;
     // 改变缓存数组
     const [removed] = newData.splice(sourceIndex, 1);
     newData.splice(targetIndex, 0, removed);

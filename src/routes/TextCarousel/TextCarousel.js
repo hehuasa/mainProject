@@ -110,15 +110,15 @@ export default class TextCarousel extends PureComponent {
     return (
       <div className={styles['text-carousel']} style={this.props.boolean ? { display: 'block' } : { display: 'none' }}>
         <span style={{ float: 'left' }}>重点关注： </span>
-        <span ref={(nede) => { this.carouselWarp = nede; }} className={styles['text-warp']}>
-          <span ref={(nede) => { this.carouselContent = nede; }} className={styles.content}>
+        <span ref={(ref) => { this.carouselWarp = ref; }} className={styles['text-warp']}>
+          <span ref={(ref) => { this.carouselContent = ref; }} className={styles.content}>
             {
               carouselValue ? carouselValue.data.map((item, index) => {
                 return item.statu === 1 ? <span key={item.concernID}><div>{`${index + 1}：`}</div>{`${item.content}`}</span> : null;
                 }) : null
             }
           </span>
-          <span ref={(nede) => { this.carouselCopy = nede; }} className={styles.content} style={this.state.toggleShow ? { visibility: 'visible' } : { visibility: 'hidden' }}>
+          <span ref={(ref) => { this.carouselCopy = ref; }} className={styles.content} style={this.state.toggleShow ? { visibility: 'visible' } : { visibility: 'hidden' }}>
             {
               carouselValue ? carouselValue.data.map((item, index) => {
                   return item.statu === 1 ? <span key={item.concernID}><div>{`${index + 1}：`}</div>{`${item.content}`}</span> : null;

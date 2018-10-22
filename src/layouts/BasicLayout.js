@@ -375,9 +375,6 @@ class BasicLayout extends React.PureComponent {
     }
     dispatch({
       type: 'login/logout',
-    }).then(() => {
-      const close = document.getElementById('close');
-      close.style.zIndex = 1;
     });
     dispatch({
       type: 'video/switch',

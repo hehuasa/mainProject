@@ -1,4 +1,5 @@
 @import "~antd/lib/style/themes/default.less";
+@import "../index";
 
 .container {
   display: flex;
@@ -10,6 +11,42 @@
 .content {
   padding: 32px 0;
   flex: 1;
+}
+.tool {
+  position: fixed;
+  top: 0;
+  height: 30px;
+  width: 100%;
+  background: #f9f9f9;
+  .close {
+    width: 52px;
+    margin: 0 8px;
+    font-size: 20px;
+    line-height: 30px;
+    vertical-align: text-top;
+    &:hover {
+      //background: red;
+      //color: red
+    }
+  }
+  .minWarp {
+    float: right;
+    display: inline-block;
+    cursor: pointer;
+    height: 100%;
+    &:hover {
+      background-color: @border-color;
+    }
+  }
+  .closeWarp {
+    float: right;
+    display: inline-block;
+    cursor: pointer;
+    height: 100%;
+    &:hover {
+      background-color: #f72335;
+    }
+  }
 }
 @media (min-width: @screen-md-min) {
   .container {

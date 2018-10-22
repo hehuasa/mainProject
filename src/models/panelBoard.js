@@ -1,5 +1,12 @@
 import { constantlyPanelModal } from "../services/constantlyModal";
 
+
+const activeKeys = [
+  { name: 'AlarmList', keys: 'AlarmList', uniqueKey: new Date().getTime(), param: { alarmType: 'AlarmList', title: '当前报警列表' } },
+  { name: 'ConstructMontiorPanel', keys: 'ConstructMontiorPanel', uniqueKey: new Date().getTime(), param: { alarmType: '', title: '作业监控看板' } },
+];
+const expandKeys = ['AlarmList', 'ConstructMontiorPanel'];
+localStorage.setItem('panelBoard', JSON.stringify({ activeKeys, expandKeys }));
 export default {
   namespace: 'panelBoard',
   state: {
@@ -8,7 +15,7 @@ export default {
     activeKeys: [
       { name: 'EventInfo', keys: 'EventInfo', type: 'default', uniqueKey: 0, param: { alarmType: '', title: '事件信息' } }, // 事件信息
       // { name: 'EntranceGuard', keys: 223, uniqueKey: 0, type: 'default', param: { alarmType:"", title: '门禁' } }, // 门禁
-      // { name: 'AlarmCounting', keys: "123", param: { alarmType: 101.102 } }, // 报警统计列表
+      { name: 'AlarmList', keys: 'AlarmList', uniqueKey: new Date().getTime(), param: { alarmType: 'AlarmList', title: '当前报警列表' } }, // 报警统计列表
       // { name: 'AlarmCountingPanel', keys: "113", type:'default', param: { alarmType: 107.102, title: '气体报警统计看板' } }, // 气体报警统计看板
       // { name: 'AlarmCountingPanel', keys: "115", type:'default',  param: { alarmType: 101.102, title: '火灾报警统计看板' } }, // 火灾报警统计看板
       // { name: 'realData', keys: "364524", uniqueKey: 0, type: 'default', param: { title: 123 } }, // 气体时实数据看板

@@ -337,8 +337,58 @@ export const addItem = async ({ map, layers, device, id, scale }) => {
     }
   });
 };
-// 资源树在地图添加元素（新）
+// 资源树在地图删除元素（新）
 export const delItem = async ({ map, device, id, dispatch }) => {
+  // 删掉对应的资源，如果资源删除完毕，则删掉图层
+  const cacheLayer = map.findLayerById(id);
+  if (cacheLayer) {
+    const { graphics } = cacheLayer;
+    const graphic = graphics.items.find(value => value.attributes.ObjCode === Number(device.gISCode));
+    cacheLayer.remove(graphic);
+    if (graphics.length === 0) {
+      delLayer(map, [id], dispatch);
+    }
+  }
+};
+// 资源树在地图添加元素（新）
+export const addPolygonItem = async ({ map, layers, device, id, scale }) => {
+  esriLoader.loadModules([
+    'esri/layers/GraphicsLayer',
+    'esri/Graphic',
+  ]).then(([GraphicsLayer, Graphic]) => {
+    // 遍历资源树节点的关联图层节点，获取到sublayer
+    let cacheLayer = map.findLayerById(id);
+    if (cacheLayer === undefined) {
+      cacheLayer = new GraphicsLayer({
+        id,
+        minScale: scale,
+      });
+      map.add(cacheLayer);
+    }
+    for (const subLayer of layers) {
+      // 地图图标
+      const renderSy = {
+        type: 'simple-line',
+        color: '#eaf660',
+        width: '2px',
+        angle,
+        style: 'solid',
+      };
+      const query = subLayer.createQuery();
+      query.outFields = ['*'];
+      query.where = `ObjCode =${device.gISCode}`;
+      subLayer.queryFeatures(query).then((res) => {
+        const item = res.features[0];
+        item.attributes.name = device.name;
+        item.attributes.设备名称 = device.name;
+        const graphic = new Graphic(item.geometry, renderSy, item.attributes);
+        cacheLayer.graphics.add(graphic);
+      });
+    }
+  });
+};
+// 资源树在地图删除元素（新）
+export const delPolygonItem = async ({ map, device, id, dispatch }) => {
   // 删掉对应的资源，如果资源删除完毕，则删掉图层
   const cacheLayer = map.findLayerById(id);
   if (cacheLayer) {
@@ -1870,17 +1920,17 @@ export const paSystemDetail = ({ view, map, layer, dispatch, paData }) => {
     let paTextLayer = map.findLayerById('扩音对讲标注专题图');
     const simpleFillSymbol = {
       type: 'simple-fill', // autocasts as new SimpleMarkerSymbol()
-      color: 'rgba(0, 0 ,0 ,0)',
+      color: '#27afff',
       style: 'solid',
       angle,
       outline: { // autocasts as new SimpleLineSymbol()
-        color: 'rgba(0, 0 ,0 ,0)',
+        color: '#fff',
         width: 1, // points
       },
     };
     const simpleTextSymbol1 = {
       type: 'text', // autocasts as new TextSymbol()
-      color: '#666',
+      color: '#eee',
       text: '',
       angle,
       font: { // autocast as new Font()

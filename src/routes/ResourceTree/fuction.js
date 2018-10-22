@@ -13,7 +13,7 @@ export const ajaxDataFilter = (treeId, parentNode, responseData) => {
       });
     }
     const newAttr = responseData.data.filter(value => Number(value.treeType) !== 1 && Number(value.treeType) !== 2);
-    if (newAttr[0].ctrlResourceType.indexOf('101.102.101.101.103') !== -1) {
+    if (newAttr.length > 0 && newAttr[0].ctrlResourceType.indexOf('101.102.101.101.103') !== -1) {
       newAttr.sort((a, b) => {
         if (a.resourceName > b.resourceName) {
           return 1;

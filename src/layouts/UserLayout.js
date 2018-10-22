@@ -1,12 +1,13 @@
 import React from 'react';
 import { Switch, Route } from 'dva/router';
 import DocumentTitle from 'react-document-title';
-import { Icon } from 'antd';
+import { Icon, Tooltip, Modal } from 'antd';
 import styles from './UserLayout.less';
 import logo from '../assets/login/logoNew.gif';
 import { getRoutes } from '../utils/utils';
 import Login from "../components/Login";
 
+const { confirm } = Modal;
 const links = [{
   key: 'help',
   title: '帮助',
@@ -25,41 +26,77 @@ class UserLayout extends React.PureComponent {
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
-    let title = 'Ant Design Pro';
+    let title = '中韩石化应急指挥系统';
     if (routerData[pathname] && routerData[pathname].name) {
-      title = `${routerData[pathname].name} - Ant Design Pro`;
+      title = `${routerData[pathname].name} - 中韩石化应急指挥系统`;
     }
     return title;
   }
+  handleClose = () => {
+    const that = this;
+    confirm({
+      title: '请确认',
+      content: '将关闭窗口',
+      okText: '确认',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        that.props.dispatch({
+          type: 'video/devTools',
+          payload: { CmdCode: 'EXIT' },
+        });
+      },
+    });
+  };
+  handleMin = () => {
+    this.props.dispatch({
+      type: 'video/devTools',
+      payload: { CmdCode: 'MIN' },
+    });
+  };
   render() {
     const { routerData, match } = this.props;
     return (
       <DocumentTitle title="用户登录">
-        <div className={styles.login_content}>
-          <div className={styles.login_header}>
-            <div className={styles.header_logo}>
-              <img alt="logo" src={logo} />
+        <div>
+          <div className={styles.tool}>
+            <Tooltip placement="bottom" title="关闭">
+            <span className={styles.closeWarp}>
+              <Icon className={styles.close} type="close" style={{ fontWeight: 800 }} onClick={this.handleClose} />
+            </span>
+            </Tooltip>
+            <Tooltip placement="bottom" title="最小化">
+            <span className={styles.minWarp}>
+              <Icon className={styles.close} type="minus" style={{ fontWeight: 800 }} onClick={this.handleMin} />
+            </span>
+            </Tooltip>
+          </div>
+          <div className={styles.login_content}>
+            <div className={styles.login_header}>
+              <div className={styles.header_logo}>
+                <img alt="logo" src={logo} />
+              </div>
+            </div>
+            <div className={styles.login_body}>
+              <Switch>
+                {getRoutes(match.path, routerData).map(item =>
+                  (
+                    <Route
+                      key={item.key}
+                      path={item.path}
+                      component={item.component}
+                      exact={item.exact}
+                    />
+                  )
+                )}
+              </Switch>
+            </div>
+            <div className={styles.login_footer}>
+              <div className={styles.footer_desc} />
             </div>
           </div>
-          <div className={styles.login_body}>
-            <Switch>
-              {getRoutes(match.path, routerData).map(item =>
-                (
-                  <Route
-                    key={item.key}
-                    path={item.path}
-                    component={item.component}
-                    exact={item.exact}
-                  />
-                )
-              )}
-            </Switch>
-              <div className={styles.close} />
-          </div>
-          <div className={styles.login_footer}>
-            <div className={styles.footer_desc} />
-          </div>
         </div>
+
       </DocumentTitle>
 
       // {/*<DocumentTitle title={this.getPageTitle()}>*/}

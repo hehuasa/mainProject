@@ -1,5 +1,5 @@
 import {
-  addItem, addLayer, delItem, delLayer, searchByAttr, transToPoint, clustering, addConstructIcon,
+  addItem, addPolygonItem, delPolygonItem, addLayer, delItem, delLayer, searchByAttr, transToPoint, clustering, addConstructIcon,
   solidWarehouseDetail, paSystemDetail, addMapAlarms, getBordStyle,
 } from '../../utils/MapService';
 import { constantlyModal, infoConstantly, infoPopsModal } from '../../services/constantlyModal';
@@ -346,7 +346,6 @@ export const handleCheck = (event, treeId, treeNode, that) => {
       loop(treeNode);
     }
   }
-  // 获取资源树对应的图层
 
   const layers = [];
   for (const layer of treeNode.resResourceTreeMapLayers) {
@@ -354,6 +353,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
   }
   // 判断节点的功能码
   const subLayers = [];
+  // 获取资源树对应的图层
   for (const layer of treeNode.resResourceTreeMapLayers) {
     let layer1;
     layer1 = mapLayers.FeatureLayers.find(value => value.layerAddress === layer.layerInfo.layerAddress);
@@ -1190,6 +1190,15 @@ export const handleCheck = (event, treeId, treeNode, that) => {
         }
       } else {
         delItem({ map: mainMap, device: treeNode, id: treeNode.ctrlResourceType, dispatch });
+      }
+      break;
+    case 4:
+      if (treeNode.checked) {
+        if (treeNode.gISCode) {
+          addPolygonItem({ map: mainMap, baseLayer, layers: subLayers, device: treeNode, id: treeNode.ctrlResourceType, scale: popupScale });
+        }
+      } else {
+        delPolygonItem({ map: mainMap, device: treeNode, id: treeNode.ctrlResourceType, dispatch });
       }
       break;
     case 7:
