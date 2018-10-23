@@ -3,6 +3,7 @@ import { lineData, getSelctData } from '../utils/Panel';
 import { constantlyInfo, addDoorIcon, envMap } from '../utils/MapService';
 import {
   getGuardCounting, getGuardDoorCounting, getConditionCalc, findByTime, getAllNewsData, getNewsData, getNewsDataByGroup, getNewsDataByCtrlResourceType,
+  getHotFurnaceRunDay, getAlternatorRunDay, getDissociationRunDay,
 } from '../services/api';
 import { constantlyModal, constantlyPanelModal, constantlyConditionCalc } from '../services/constantlyModal';
 // 公共函数，在地图显示各种实时专题数据
@@ -149,15 +150,31 @@ export default {
     // 设备监测实时值
     *getDeviceMonitorData({ payload }, { call }) {
       const response = yield call(getAllNewsData, payload);
+      let runDayUrl;
+      switch (payload.selectRunDay) {
+        case 'proRptAlternatorInfo':
+          runDayUrl = getAlternatorRunDay;
+          break;
+        case 'proRptDissociationInfo':
+          runDayUrl = getDissociationRunDay;
+          break;
+        case 'proRptHotFurnaceInfo':
+            runDayUrl = getHotFurnaceRunDay;
+            break;
+        default: break;
+      }
+      // const rundayData = yield call(runDayUrl, { date: new Date().getTime() });
+      const runDayData = yield call(runDayUrl, { date: 1538958903000 });
       if (constantlyModal[payload.ctrlResourceType] === undefined) {
         constantlyModal[payload.ctrlResourceType] = {};
         constantlyModal[payload.ctrlResourceType].data = response.data;
+        constantlyModal[payload.ctrlResourceType].runDayData = runDayData.data;
       } else {
         constantlyModal[payload.ctrlResourceType].data = response.data;
+        constantlyModal[payload.ctrlResourceType].runDayData = runDayData.data;
       }
     },
     *getGuardDoorCounting({ payload }, { call }) {
-      const { domTypeDoor, map, view, dispatch, graphics, scale } = payload;
       const responseDoor = yield call(getGuardDoorCounting);
       const responseArea = yield call(getGuardCounting);
       yield constantlyModal[payload.domTypeDoor].data = responseDoor.data;

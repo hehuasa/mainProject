@@ -1,4 +1,5 @@
 @import "../../../index";
+
 @blue1: #7eb8f0;
 @blue2: #2f9ef3;
 @boder1: #d0d0d0;
@@ -12,7 +13,7 @@
   background: @bg1;
   & .deviceType {
     color: @blue2;
-    font-size: 18px;
+    font-size: 16px;
     margin: 18px 0 16px 40px;
   }
   & .cardWarp {
@@ -25,12 +26,23 @@
       height: 160px;
       border: 1px solid @boder1;
       & .title {
-       margin: 0 5% 12px 4px;
+        margin: 0 4px 4px 4px;
         padding: 0 4px;
+        width: 98%;
         height: 24px;
         line-height: 24px;
         text-align: left;
         border-bottom: 1px solid @boder1;
+        overflow: hidden;
+        & span {
+          margin: 0 8px;
+        }
+        & .left {
+          float: left;
+        }
+        & .right {
+          float: right;
+        }
       }
       & .text {
         display: flex;
@@ -46,7 +58,7 @@
         border-radius: 3px;
         background: @bg2;
         & .value {
-          font-size: 18px;
+          font-size: 16px;
         }
         & .units {
           font-size: 12px;
@@ -54,12 +66,12 @@
       }
       & .quota2 {
         padding: 4px 8px;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
         min-width: 80px;
         border-radius: 3px;
         background: @bg2;
         & .value {
-          font-size: 18px;
+          font-size: 16px;
         }
         & .units {
           font-size: 12px;
@@ -96,5 +108,9 @@
       }
     }
   }
-
+  & .name {
+    position: absolute;
+    bottom: 4px;
+    width: 50%;
+  }
 }

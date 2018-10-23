@@ -15,77 +15,59 @@ export default class DeviceMonitor extends PureComponent {
     const option = JSON.parse(this.props.currentFlow.data.graphicsContent);
     dispatch({
       type: 'constantlyData/getDeviceMonitorData',
-      payload: { ctrlResourceType },
+      payload: { ctrlResourceType, selectRunDay: option.selectRunDay },
     }).then(() => {
-      if (constantlyModal[ctrlResourceType]) {
-        const { data } = constantlyModal[ctrlResourceType];
-        // 按照炉号（datacode）分组
-        const array = [];
-        for (const item of data) {
-          // 判断新增还是push
-          const index = array.findIndex(value => value.processNumber === item.resResourceInfo.processNumber);
-          for (const [key, value] of Object.entries(option.quotas)) {
-            if (value === item.dataTypeName) {
-              if (index === -1) {
-                const obj = {};
-                obj[key] = { value: item.value, meterUnit: item.meterUnit, dataTypeName: item.dataTypeName };
-                obj.processNumber = item.resResourceInfo.processNumber;
-                obj.sort = Number(item.resResourceInfo.resourceCode);
-                array.push(obj);
-              } else {
-                array[index][key] = { value: item.value, meterUnit: item.meterUnit, dataTypeName: item.dataTypeName };
-                array[index][key].processNumber = item.resResourceInfo.processNumber;
-                array[index][key].sort = Number(item.resResourceInfo.resourceCode);
-              }
-            }
-          }
-        }
-        array.sort((a, b) => {
-          return a.sort - b.sort;
-        });
-        this.setState({ data: array });
-      }
+      this.getData(ctrlResourceType, option);
     });
     timer = setInterval(() => {
       dispatch({
         type: 'constantlyData/getDeviceMonitorData',
         payload: { ctrlResourceType },
       }).then(() => {
-        if (constantlyModal[ctrlResourceType]) {
-          const { data } = constantlyModal[ctrlResourceType];
-          // 按照炉号（datacode）分组
-          const array = [];
-          for (const item of data) {
-            // 判断新增还是push
-            const index = array.findIndex(value => value.processNumber === item.resResourceInfo.processNumber);
-            for (const [key, value] of Object.entries(option.quotas)) {
-              if (value === item.dataTypeName) {
-                if (index === -1) {
-                  const obj = {};
-                  obj[key] = { value: item.value, meterUnit: item.meterUnit, dataTypeName: item.dataTypeName };
-                  // obj[1] = { value: item.value, meterUnit: item.meterUnit };
-                  obj.processNumber = item.resResourceInfo.processNumber;
-                  obj.sort = Number(item.resResourceInfo.resourceCode);
-                  array.push(obj);
-                } else {
-                  array[index][key] = { value: item.value, meterUnit: item.meterUnit, dataTypeName: item.dataTypeName };
-                  array[index][key].processNumber = item.resResourceInfo.processNumber;
-                  array[index][key].sort = Number(item.resResourceInfo.resourceCode);
-                }
-              }
-            }
-          }
-          array.sort((a, b) => {
-            return a.sort - b.sort;
-          });
-          this.setState({ data: array });
-        }
+        this.getData(ctrlResourceType, option);
       });
     }, option.spaceTime);
   }
   componentWillUnmount() {
     clearInterval(timer);
   }
+  getData = (ctrlResourceType, option) => {
+    if (constantlyModal[ctrlResourceType]) {
+      const { data, runDayData } = constantlyModal[ctrlResourceType];
+      // 按照炉号（datacode）分组
+      const array = [];
+      for (const item of data) {
+        // 判断新增还是push
+        const index = array.findIndex(value => value.processNumber === item.resResourceInfo.processNumber);
+        for (const [key, value] of Object.entries(option.quotas)) {
+          if (value === item.dataTypeName) {
+            if (index === -1) {
+              const obj = {};
+              obj[key] = { value: item.value, meterUnit: item.meterUnit, dataTypeName: item.dataTypeName };
+              obj.processNumber = item.resResourceInfo.processNumber;
+              obj.sort = Number(item.resResourceInfo.resourceCode);
+              array.push(obj);
+            } else {
+              array[index][key] = { value: item.value, meterUnit: item.meterUnit, dataTypeName: item.dataTypeName };
+              array[index][key].processNumber = item.resResourceInfo.processNumber;
+              array[index][key].sort = Number(item.resResourceInfo.resourceCode);
+            }
+          }
+        }
+      }
+      for (const item of array) {
+        const runDay = runDayData.find(value => value.dissociationName === item.processNumber);
+        if (runDay) {
+          item.dayCount = runDay.dayCount;
+          item.rawName = runDay.rawName;
+        }
+      }
+      array.sort((a, b) => {
+        return a.sort - b.sort;
+      });
+      this.setState({ data: array });
+    }
+  };
   render() {
     const { mapHeight, deviceMonitor } = this.props;
     const { data } = this.state;
@@ -97,7 +79,9 @@ export default class DeviceMonitor extends PureComponent {
             { data && data.length > 0 ? data.map(item => (
               <Col xs={12} sm={21} md={12} lg={12} xl={12} xxl={8} style={{ textAlign: 'center' }} key={Math.random() * new Date().getTime()}>
                 <div className={styles.card} key={item.processNumber}>
-                  <div className={styles.title}>{item.processNumber}</div>
+                  <div className={styles.title}>
+                    <span className={styles.left}>{item.processNumber}</span><span className={styles.right}>运行天数：{item.dayCount}</span>
+                  </div>
                   <div className={styles.text}>
                     { item[0] ? (
                       <div className={item[1] ? styles.quota2 : styles.quota1}>
@@ -112,7 +96,9 @@ export default class DeviceMonitor extends PureComponent {
 ) : null
                   }
                   </div>
-
+                  <div className={styles.name}>
+                    物料名称：  {item.rawName}
+                  </div>
                   <div className={styles.circle}>
                     <div className={styles.content}>
                       {
