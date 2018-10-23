@@ -1,18 +1,29 @@
 import React, { PureComponent } from 'react';
-import { Form, Table, Row, Col, Input, Button, Modal, Select } from 'antd';
+import { TreeSelect, Form, Table, Row, Col, Input, Button, Modal, Select } from 'antd';
 import moment from 'moment';
 import styles from './index.less';
 
 const FormItem = Form.Item;
+const { TreeNode } = TreeSelect;
 const columnsTitle = () => {
   return (
     [{
+      title: '装置区域',
+      dataIndex: 'area',
+      width: 200,
+      render: (text) => {
+        return text ? text.areaName : '';
+      },
+    }, {
+      title: '机构名称',
+      dataIndex: 'organization',
+      width: 200,
+      render: (text) => {
+        return text ? text.orgnizationName : '';
+      },
+    }, {
       title: '资源名称',
       dataIndex: 'resourceName',
-      width: 200,
-    }, {
-      title: '上级资源',
-      dataIndex: 'parentCode',
       width: 200,
     }, {
       title: '规格型号',
@@ -20,7 +31,7 @@ const columnsTitle = () => {
       width: 200,
     }, {
       title: '所属专业',
-      dataIndex: 'specialties',
+      dataIndex: 'professionSystemName',
       width: 200,
     }, {
       title: '工艺位号',
@@ -82,6 +93,11 @@ export default class CommonQuery extends PureComponent {
     this.props.dispatch({
       type: 'alarmDeal/professionList',
     });
+    // 获取装置列表
+    this.props.dispatch({
+      type: 'alarmDeal/getAreaList',
+      payload: { areaType: 111.101 },
+    });
   }
   onhandleTableChange = (pagination, filtersArg, sorter) => {
     if (!this.props.isUsePage) {
@@ -127,6 +143,8 @@ export default class CommonQuery extends PureComponent {
           profession: fieldsValue.profession,
           resourceClassify: fieldsValue.resourceClassify,
           installPosition: fieldsValue.installPosition,
+          areaID: fieldsValue.areaID,
+          orgID: fieldsValue.orgID,
         },
       });
     });
@@ -157,7 +175,7 @@ export default class CommonQuery extends PureComponent {
     const { form } = this.props;
     const alarmEventInfoData = {};
     const { title, searchValue, whether, clickWhether, visible, onHandleOk,
-      onHandleCancel, rowSelection, alarmDeal } = this.props;
+      onHandleCancel, rowSelection, alarmDeal, orgTree } = this.props;
     let columns = null;
     let newPagination = {};
     if (clickWhether === 1 || clickWhether === 2) {
@@ -169,6 +187,18 @@ export default class CommonQuery extends PureComponent {
       newPagination = {};
     } else {
       newPagination = alarmDeal.pagination;
+    }
+    const renderTreeNodes = (data) => {
+      return data.map((item) => {
+        if (item.children) {
+          return (
+            <TreeNode title={item.orgnizationName} key={item.orgID} value={`${item.orgID}`} >
+              {renderTreeNodes(item.children)}
+            </TreeNode>
+          );
+        }
+        return <TreeNode title={item.orgnizationName} key={item.orgID} value={`${item.orgID}`} />;
+      });
     }
     return (
       <div>
@@ -189,6 +219,56 @@ export default class CommonQuery extends PureComponent {
               <div className={styles.tableListForm}>
                 <Form layout="inline" >
                   <Row type="flex" gutter={{ md: 8, lg: 24, xl: 48 }} >
+                    <Col md={6} sm={24}>
+                      <FormItem
+                        labelCol={{ span: 7 }}
+                        wrapperCol={{ span: 15 }}
+                        label="装置区域"
+                      >
+                        {form.getFieldDecorator('areaID', {
+                        })(
+                          <Select
+                            placeholder="请选择装置区域"
+                            onChange={this.handleChange}
+                            optionFilterProp="title"
+                            showSearch
+                            style={{ width: '100%' }}
+                          >
+                            <Option value="">请选择</Option>
+                            {alarmDeal.areaList.map(item => (
+                              <Option
+                                key={item.areaID}
+                                value={item.areaID}
+                                title={item.areaName}
+                              >{item.areaName}
+                              </Option>
+                            ))}
+                          </Select>
+                        )}
+                      </FormItem>
+                    </Col>
+                    <Col md={6} sm={24}>
+                      <FormItem
+                        labelCol={{ span: 7 }}
+                        wrapperCol={{ span: 15 }}
+                        label="所属部门"
+                      >
+                        {form.getFieldDecorator('orgID', {
+                        })(
+                          <TreeSelect
+                            showSearch
+                            style={{ width: '100%' }}
+                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                            placeholder="请选择事发部门"
+                            treeNodeFilterProp="title"
+                            allowClear
+                            treeDefaultExpandAll
+                          >
+                            {renderTreeNodes(alarmDeal.apparatusList)}
+                          </TreeSelect>
+                        )}
+                      </FormItem>
+                    </Col>
                     <Col md={6} sm={24}>
                       <FormItem
                         labelCol={{ span: 7 }}

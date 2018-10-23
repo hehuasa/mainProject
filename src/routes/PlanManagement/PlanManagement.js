@@ -583,7 +583,7 @@ export default class Analysis extends PureComponent {
       },
       {
         title: '发布时间',
-        dataIndex: 'startTime',
+        dataIndex: 'releaseTime',
         // width: 180,
         render: (val) => {
           if (!val) {
