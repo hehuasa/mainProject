@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Table } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
-import { searchByAttr } from '../../../../utils/MapService';
+import {hoveringAlarm, searchByAttr} from '../../../../utils/MapService';
 import styles from './zoomComponents.less';
 import { mapConstants } from '../../../../services/mapConstant';
 
@@ -53,8 +53,11 @@ const columns = [
     },
   }];
 
-@connect(({ alarm }) => ({
+@connect(({ alarm, map }) => ({
   alarm,
+  popupScale: map.popupScale,
+  iconArray: alarm.iconArray,
+  infoPops: map.infoPops,
 }))
 class AlarmCounting extends PureComponent {
   constructor(props) {
@@ -68,11 +71,15 @@ class AlarmCounting extends PureComponent {
     });
   }
   handleClick = (record) => {
+    const { popupScale, dispatch, infoPops } = this.props;
     const { view } = mapConstants;
     searchByAttr({ searchText: record.resourceGisCode, searchFields: ['ObjCode'] }).then(
       (res) => {
         if (res.length > 0) {
-          view.goTo({ center: res[0].feature.geometry, scale: 7000 });
+          const screenPoint = view.toScreen(res[0].feature.geometry);
+          view.goTo({ center: res[0].feature.geometry, scale: popupScale }).then(() => {
+            hoveringAlarm({ layer: mapConstants.mainMap.findLayerById('报警选中'), geometry: res[0].feature.geometry, alarm: record, dispatch, screenPoint, infoPops });
+          });
         }
       }
     );

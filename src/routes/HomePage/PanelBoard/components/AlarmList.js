@@ -54,6 +54,7 @@ const columns = [
     popupScale: map.popupScale,
     iconArray: alarm.iconArray,
     alarmDeal,
+    infoPops: map.infoPops,
   };
 })
 class AlarmCounting extends PureComponent {
@@ -62,7 +63,7 @@ class AlarmCounting extends PureComponent {
     this.handleClick = this.handleClick.bind(this);
   }
   handleClick = (record) => {
-    const { popupScale, dispatch, iconArray } = this.props;
+    const { popupScale, dispatch, infoPops } = this.props;
     const { view, mainMap } = mapConstants;
     dispatch({
       type: 'resourceTree/saveClickedAlarmId',
@@ -72,9 +73,9 @@ class AlarmCounting extends PureComponent {
       searchByAttr({ searchText: record.resourceGisCode, searchFields: ['ObjCode'] }).then(
         (res) => {
           if (res.length > 0) {
-            hoveringAlarm({ layer: mapConstants.mainMap.findLayerById('报警选中'), geometry: res[0].feature.geometry, alarm: record });
-            // }
+            const screenPoint = view.toScreen(res[0].feature.geometry);
             view.goTo({ center: res[0].feature.geometry, scale: popupScale }).then(() => {
+              hoveringAlarm({ layer: mapConstants.mainMap.findLayerById('报警选中'), geometry: res[0].feature.geometry, alarm: record, dispatch, screenPoint, infoPops });
               dispatch({
                 type: 'resourceTree/selectByGISCode',
                 payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, gISCode: record.resourceGisCode },
