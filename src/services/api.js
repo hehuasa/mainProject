@@ -662,6 +662,13 @@ export async function getCrackingFurnace(params) {
     body: params,
   });
 }
+// 获取裂解炉运行天数
+export async function getDissociationRunDay(params) {
+  return request(`${path}/report/proRptDissociationInfo/selectRunDay`, {
+    method: 'POST',
+    body: params,
+  });
+}
 // 获取裂解炉运行情况
 export async function updateCrackingFurnace(params) {
   return request(`${path}/production/proEquipmentRunStateValue/update`, {
@@ -2140,9 +2147,23 @@ export async function getThermoelectricFurnace(params) {
     body: params,
   });
 }
+// 热电锅炉运行天数
+export async function getHotFurnaceRunDay(params) {
+  return request(`${path}/report/proRptHotFurnaceInfo/selectRunDay`, {
+    method: 'POST',
+    body: params,
+  });
+}
 // 发电机
 export async function getDynamotor(params) {
   return request(`${path}/report/proRptAlternatorInfo/selectToday`, {
+    method: 'POST',
+    body: params,
+  });
+}
+// 发电机运行天数
+export async function getAlternatorRunDay(params) {
+  return request(`${path}/report/proRptAlternatorInfo/selectRunDay`, {
     method: 'POST',
     body: params,
   });
