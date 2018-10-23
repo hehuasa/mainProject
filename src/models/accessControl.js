@@ -29,7 +29,7 @@ export default {
     // 门禁统计
     *getAllDoorCount({ payload }, { call, put, select }) {
       const { data } = yield call(getAllDoorCount, payload);
-      const { map, view, graphics } = payload;
+      const { map, view, graphics, dispatch } = payload;
       yield put({
         type: 'queryAllDoorCount',
         payload: data,
@@ -38,7 +38,7 @@ export default {
         return accessControl.show;
       });
       if (show) {
-        yield addDoorIcon({ map, view, data, graphics });
+        yield addDoorIcon({ map, view, data, graphics, dispatch });
       }
     },
     // 各部门人员分布情况

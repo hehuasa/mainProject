@@ -3,7 +3,7 @@
 
 .warp {
   background-color: @component-background;
-  font-size: 12px;
+  font-size: 12px !important;
   & .header {
     height: 30px;
     background-color: @primary-6;
@@ -156,3 +156,8 @@
   }
 }
 
+:global {
+  .ant-collapse {
+    font-size: 12px;
+  }
+}

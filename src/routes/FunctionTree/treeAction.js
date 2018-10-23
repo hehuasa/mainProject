@@ -535,12 +535,12 @@ export const handleCheck = (event, treeId, treeNode, that) => {
                     clearInterval(a);
                     dispatch({
                       type: 'accessControl/getAllDoorCount',
-                      payload: { map: mainMap, view, layer: subLayers[0], graphics },
+                      payload: { map: mainMap, view, layer: subLayers[0], graphics, dispatch },
                     });
                     loopObj[deviceArrayIndex] = setInterval(() => {
                       dispatch({
                         type: 'accessControl/getAllDoorCount',
-                        payload: { map: mainMap, view, layer: subLayers[0], graphics },
+                        payload: { map: mainMap, view, layer: subLayers[0], graphics, dispatch },
                       });
                     }, spaceTime);
                   }

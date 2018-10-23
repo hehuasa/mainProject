@@ -9,6 +9,7 @@ import AlarmCount from './infoWindow/AlarmCount';
 import ConstantlyTemplate from './infoWindow/ConstantlyTem/ConstantlyTemplate';
 import InfoPops from './infoWindow/Template/InfoPops';
 import ClusterPopup from './infoWindow/ClusterPopup/ClusterPopup';
+import AccessPopup from './infoWindow/AccessPopup/AccessPopup';
 import PAPopup from './infoWindow/PApopup/PApopup';
 import { constantlyModal, infoPopsModal } from '../../services/constantlyModal';
 import { mapLayers, mapConstants } from '../../services/mapConstant';
@@ -27,7 +28,7 @@ const current = {};
 
 const mapStateToProps = ({ map, homepage, websocket, alarm, resourceTree, constantlyData, loading, global }) => {
   const { infoWindow, scale, popupScale, baseLayer, trueMapShow, locateTrueMap, mapPoint, screenBeforePoint, searchDeviceArray, screenPoint, popupShow,
-    constantlyValue, doorConstantlyValue, doorAreaConstantlyValue, gasConstantlyValue, envConstantlyValue, paPopup, stopPropagation,
+    constantlyValue, doorConstantlyValue, doorAreaConstantlyValue, gasConstantlyValue, envConstantlyValue, paPopup, stopPropagation, accessPops,
     vocConstantlyValue, waterConstantlyValue, steamConstantlyValue, contextPosition, clusterPopup, isDraw,
     crackingConstantlyValue, generatorConstantlyValue, largeUnitConstantlyValue, boilerConstantlyValue, infoPops, spaceQueryPop,
   } = map;
@@ -70,6 +71,7 @@ const mapStateToProps = ({ map, homepage, websocket, alarm, resourceTree, consta
     infoPops,
     clusterPopup,
     spaceQueryPop,
+    accessPops,
     paPopup,
     resourceTree,
     fetchingAlarm: loading.effects['alarm/fetch'],
@@ -138,7 +140,7 @@ export default class MapRelation extends PureComponent {
   };
 
   render() {
-    const { stopPropagation, popupShow, trueMapShow, dispatch, serviceUrl, contextPosition, screenPoint, mapPoint, constantlyComponents, infoPops, clusterPopup, baseLayer, paPopup, mapHeight } = this.props;
+    const { stopPropagation, popupShow, trueMapShow, dispatch, serviceUrl, contextPosition, screenPoint, mapPoint, constantlyComponents, infoPops, clusterPopup, accessPops, baseLayer, paPopup, mapHeight } = this.props;
     const { legendIndex } = this.state;
     const { allSublayers } = baseLayer;
     // 实时专题图气泡窗
@@ -155,6 +157,9 @@ export default class MapRelation extends PureComponent {
     // 扩音对讲气泡窗
     const paPopupComponents =
       (paPopup.show && paPopup.load ? paPopup.data.map(item => <PAPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null);
+    // 门禁气泡窗
+    const accessPopupComponents =
+      (accessPops.show && accessPops.load ? accessPops.data.map(item => <AccessPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null);
     const mapStyle = { height: mapHeight };
     return (
       serviceUrl.mapApiUrl === '' ? null : (
@@ -181,6 +186,7 @@ export default class MapRelation extends PureComponent {
             { popupShow ? ConstantlyComponents : null }
             { popupShow ? paPopupComponents : null }
             { popupShow ? clusterPropComponents : null }
+            { accessPopupComponents }
             <AlarmCount />
             <MeasurePop />
             <SpaceQuery />

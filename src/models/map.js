@@ -203,6 +203,7 @@ export default {
     // 扩音分区
     paSystemInfo: [],
     paPopup: { show: false, load: false, data: [] },
+    accessPops: { show: false, load: false, data: [] },
     paBordInfo: {},
     resourceInfo: {}, // 报警对应的资源信息
   },
@@ -568,6 +569,13 @@ export default {
       return {
         ...state,
         infoPops: payload,
+      };
+    },
+    // 门禁的popup
+    queryAccessPops(state, { payload }) {
+      return {
+        ...state,
+        accessPops: payload,
       };
     },
     // 聚合的popup

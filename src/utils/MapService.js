@@ -1640,7 +1640,7 @@ export const constantlyInfo = async (map, view, dispatch, devices, type, constan
   });
 };
 // 添加门禁图标
-export const addDoorIcon = async ({ map, view, data, graphics }) => {
+export const addDoorIcon = async ({ map, view, data, graphics, dispatch }) => {
   esriLoader.loadModules([
     'esri/geometry/Point',
     'esri/layers/GraphicsLayer',
@@ -1735,23 +1735,39 @@ export const addDoorIcon = async ({ map, view, data, graphics }) => {
         // weight: "bold"
       },
     };
-
+    const datas = [];
     for (const item of graphics) {
-      const point = new Point(item.geometry);
       const doorData = data.find(value => Number(value.gisCode) === Number(item.attributes.ObjCode));
       if (doorData) {
         doorInfoIndex += 1;
-        symbolTextIn.text = `进${doorData.inNUm}`;
-        symbolTextOut.text = `出${doorData.outNum}`;
-        symbolTextDoorName.text = doorData.doorName;
+        // symbolTextIn.text = `进${doorData.inNUm}`;
+        // symbolTextOut.text = `出${doorData.outNum}`;
+        // symbolTextDoorName.text = doorData.doorName;
+        const accessPop = {
+          data: {
+            in: `进${doorData.inNUm}`,
+            out: `出${doorData.outNum}`,
+            name: doorData.doorName,
+            index: doorInfoIndex,
+            geometry: item.geometry,
+            screenPoint: view.toScreen(item.geometry),
+            },
+          uniqueKey: new Date().getTime() * Math.random(),
+        };
+        datas.push(accessPop);
         // const e = new Graphic(point, symbolDoor, {});
-        const a = new Graphic(point, symbolBox, { index: doorInfoIndex });
-        const b = new Graphic(point, symbolTextIn, { index: doorInfoIndex });
-        const c = new Graphic(point, symbolTextOut, { index: doorInfoIndex });
-        const f = new Graphic(point, symbolTextDoorName, { gISCode: item.attributes.ObjCode, index: doorInfoIndex, isBox: true });
-        doorLayer.graphics.addMany([a, b, c, f]);
+        // const a = new Graphic(point, symbolBox, { index: doorInfoIndex });
+        // const b = new Graphic(point, symbolTextIn, { index: doorInfoIndex });
+        // const c = new Graphic(point, symbolTextOut, { index: doorInfoIndex });
+        // const f = new Graphic(point, symbolTextDoorName, { gISCode: item.attributes.ObjCode, index: doorInfoIndex, isBox: true });
+        // doorLayer.graphics.addMany([a, b, c, f]);
       }
     }
+    console.log('datas', datas);
+    dispatch({
+      type: 'map/queryAccessPops',
+      payload: { show: true, load: true, data: datas },
+    })
   });
 };
 // 作业监控数量图标
@@ -2127,7 +2143,7 @@ export const envMap = ({ view, map, graphics }) => {
           // data.value = datas.findIndex(value => value.gISCode === data.gISCode);
           // console.log('data.value', data.value);
           const isInRange = data.value > parseFloat(data.baseConditionExpressShowInfoVOS[0].startValue) && data.value < parseFloat(data.baseConditionExpressShowInfoVOS[0].endValue);
-          simpleMarkerSymbol.color = isInRange ? '#e6111d' : '#74c01f';
+          simpleMarkerSymbol.color = isInRange ? '#e6111d' : '#2dc12d';
           // simpleMarkerSymbol.color = '#d12b2b';
           simpleTextSymbol1.text = parseFloat(data.value).toFixed(2);
           // simpleTextSymbol1.color = isInRange ? '#d12b2b' : '#74c01f';
