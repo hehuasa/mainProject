@@ -453,7 +453,7 @@ export default class Trees extends PureComponent {
       type: 'sysFunction/getContext',
       payload: { show: false },
     });
-    if (title === '未处理事件') {
+    if (title === '应急事件') {
       dispatch({
         type: 'emergency/undoneEventList',
       });

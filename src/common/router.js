@@ -83,7 +83,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
     },
     '/homePage': {
-      component: dynamicWrapper(app, ['homepage', 'panelBoard', 'map', 'tabs', 'resourceTree', 'websocket', 'paSystem', 'alarm', 'video', 'combustibleGas', 'outerDrain', 'vocs', 'constantlyData', 'flow', 'accessControl', 'constructMonitor'], () => import('../routes/HomePage/HomePage')),
+      component: dynamicWrapper(app, ['homepage', 'panelBoard', 'map', 'tabs', 'resourceTree', 'websocket', 'paSystem', 'alarm', 'video', 'combustibleGas', 'outerDrain', 'vocs', 'constantlyData', 'flow', 'accessControl', 'constructMonitor', 'organization'], () => import('../routes/HomePage/HomePage')),
     },
     '/monitorWarning/evr': {
       component: dynamicWrapper(app, ['homepage', 'sidebar', 'map'], () => import('../routes/MonitorWarning/evr')),
@@ -291,7 +291,7 @@ export const getRouterData = (app) => {
     '/system/systemCode': {
       component: dynamicWrapper(app, ['typeCode'], () => import('../routes/System/SystemCode/index')), // 码表维护
     },
-    '/emergencyDrill/manage': {
+    '/emgcDrill/manage': {
       component: dynamicWrapper(app, ['drillManage'], () => import('../routes/EmergencyDrill/DrillManage')), // 应急方案管理
     },
     // 生产日报 上传报表

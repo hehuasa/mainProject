@@ -17,11 +17,11 @@ const Option = Select.Option;
 }))
 export default class AddFeature extends PureComponent {
   componentDidMount() {
-    const { dispatch, eventID } = this.props;
+    const { dispatch, eventID, eventExecPlanID } = this.props;
     // 根据eventID获取流程节点
     dispatch({
       type: 'emergency/getFlowNodeList',
-      payload: { eventID },
+      payload: { eventID, eventExecPlanID },
     });
     // 根据eventID获取应急人员
     dispatch({

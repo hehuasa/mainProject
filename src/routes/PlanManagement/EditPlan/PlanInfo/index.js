@@ -763,7 +763,7 @@ export default class PlanInfo extends PureComponent {
         render: (text) => {
           let str = '';
           text.forEach((item) => {
-            str = `${str}${item.postionName}, `;
+            str = item ? `${str}${item.postionName}, ` : `${str}`;
           });
           return str;
         },

@@ -1,7 +1,7 @@
 import {
   alarmEvent, alarmDeal, queryEventInfoReport, getResourceQueryPage,
   getMonitorResourceObj, getByResourceIDs, getApparatus, getAlarmConten,
-  selectByTypeParent, selectByCodeByCode,
+  selectByTypeParent, selectByCodeByCode, queryAreaListByAreaType,
 } from '../services/api';
 
 
@@ -18,6 +18,7 @@ export default {
     alarmDealTypeList: [], // 报警处理类型列表 码表104
     isDrill: 0, // 是否是应急演练
     professionList: [], // 所属专业
+    areaList: [], // 区域list
   },
 
   effects: {
@@ -100,6 +101,14 @@ export default {
         payload: response.data,
       });
     },
+    // 获取装置区域
+    *getAreaList({ payload }, { call, put }) {
+      const response = yield call(queryAreaListByAreaType, payload);
+      yield put({
+        type: 'saveAreaList',
+        payload: response.data,
+      });
+    },
   },
 
   reducers: {
@@ -167,6 +176,12 @@ export default {
       return {
         ...state,
         professionList: payload,
+      };
+    },
+    saveAreaList(state, { payload }) {
+      return {
+        ...state,
+        areaList: payload,
       };
     },
 

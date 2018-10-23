@@ -2258,3 +2258,10 @@ export async function getPlansByEventID(params) {
     body: params,
   });
 }
+// 获取区域列表 参数: areaType(111.101: 装置区域,111.102:门禁分区,111.103:扩音分区,111.104:功能分区,111.104: 责任分区)
+export async function queryAreaListByAreaType(params) {
+  return request(`${path}/resource/area/getByAreaType`, {
+    method: 'POST',
+    body: params,
+  });
+}

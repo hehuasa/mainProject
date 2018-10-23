@@ -19,8 +19,9 @@ let searchValue = null; // 子页面的默认文本
 let whether = true; // 是否运行查询
 
 
-@connect(({ alarmDeal }) => ({
+@connect(({ alarmDeal, organization }) => ({
   alarmDeal,
+  orgTree: organization.orgTree,
 }))
 export default class AlarmEventInfo extends PureComponent {
   constructor(props) {
@@ -45,6 +46,9 @@ export default class AlarmEventInfo extends PureComponent {
   componentDidMount() {
     this.props.dispatch({
       type: 'alarmDeal/getApparatus',
+    });
+    this.props.dispatch({
+      type: 'organization/getOrgTree',
     });
     // 每次打开清空上次选择
     selectedData = null;
@@ -513,6 +517,7 @@ export default class AlarmEventInfo extends PureComponent {
           {...this.state}
           dispatch={this.props.dispatch}
           alarmDeal={this.props.alarmDeal}
+          orgTree={this.props.orgTree}
           onHandleOk={this.onHandleOk}
           onHandleCancel={this.onHandleCancel}
           title={title}
