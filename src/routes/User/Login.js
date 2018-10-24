@@ -23,14 +23,14 @@ export default class LoginPage extends Component {
     // 请求公钥
     // $.ajax('/local/getPubKey').then((pubKey) => {
     //   jsEncrypt.setPublicKey(pubKey);
-    //   // const obj = {
-    //   //   login: 'admin',
-    //   //   password: jsEncrypt.encrypt('admin123321'),
-    //   // };
-    //   // console.log('obj', obj);
-    //   // $.post('/local/login', obj).then((res1) => {
-    //   //   console.log('res1', res1);
-    //   // });
+      // const obj = {
+      //   login: 'admin',
+      //   password: jsEncrypt.encrypt('admin123321'),
+      // };
+      // console.log('obj', obj);
+      // $.post('/local/login', obj).then((res1) => {
+      //   console.log('res1', res1);
+      // });
     // });
   }
   // 处理视频插件的通讯
@@ -44,6 +44,7 @@ export default class LoginPage extends Component {
     }
   };
   handleSubmit = (err, values) => {
+    // jsEncrypt.setPublicKey(pubKey);
     // values.password = jsEncrypt.encrypt(values.password);
     if (!err) {
       this.props.dispatch({
