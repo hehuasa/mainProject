@@ -44,7 +44,7 @@ export default class LoginPage extends Component {
     }
   };
   handleSubmit = (err, values) => {
-    values.password = MD5(values.password).toString();
+    // values.password = MD5(values.password).toString();
     if (!err) {
       this.props.dispatch({
         type: 'login/login',
