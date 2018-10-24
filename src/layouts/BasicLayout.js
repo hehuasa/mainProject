@@ -495,9 +495,9 @@ class BasicLayout extends React.PureComponent {
                     type: 'resourceTree/getBeMonitorsByResourceID',
                     payload: { resourceID: socketMessage.B.resourceID, ctrlResourceType: '101.102.101' },
                   }).then(() => {
-                    if (this.props.resourceInfo.beMonitorObjs && this.props.resourceInfo.beMonitorObjs.length > 0) {
+                    if (this.props.resourceTree.resourceInfo.beMonitorObjs && this.props.resourceTree.resourceInfo.beMonitorObjs.length > 0) {
                       // 视频播放
-                      this.handleVideoPlay(this.props.resourceInfo.beMonitorObjs[0]);
+                      this.handleVideoPlay(this.props.resourceTree.resourceInfo.beMonitorObjs[0]);
                     }
                   });
                 }
@@ -971,6 +971,7 @@ export default connect(({ user, global, loading, tabs, map, sysFunction, alarm, 
     rightCollapsed: global.rightCollapsed,
     tabs,
     map,
+    resourceTree,
     resourceGroupByArea: resourceTree.resourceGroupByArea,
     clusterRes: resourceTree.clusterRes,
     sysFunction,
