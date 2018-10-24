@@ -323,81 +323,146 @@ export const getUUID = () => {
   const uuid = arr.join('');
   return uuid;
 };
-// 返回首页
+// 返回首页（不关闭设备监测逻辑图等）
 export const returnHome = (that) => {
   return new Promise((resolve) => {
-    const { dispatch, videoFooterHeight, tabs } = that.props;
-    if (tabs.activeKey === 'homePage') {
+    const { dispatch, tabs } = that.props;
+    if (tabs.activeKey === '/homePage') {
       resolve();
+      return;
     }
     dispatch({
       type: 'tabs/active',
       payload: { key: '/homePage' },
     }).then(() => {
-      const { video } = that.props;
+      const { video, videoFooterHeight, rightCollapsed, accessControlShow } = that.props;
+      const { position } = video;
+      const { view, accessInfoExtent } = mapConstants;
+      changeVideoPosition('homePage', rightCollapsed, position, dispatch);
       // 恢复看板
-      if (videoFooterHeight.current !== 0) {
-        resolve();
-        return false;
+      if (rightCollapsed) {
+        dispatch({
+          type: 'global/changeRightCollapsed',
+          payload: false,
+        }).then(() => {
+          changeVideoSize(videoFooterHeight, dispatch, 'show');
+          resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent).then(() => {
+            resolve();
+          });
+        });
+      } else {
+        resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent).then(() => {
+          resolve();
+        });
       }
-      // 恢复看板
-      dispatch({
-        type: 'global/changeRightCollapsed',
-        payload: false,
-      }).then(() => {
-        const { view, currentExtent, domWarp } = mapConstants;
-        const width = domWarp.clientWidth;
-        const a = setInterval(() => {
-          if (domWarp.clientWidth !== width) {
-            clearInterval(a);
-            // 恢复视频区高度
-            dispatch({
-              type: 'video/resize',
-              payload: {
-                CmdCode: '10001',
-                Size:
-                    {
-                      // Width: 400, // 误差与边距20
-                      Width: domWarp.clientWidth - 16, // 误差与边距20
-                      Height: video.size.height,
-                    },
-              },
-            }).then(() => {
-              dispatch({
-                type: 'video/relayout',
-                payload: video.layoutCommand,
-              });
-            });
-            dispatch({
-              type: 'homepage/getMapHeight',
-              payload: { domType: 'map' },
-            });
-            dispatch({
-              type: 'video/switch',
-              payload: {
-                CmdCode: 'Show',
-              },
-            });
-            dispatch({
-              type: 'homepage/getVideoFooterHeight',
-              payload: { current: that.props.videoFooterHeight.cache, cache: that.props.videoFooterHeight.current },
-            }).then(() => {
-              // 恢复地图显示范围
-              if (view.height) {
-                view.goTo({ extent: currentExtent }).then(() => {
-                  getBordStyle(view).then((style) => {
-                    dispatch({
-                      type: 'accessControl/queryStyle',
-                      payload: style,
-                    });
-                    resolve();
-                  });
-                });
-              }
-            });
-          }
-        }, 500);
       });
     });
-  });
+  };
+// 视频栏隐藏与显示
+export const switchVideo = (videoFooterHeight, dispatch) => {
+  // 视频栏是否隐藏，没有的话执行隐藏
+  if (videoFooterHeight.current !== 0) {
+    dispatch({
+      type: 'video/switch',
+      payload: {
+        CmdCode: 'Hide',
+      },
+    });
+    dispatch({
+      type: 'homepage/getVideoFooterHeight',
+      payload: { current: 0, cache: videoFooterHeight.current },
+    });
+    dispatch({
+      type: 'homepage/getMapHeight',
+      payload: { domType: 'map', changingType: 'evrVideo' },
+    });
+  }
+};
+// 修改视频坐标
+export const changeVideoPosition = (key, rightCollapsed, position, dispatch) => {
+  let x;
+  // 即将跳转的页签是否在首页
+  if (key.indexOf('homePage') === -1) {
+    // 不在首页，且右边栏未折叠，x右移230
+    if (!rightCollapsed) {
+      x = position.x + 230;
+      dispatch({
+        type: 'video/reposition',
+        payload: {
+          CmdCode: '10002',
+          Point: { x, y: position.y },
+        },
+      });
+    }
+  } else {
+    // 右边栏是否折叠
+    if (!rightCollapsed) {
+      return;
+    }
+    x = position.x - 230;
+    dispatch({
+      type: 'video/reposition',
+      payload: {
+        CmdCode: '10002',
+        Point: { x, y: position.y },
+      },
+    });
+  }
+};
+// 修改视频尺寸
+export const changeVideoSize = (videoFooterHeight, dispatch, type) => {
+  if (type === 'hide') {
+    if (videoFooterHeight.current !== 0) {
+      dispatch({
+        type: 'video/switch',
+        payload: {
+          CmdCode: 'Hide',
+        },
+      });
+      dispatch({
+        type: 'homepage/getVideoFooterHeight',
+        payload: { current: 0, cache: videoFooterHeight.current },
+      });
+      dispatch({
+        type: 'homepage/getMapHeight',
+        payload: { domType: 'map', changingType: 'evrVideo' },
+      });
+    }
+  } else {
+    if (videoFooterHeight.current !== 0) {
+      return;
+    }
+    dispatch({
+      type: 'homepage/getMapHeight',
+      payload: { domType: 'map' },
+    });
+    dispatch({
+      type: 'video/switch',
+      payload: {
+        CmdCode: 'Show',
+      },
+    });
+    dispatch({
+      type: 'homepage/getVideoFooterHeight',
+      payload: { current: videoFooterHeight.cache, cache: videoFooterHeight.current },
+    });
+  }
+};
+// 重设门禁展示的坐标
+export const resetAccessStyle = (accessControlShow, view, dispatch, accessInfoExtent) => {
+  return new Promise((resolve) => {
+    // if (accessControlShow) {
+      if (view.height) {
+        view.goTo({ extent: accessInfoExtent }).then(() => {
+          getBordStyle(view).then((style) => {
+            dispatch({
+              type: 'accessControl/queryStyle',
+              payload: style,
+            });
+            resolve();
+          });
+        });
+      }
+    // }
+  })
 };

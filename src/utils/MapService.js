@@ -1743,14 +1743,15 @@ export const addDoorIcon = async ({ map, view, data, graphics, dispatch }) => {
         // symbolTextIn.text = `进${doorData.inNUm}`;
         // symbolTextOut.text = `出${doorData.outNum}`;
         // symbolTextDoorName.text = doorData.doorName;
+        const screenPoint = view.toScreen(item.geometry);
         const accessPop = {
           data: {
-            in: `进${doorData.inNUm}`,
+            in_: `进${doorData.inNUm}`,
             out: `出${doorData.outNum}`,
             name: doorData.doorName,
             index: doorInfoIndex,
             geometry: item.geometry,
-            screenPoint: view.toScreen(item.geometry),
+            style: { left: screenPoint.x, top: screenPoint.y - 48 },
             },
           uniqueKey: new Date().getTime() * Math.random(),
         };
@@ -1763,7 +1764,6 @@ export const addDoorIcon = async ({ map, view, data, graphics, dispatch }) => {
         // doorLayer.graphics.addMany([a, b, c, f]);
       }
     }
-    console.log('datas', datas);
     dispatch({
       type: 'map/queryAccessPops',
       payload: { show: true, load: true, data: datas },

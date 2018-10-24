@@ -537,18 +537,22 @@ export const handleCheck = (event, treeId, treeNode, that) => {
                       type: 'accessControl/getAllDoorCount',
                       payload: { map: mainMap, view, layer: subLayers[0], graphics, dispatch },
                     });
-                    loopObj[deviceArrayIndex] = setInterval(() => {
-                      dispatch({
-                        type: 'accessControl/getAllDoorCount',
-                        payload: { map: mainMap, view, layer: subLayers[0], graphics, dispatch },
-                      });
-                    }, spaceTime);
+                    // loopObj[deviceArrayIndex] = setInterval(() => {
+                    //   dispatch({
+                    //     type: 'accessControl/getAllDoorCount',
+                    //     payload: { map: mainMap, view, layer: subLayers[0], graphics, dispatch },
+                    //   });
+                    // }, spaceTime);
                   }
                 }, 100);
               });
             });
           } else {
             delLayer(mainMap, ['门禁专题图'], dispatch);
+            dispatch({
+              type: 'map/queryAccessPops',
+              payload: { show: false, load: false, data: [] },
+            });
             // 恢复地图事件
             dispatch({
               type: 'map/queryStopPropagation',

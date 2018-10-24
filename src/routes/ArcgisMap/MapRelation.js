@@ -36,6 +36,12 @@ const mapStateToProps = ({ map, homepage, websocket, alarm, resourceTree, consta
   for (const item of constantlyData.constantlyComponents) {
     data.push(item);
   }
+  const { show, load } = accessPops;
+  const accessData = [];
+  for (const item of accessPops.data) {
+    accessData.push(item);
+  }
+  const newAccessPops = { show, load, data: accessData };
   return {
     serviceUrl: global.serviceUrl,
     infoWindow,
@@ -71,7 +77,7 @@ const mapStateToProps = ({ map, homepage, websocket, alarm, resourceTree, consta
     infoPops,
     clusterPopup,
     spaceQueryPop,
-    accessPops,
+    accessPops: newAccessPops,
     paPopup,
     resourceTree,
     fetchingAlarm: loading.effects['alarm/fetch'],
@@ -97,23 +103,23 @@ export default class MapRelation extends PureComponent {
   switchMap = (type) => {
     const { dispatch } = this.props;
     const switching = (showType) => {
-        const tileLayer = mapConstants.mainMap.findLayerById('底图');
-        const id = mapLayers.RasterLayers[0].id;
-        const newLayer = mapConstants.baseLayer.findSublayerById(id); // 卫星图
-        if (showType === 1) {
-            tileLayer.visible = true;
-            newLayer.visible = false;
-        } else {
-            tileLayer.visible = false;
-            newLayer.visible = true;
-        }
+      const tileLayer = mapConstants.mainMap.findLayerById('底图');
+      const id = mapLayers.RasterLayers[0].id;
+      const newLayer = mapConstants.baseLayer.findSublayerById(id); // 卫星图
+      if (showType === 1) {
+        tileLayer.visible = true;
+        newLayer.visible = false;
+      } else {
+        tileLayer.visible = false;
+        newLayer.visible = true;
+      }
     };
     switch (Number(type)) {
       case 1:
-          switching(1);
+        switching(1);
         break;
       case 2:
-          switching(2);
+        switching(2);
         break;
       case 3:
         {
@@ -128,7 +134,7 @@ export default class MapRelation extends PureComponent {
           trueMapLocate(mapConstants.mainMap, mapConstants.view, roadLine, dispatch);
         }
         break;
-        default: break;
+      default: break;
     }
   };
 
@@ -152,14 +158,17 @@ export default class MapRelation extends PureComponent {
       (item.show ? <InfoPops key={item.key} uniqueKey={item.uniqueKey} popValue={infoPopsModal[item.key]} popKey={item.key} /> : null)
     );
     // 聚合气泡窗
-    const clusterPropComponents =
-      (clusterPopup.show && clusterPopup.load ? clusterPopup.data.map(item => <ClusterPopup key={item.key} uniqueKey={item.uniqueKey} popValue={item} popKey={item.key} />) : null);
+    const clusterPropComponents = () => {
+      return clusterPopup.show && clusterPopup.load ? clusterPopup.data.map(item => <ClusterPopup key={item.key} uniqueKey={item.uniqueKey} popValue={item} popKey={item.key} />) : null
+    };
     // 扩音对讲气泡窗
-    const paPopupComponents =
-      (paPopup.show && paPopup.load ? paPopup.data.map(item => <PAPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null);
+    const paPopupComponents = () => {
+      return paPopup.show && paPopup.load ? paPopup.data.map(item => <PAPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null
+    };
     // 门禁气泡窗
-    const accessPopupComponents =
-      (accessPops.show && accessPops.load ? accessPops.data.map(item => <AccessPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null);
+    const accessPopupComponents = () => {
+      return accessPops.show && accessPops.load ? accessPops.data.map(item => <AccessPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null;
+    };
     const mapStyle = { height: mapHeight };
     return (
       serviceUrl.mapApiUrl === '' ? null : (
@@ -184,9 +193,9 @@ export default class MapRelation extends PureComponent {
             {popupShow && contextPosition.show ? <ContextMenu map={mapConstants.mainMap} dispatch={dispatch} position={contextPosition} screenPoint={screenPoint} mapPoint={mapPoint} /> : null}
             { popupShow ? infoPropComponents : null }
             { popupShow ? ConstantlyComponents : null }
-            { popupShow ? paPopupComponents : null }
-            { popupShow ? clusterPropComponents : null }
-            { accessPopupComponents }
+            { popupShow ? paPopupComponents() : null }
+            { popupShow ? clusterPropComponents() : null }
+            { popupShow ? accessPopupComponents() : null }
             <AlarmCount />
             <MeasurePop />
             <SpaceQuery />

@@ -7,7 +7,7 @@ import { Link } from 'dva/router';
 import styles from './index.less';
 import Weather from './Weather';
 import HandAlarmDeal from './HandAlarmDeal';
-import { getBrowserStyle } from '../../utils/utils';
+import {changeVideoPosition, changeVideoSize, getBrowserStyle, resetAccessStyle} from '../../utils/utils';
 
 import alarmIcon from '../../assets/header/alarm.png';
 import majorIcon from '../../assets/header/major.png';
@@ -390,7 +390,8 @@ export default class GlobalHeader extends PureComponent {
   };
 
   return = () => {
-    const { dispatch, videoFooterHeight } = this.props;
+    const { dispatch, videoFooterHeight, rightCollapsed, video, tabs } = this.props;
+    const { view, accessInfoExtent } = mapConstants;
     dispatch({
       type: 'tabs/active',
       payload: { key: '/homePage' },
@@ -422,64 +423,18 @@ export default class GlobalHeader extends PureComponent {
         input1.checked = false;
       }
       // 恢复看板
-      if (videoFooterHeight.current !== 0) {
-        return false;
+      changeVideoPosition('homePage', rightCollapsed, video.position, dispatch);
+      if (rightCollapsed) {
+        dispatch({
+          type: 'global/changeRightCollapsed',
+          payload: false,
+        }).then(() => {
+          changeVideoSize(videoFooterHeight, dispatch, 'show');
+          resetAccessStyle(view, dispatch, accessInfoExtent);
+        });
+      } else {
+        resetAccessStyle(view, dispatch, accessInfoExtent);
       }
-      // 恢复看板
-      dispatch({
-        type: 'global/changeRightCollapsed',
-        payload: false,
-      }).then(() => {
-        const { view, currentExtent, domWarp } = mapConstants;
-        if (view.height) {
-          view.goTo({ extent: currentExtent }).then(() => {
-            getBordStyle(view).then((style) => {
-              dispatch({
-                type: 'accessControl/queryStyle',
-                payload: style,
-              });
-            });
-          });
-        }
-        const width = domWarp.clientWidth;
-        const a = setInterval(() => {
-          if (domWarp.clientWidth !== width) {
-            clearInterval(a);
-            dispatch({
-              type: 'video/resize',
-              payload: {
-                CmdCode: '10001',
-                Size:
-                                {
-                                  // Width: 400, // 误差与边距20
-                                  Width: domWarp.clientWidth - 16, // 误差与边距20
-                                  Height: video.size.height,
-                                },
-              },
-            }).then(() => {
-              dispatch({
-                type: 'video/relayout',
-                payload: video.layoutCommand,
-              });
-            });
-            dispatch({
-              type: 'homepage/getMapHeight',
-              payload: { domType: 'map' },
-            });
-            dispatch({
-              type: 'video/switch',
-              payload: {
-                CmdCode: 'Show',
-              },
-            });
-            const { videoFooterHeight } = this.props;
-            dispatch({
-              type: 'homepage/getVideoFooterHeight',
-              payload: { current: videoFooterHeight.cache, cache: videoFooterHeight.current },
-            });
-          }
-        }, 500);
-      });
     });
   }
   toggle = () => {

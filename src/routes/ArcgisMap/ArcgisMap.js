@@ -12,7 +12,7 @@ import { hoveringAlarm, switchAlarmIcon } from '../../utils/MapService';
 const current = {};
 let symboltt = {};
 const mapStateToProps = ({ map, homepage, resourceTree, constantlyData, loading, tabs, global }) => {
-  const { popupScale, baseLayer, trueMapShow, paPopup, stopPropagation, clusterPopup, infoPops, spaceQueryPop } = map;
+  const { popupScale, baseLayer, trueMapShow, paPopup, stopPropagation, clusterPopup, infoPops, spaceQueryPop, accessPops } = map;
   const data = [];
   for (const item of constantlyData.constantlyComponents) {
     data.push(item);
@@ -29,6 +29,7 @@ const mapStateToProps = ({ map, homepage, resourceTree, constantlyData, loading,
     clusterPopup,
     spaceQueryPop,
     paPopup,
+    accessPops,
     activeKey: tabs.activeKey,
     resourceInfo: resourceTree.resourceInfo,
     fetchingMapApi: loading.effects['global/fetchUrl'],
@@ -625,10 +626,7 @@ export default class ArcgisMap extends PureComponent {
                       mapConstants.currentExtent = view.extent;
                     }
 
-                    dispatch({
-                      type: 'map/showPopup',
-                      payload: true,
-                    });
+
                     // 弹窗处理
                     const { spaceQueryPop } = this.props;
                     // 弹窗
@@ -674,15 +672,31 @@ export default class ArcgisMap extends PureComponent {
                     });
                     // 扩音弹窗处理
                     const paObj = this.props.paPopup;
-                    for (const item of paObj.data) {
-                      const screenPoint1 = mapConstants.view.toScreen(item.data.geometry);
-                      item.data.style = { left: screenPoint1.x, top: screenPoint1.y, width: item.data.extent.width / 2, height: item.data.extent.width / 2, lineHeight: `${item.data.extent.width / 2}px` };
-                      item.uniqueKey = Math.random() * new Date().getTime();
+                    if (paObj.load) {
+                      for (const item of paObj.data) {
+                        const screenPoint1 = mapConstants.view.toScreen(item.data.geometry);
+                        item.data.style = { left: screenPoint1.x, top: screenPoint1.y, width: item.data.extent.width / 2, height: item.data.extent.width / 2, lineHeight: `${item.data.extent.width / 2}px` };
+                        item.uniqueKey = Math.random() * new Date().getTime();
+                      }
+                      dispatch({
+                        type: 'map/queryPAPopup',
+                        payload: { show: true, load: true, data: paObj.data },
+                      });
                     }
-                    dispatch({
-                      type: 'map/queryPAPopup',
-                      payload: { show: true, load: true, data: paObj.data },
-                    });
+                    // 门禁弹窗处理
+                    const accessPop = this.props.accessPops;
+                    if (accessPop.load) {
+                      for (const item of accessPop.data) {
+                        const screenPoint = mapConstants.view.toScreen(item.data.geometry);
+                        item.data.style = { left: screenPoint.x, top: screenPoint.y - 48 };
+                        item.uniqueKey = Math.random() * new Date().getTime();
+                        console.log('style0', item.data.name, JSON.parse(JSON.stringify(item.data.style)));
+                      }
+                      dispatch({
+                        type: 'map/queryPAPopup',
+                        payload: { show: true, load: true, data: accessPop.data },
+                      });
+                    }
                     // 空间查询菜单
                     if (spaceQueryPop.load) {
                       const style = mapConstants.view.toScreen(spaceQueryPop.point);
@@ -691,13 +705,17 @@ export default class ArcgisMap extends PureComponent {
                         payload: { load: true, show: true, style: { left: style.x, top: style.y }, point: spaceQueryPop.point, screenPoint: style },
                       });
                     }
+                    dispatch({
+                      type: 'map/showPopup',
+                      payload: true,
+                    });
                   }
-                  // else {
-                  //     dispatch({
-                  //         type: 'map/showPopup',
-                  //         payload: false,
-                  //     });
-                  // }
+                  else {
+                      dispatch({
+                          type: 'map/showPopup',
+                          payload: false,
+                      });
+                  }
                 });
               });
               const thisMap = this;

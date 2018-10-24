@@ -9,7 +9,13 @@ import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import { enquireScreen } from 'enquire-js';
 import GlobalHeader from '../components/GlobalHeader';
-import { getBrowserStyle } from '../utils/utils';
+import {
+  getBrowserStyle,
+  changeVideoPosition,
+  changeVideoSize,
+  resetAccessStyle,
+  getBrowserScroll,
+} from '../utils/utils';
 import { getMenuData } from '../common/menu';
 import logo from '../assets/logo.png';
 import styles from './basicLayout.less';
@@ -203,134 +209,32 @@ class BasicLayout extends React.PureComponent {
   };
   handleTabClick = (key) => {
     const { video, videoFooterHeight, dispatch, rightCollapsed, accessControlShow } = this.props;
-    const { show, position } = video;
+    const { position } = video;
     const { view, accessInfoExtent } = mapConstants;
     mapConstants.domWarp = this.content;
+    changeVideoPosition(key, rightCollapsed, position, dispatch);
     if (key.indexOf('homePage') === -1) {
-      // 视频区域坐标
-      let x;
-      // if (show) {
-      if (!rightCollapsed) {
-        x = position.x + 230;
-        dispatch({
-          type: 'video/reposition',
-          payload: {
-            CmdCode: '10002',
-            Point: { x, y: position.y },
-          },
-        });
-      }
-      // }
       // 折叠
       dispatch({
         type: 'global/changeRightCollapsed',
         payload: true,
       }).then(() => {
-        if (accessControlShow) {
-          if (view.height) {
-            view.goTo({ extent: accessInfoExtent }).then(() => {
-              getBordStyle(view).then((style) => {
-                dispatch({
-                  type: 'accessControl/queryStyle',
-                  payload: style,
-                });
-              });
-            });
-          }
-        }
+        resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+        changeVideoSize(videoFooterHeight, dispatch, 'hide');
       });
-      if (videoFooterHeight.current !== 0) {
-        dispatch({
-          type: 'video/switch',
-          payload: {
-            CmdCode: 'Hide',
-          },
-        });
-        dispatch({
-          type: 'homepage/getVideoFooterHeight',
-          payload: { current: 0, cache: videoFooterHeight.current },
-        });
-        dispatch({
-          type: 'homepage/getMapHeight',
-          payload: { domType: 'map', changingType: 'evrVideo' },
-        });
-      }
     } else {
-      // 视频区域坐标
-      let x;
-      if (rightCollapsed) {
-        x = position.x - 230;
-        dispatch({
-          type: 'video/reposition',
-          payload: {
-            CmdCode: '10002',
-            Point: { x, y: position.y },
-          },
-        });
-      }
       // 恢复看板
       if (rightCollapsed) {
         dispatch({
           type: 'global/changeRightCollapsed',
           payload: false,
         }).then(() => {
-          const { domWarp } = mapConstants;
-          if (accessControlShow) {
-            if (view.height) {
-              view.goTo({ extent: accessInfoExtent }).then(() => {
-                getBordStyle(view).then((style) => {
-                  dispatch({
-                    type: 'accessControl/queryStyle',
-                    payload: style,
-                  });
-                });
-              });
-            }
-          }
-          if (videoFooterHeight.current !== 0) {
-            return false;
-          }
-          const width = domWarp.clientWidth;
-          const a = setInterval(() => {
-            if (domWarp.clientWidth !== width) {
-              clearInterval(a);
-              dispatch({
-                type: 'homepage/getMapHeight',
-                payload: { domType: 'map' },
-              });
-              dispatch({
-                type: 'video/switch',
-                payload: {
-                  CmdCode: 'Show',
-                },
-              });
-              const { videoFooterHeight } = this.props;
-              dispatch({
-                type: 'homepage/getVideoFooterHeight',
-                payload: { current: videoFooterHeight.cache, cache: videoFooterHeight.current },
-              });
-            }
-          }, 500);
+          changeVideoSize(videoFooterHeight, dispatch, 'show');
+          resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
         });
       } else {
-        if (this.props.videoFooterHeight.current !== 0) {
-          return false;
-        }
-        dispatch({
-          type: 'homepage/getMapHeight',
-          payload: { domType: 'map' },
-        });
-        dispatch({
-          type: 'video/switch',
-          payload: {
-            CmdCode: 'Show',
-          },
-        });
-        const { videoFooterHeight } = this.props;
-        dispatch({
-          type: 'homepage/getVideoFooterHeight',
-          payload: { current: videoFooterHeight.cache, cache: videoFooterHeight.current },
-        });
+        changeVideoSize(videoFooterHeight, dispatch, 'show');
+        resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
       }
     }
   }
@@ -453,7 +357,7 @@ class BasicLayout extends React.PureComponent {
   };
   handleEdit = (targetKey, addOrRemove) => {
     const { dispatch, video, videoFooterHeight, rightCollapsed, accessControlShow } = this.props;
-    const { show, position } = video;
+    const { position } = video;
     const { view, accessInfoExtent } = mapConstants;
     mapConstants.domWarp = this.content;
     dispatch({
@@ -461,85 +365,15 @@ class BasicLayout extends React.PureComponent {
       payload: { key: targetKey },
     }).then(() => {
       if (this.props.tabs.activeKey.indexOf('homePage') !== -1) {
-        if (videoFooterHeight.current !== 0) {
-          return false;
-        }
-        // 视频区域坐标
-        let x;
-        if (rightCollapsed) {
-          x = position.x - 230;
-          dispatch({
-            type: 'video/reposition',
-            payload: {
-              CmdCode: '10002',
-              Point: { x, y: position.y },
-            },
-          });
-        }
-        // 恢复看板
-        if (rightCollapsed) {
-          dispatch({
-            type: 'global/changeRightCollapsed',
-            payload: false,
-          }).then(() => {
-            const { domWarp } = mapConstants;
-            if (accessControlShow) {
-              if (view.height) {
-                view.goTo({ extent: accessInfoExtent }).then(() => {
-                  getBordStyle(view).then((style) => {
-                    dispatch({
-                      type: 'accessControl/queryStyle',
-                      payload: style,
-                    });
-                  });
-                });
-              }
-            }
-            if (videoFooterHeight.current !== 0) {
-              return false;
-            }
-            const width = domWarp.clientWidth;
-            const a = setInterval(() => {
-              if (domWarp.clientWidth !== width) {
-                clearInterval(a);
-                dispatch({
-                  type: 'homepage/getMapHeight',
-                  payload: { domType: 'map' },
-                });
-                dispatch({
-                  type: 'video/switch',
-                  payload: {
-                    CmdCode: 'Show',
-                  },
-                });
-                const { videoFooterHeight } = this.props;
-                dispatch({
-                  type: 'homepage/getVideoFooterHeight',
-                  payload: { current: videoFooterHeight.cache, cache: videoFooterHeight.current },
-                });
-              }
-            }, 500);
-          });
-        } else {
-          if (this.props.videoFooterHeight.current !== 0) {
-            return false;
-          }
-          dispatch({
-            type: 'homepage/getMapHeight',
-            payload: { domType: 'map' },
-          });
-          dispatch({
-            type: 'video/switch',
-            payload: {
-              CmdCode: 'Show',
-            },
-          });
-          const { videoFooterHeight } = this.props;
-          dispatch({
-            type: 'homepage/getVideoFooterHeight',
-            payload: { current: videoFooterHeight.cache, cache: videoFooterHeight.current },
-          });
-        }
+        changeVideoPosition(this.props.tabs.activeKey, rightCollapsed, position, dispatch);
+        // 折叠
+        dispatch({
+          type: 'global/changeRightCollapsed',
+          payload: false,
+        }).then(() => {
+          resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+          changeVideoSize(videoFooterHeight, dispatch, 'show');
+        });
       }
     });
 
@@ -655,6 +489,16 @@ class BasicLayout extends React.PureComponent {
                   queryArea.outFields = ['*'];
                   subLayer.queryFeatures(queryArea).then((res) => {
                     clustering({ view, dispatch, alarms: that.props.alarm.groupByOverview.list, graphics: res.features, overviewShow: that.props.alarm.overviewShow, clusterRes, popupScale, resourceGroupByArea });
+                  });
+                  // 播放该设备关联的视频
+                  dispatch({
+                    type: 'resourceTree/getBeMonitorsByResourceID',
+                    payload: { resourceID: socketMessage.B.resourceID, ctrlResourceType: '101.102.101' },
+                  }).then(() => {
+                    if (this.props.resourceInfo.beMonitorObjs && this.props.resourceInfo.beMonitorObjs.length > 0) {
+                      // 视频播放
+                      this.handleVideoPlay(this.props.resourceInfo.beMonitorObjs[0]);
+                    }
                   });
                 }
               });
@@ -809,6 +653,98 @@ class BasicLayout extends React.PureComponent {
       }
     }
   };
+  handleVideoPlay = (item) => {
+    const { dispatch, videoFooterHeight } = this.props;
+    // 显示视频
+    dispatch({
+      type: 'video/switch',
+      payload: {
+        CmdCode: 'Show',
+      },
+    });
+    if (videoFooterHeight.current === 0) {
+      dispatch({
+        type: 'homepage/getVideoFooterHeight',
+        payload: { current: videoFooterHeight.cache, cache: videoFooterHeight.current },
+      });
+      dispatch({
+        type: 'homepage/getMapHeight',
+        payload: { domType: 'map', changingType: 'evrVideo' },
+      });
+    }
+    // 播放其关联设备
+    if (this.state.selectedRows.checkedVideos.find(value => value === item.gISCode)) {
+      if (item.externalMaps[0].length === 0) {
+        return false;
+      }
+      // 同样判断有无父级
+      if (item.parentCode) {
+        this.props.dispatch({
+          type: 'resourceTree/getResInfoByGISCode',
+          payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, resourceCode: item.parentCode },
+        }).then(() => {
+          const { extendFields } = this.props.resourceTree.resInfo;
+          const { externalMaps } = this.props.resourceTree.resourceInfo;
+          this.props.dispatch({
+            type: 'video/play',
+            payload: {
+              CmdCode: '10004',
+              Pos: '',
+              PlatForm: {
+                strGRTGUID: '',
+                strUserName: extendFields.loginUser || 0,
+                strPwd: extendFields.loginPWD || 0,
+                strIPAddr: extendFields.visitAddr || 0,
+                sPort: extendFields.visitPort || 0,
+                strDevFactory: extendFields.factoryCode || 0,
+                strDevVersion: extendFields.version || 0,
+              },
+              Device: {
+                SerialNumber: item.gISCode,
+                nDevID: item.extendFields.nDevID || 0,
+                strGRTGUID: '',
+                strDeviceCode: item.externalMaps[0].otherCode || 0,
+                strDevIP: extendFields.visitAddr || 0,
+                sDevPort: extendFields.visitPort || 0,
+                nChannelIdx: '0',
+              },
+            },
+          });
+        });
+      } else {
+        const { extendFields } = item.resourceInfo;
+        const { externalMaps } = item.resourceInfo;
+        if (externalMaps.length === 0) {
+          return false;
+        }
+        this.props.dispatch({
+          type: 'video/play',
+          payload: {
+            CmdCode: '10004',
+            Pos: '',
+            PlatForm: {
+              strGRTGUID: '',
+              strUserName: extendFields.loginUser || 0,
+              strPwd: extendFields.loginPWD || 0,
+              strIPAddr: extendFields.visitAddr || 0,
+              sPort: extendFields.visitPort || 0,
+              strDevFactory: extendFields.factoryCode || 0,
+              strDevVersion: extendFields.version || 0,
+            },
+            Device: {
+              SerialNumber: item.gISCode,
+              nDevID: item.extendFields.nDevID || 0,
+              strGRTGUID: '',
+              strDeviceCode: externalMaps[0].otherCode || 0,
+              strDevIP: extendFields.visitAddr || 0,
+              sDevPort: extendFields.visitPort || 0,
+              nChannelIdx: '0',
+            },
+          },
+        });
+      }
+    }
+  };
   // 处理视频插件的通讯
   onmessage1 = ({ data }) => {
     const { dispatch, map } = this.props;
@@ -908,6 +844,7 @@ class BasicLayout extends React.PureComponent {
                   dispatch={this.props.dispatch}
                   logo={logo}
                   currentUser={currentUser}
+                  rightCollapsed={rightCollapsed}
                   fetchingNotices={fetchingNotices}
                   notices={notices}
                   collapsed={collapsed}

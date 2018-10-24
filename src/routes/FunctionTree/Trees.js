@@ -10,7 +10,7 @@ import { mapConstants } from '../../services/mapConstant';
 import { getBordStyle } from '../../utils/MapService';
 import { ajaxDataFilter } from './fuction';
 import { handleClick, handleCheck, handleSelected } from './treeAction';
-import {getBrowserStyle} from "../../utils/utils";
+import {changeVideoPosition, changeVideoSize, getBrowserStyle, resetAccessStyle} from "../../utils/utils";
 
 // 自定义的 treeNode 设置属性
 const setAttribute = (node, array) => {
@@ -24,7 +24,7 @@ const setStyle = (node, array) => {
     node.style[item[0]] = item[1];
   }
 };
-@connect(({ sysFunction, user, loading, tabs, resourceTree, emergency, panelBoard, homepage, video, alarm, map, constructMonitor, paSystem, global }) => {
+@connect(({ sysFunction, user, accessControl, loading, tabs, resourceTree, emergency, panelBoard, homepage, video, alarm, map, constructMonitor, paSystem, global }) => {
   return {
     treeData: sysFunction.treeData,
     contextMenu: sysFunction.contextMenu,
@@ -55,6 +55,7 @@ const setStyle = (node, array) => {
     video,
     paSystem,
     constructMonitor,
+    accessControlShow: accessControl.show,
     videoPosition: video.position,
     videoShow: video.show,
     emergency,
@@ -396,57 +397,20 @@ export default class Trees extends PureComponent {
   }
   // 处理点击事件，处理tabs
   changeTabs = (key, title) => {
-    const { tabs, dispatch, videoFooterHeight, videoPosition, rightCollapsed, videoShow } = this.props;
+    const { tabs, dispatch } = this.props;
     if (title !== '应急事件') {
+      const { video, videoFooterHeight, rightCollapsed, accessControlShow } = this.props;
+      const { position } = video;
     // 折叠
+      changeVideoPosition(key, rightCollapsed, position, dispatch);
       dispatch({
         type: 'global/changeRightCollapsed',
         payload: true,
       }).then(() => {
-        const { view, extent } = mapConstants;
-        if (view.height) {
-          view.goTo({ extent }).then(() => {
-            getBordStyle(view).then((style) => {
-              dispatch({
-                type: 'accessControl/queryStyle',
-                payload: style,
-              });
-            });
-          });
-        }
+          const { view, accessInfoExtent } = mapConstants;
+          resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+          changeVideoSize(videoFooterHeight, dispatch, 'hide');
       });
-      // 视频区域坐标
-      let x;
-      // if (videoShow) {
-      if (!rightCollapsed) {
-        x = videoPosition.x + 230;
-        dispatch({
-          type: 'video/reposition',
-          payload: {
-            CmdCode: '10002',
-            Point: {
-              x,
-              y: videoPosition.y,
-            },
-          },
-        });
-      }
-      if (videoFooterHeight.current !== 0) {
-        dispatch({
-          type: 'video/switch',
-          payload: {
-            CmdCode: 'Hide',
-          },
-        });
-        dispatch({
-          type: 'homepage/getVideoFooterHeight',
-          payload: { current: 0, cache: videoFooterHeight.current },
-        });
-        dispatch({
-          type: 'homepage/getMapHeight',
-          payload: { domType: 'map', changingType: 'evrVideo' },
-        });
-      }
     }
 
     dispatch({
