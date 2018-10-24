@@ -673,7 +673,6 @@ class BasicLayout extends React.PureComponent {
       });
     }
     // 播放其关联设备
-    if (this.state.selectedRows.checkedVideos.find(value => value === item.gISCode)) {
       if (item.externalMaps[0].length === 0) {
         return false;
       }
@@ -743,7 +742,6 @@ class BasicLayout extends React.PureComponent {
           },
         });
       }
-    }
   };
   // 处理视频插件的通讯
   onmessage1 = ({ data }) => {
