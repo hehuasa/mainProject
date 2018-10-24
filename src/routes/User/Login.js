@@ -9,7 +9,7 @@ import { switchCode } from '../../services/statusCode';
 import VideoSocket from '../Websocket/VideoSocket';
 
 const { UserName, Password, Submit } = Login;
-// const jsEncrypt = new window.JSEncrypt();
+const jsEncrypt = new window.JSEncrypt();
 @connect(({ login, loading }) => ({
   login,
   submitting: loading.effects['login/login'],
@@ -44,7 +44,7 @@ export default class LoginPage extends Component {
     }
   };
   handleSubmit = (err, values) => {
-    // values.password = MD5(values.password).toString();
+    // values.password = jsEncrypt.encrypt(values.password);
     if (!err) {
       this.props.dispatch({
         type: 'login/login',
