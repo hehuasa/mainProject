@@ -117,6 +117,7 @@ export default {
     implEmgcAnnex: [], // 实施方案 应急流程信息
     executeList: [], // 实施方案列表
     eventPlanList: [], // 某事件已关联的预案信息
+    templatePlanID: null, // 信息研判阶段设为模板的预案ID
   },
 
   effects: {
@@ -823,9 +824,14 @@ export default {
     //  通过事件ID获取事件关联的所有预案信息
     *getPlansByEventID({ payload }, { call, put }) {
       const response = yield call(getPlansByEventID, payload);
+      const planInfo = response.data[0] || {};
       yield put({
         type: 'saveEventPlanList',
         payload: response.data,
+      });
+      yield put({
+        type: 'saveTemplatePlanID',
+        payload: planInfo.planInfoID,
       });
     },
 
@@ -1280,6 +1286,12 @@ export default {
       return {
         ...state,
         eventPlanList: payload,
+      };
+    },
+    saveTemplatePlanID(state, { payload }) {
+      return {
+        ...state,
+        templatePlanID: payload,
       };
     },
   },

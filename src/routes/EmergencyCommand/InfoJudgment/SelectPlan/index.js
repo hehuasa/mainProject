@@ -81,6 +81,7 @@ const SearchForm = Form.create()((props) => {
   annexPage: emergency.annexPage,
   eventInfo: emergency.eventInfo,
   eventPlanList: emergency.eventPlanList,
+  templatePlanID: emergency.templatePlanID,
 }))
 export default class SelectPlan extends PureComponent {
   state = {
@@ -110,12 +111,10 @@ export default class SelectPlan extends PureComponent {
       type: 'emergency/getPlanTypeList',
       payload: 558,
     });
-    //  获取预案类别
+    //  通过事件ID获取事件关联的所有预案信息
     dispatch({
       type: 'emergency/getPlansByEventID',
       payload: { eventID: this.props.eventID },
-    }).then(() => {
-      this.getPlanID(this.props.eventPlanList);
     });
   }
   page = (pageNum, pageSize) => {
@@ -191,12 +190,10 @@ export default class SelectPlan extends PureComponent {
       type: 'emergency/copyPlan',
       payload: { jsonData },
     }).then(() => {
-      //  获取预案类别
+      //  获取事件关联的预案
       this.props.dispatch({
         type: 'emergency/getPlansByEventID',
         payload: { eventID: this.props.eventID },
-      }).then(() => {
-        this.getPlanID(this.props.eventPlanList);
       });
       // 根据eventID获取预案基本信息
       this.props.dispatch({
@@ -262,23 +259,23 @@ export default class SelectPlan extends PureComponent {
       {
         title: '预案名称',
         dataIndex: 'planName',
-        width: '40%',
+        width: '32%',
         key: 'planName',
         render: (text, record) => <a onClick={() => this.openModel(record)} href="javascript:;">{text}</a>,
       }, {
         title: '预案类别',
         dataIndex: 'planTypeName',
-        width: '10%',
+        width: '18%',
         key: 'planTypeName',
       }, {
         title: '预案级别',
-        width: '10%',
+        width: '15%',
         render: (text, record) => {
           return record.planPlanLevel.levelName;
         },
       }, {
         title: '直接匹配特征',
-        width: '15%',
+        width: '10%',
         dataIndex: 'planFuture',
       }, {
         title: '匹配度',
@@ -289,7 +286,7 @@ export default class SelectPlan extends PureComponent {
         width: '15%',
         dataIndex: 'action',
         render: (text, record) => {
-          return this.state.selectedPlanID === record.planInfoID ? '当前模板' : (
+          return this.props.templatePlanID === record.planInfoID ? '当前模板' : (
             current === viewNode ? <a onClick={() => this.setTemplete(record)} href="javascript:;">设为模板</a> : ''
           );
         },
@@ -306,27 +303,6 @@ export default class SelectPlan extends PureComponent {
     };
     return (
       <div className={styles.selectPlan}>
-        <div className={styles.planTitle}>
-          <div className={styles.titleName} />
-          <div className={styles.planLevel}>
-            <span className={styles.levelName}>应急响应等级</span>
-            <Select
-              value={this.state.planTemple.planLevelID}
-              placeholder="请选择"
-              style={{ width: '50%' }}
-              disabled
-            >
-              <Option value="">请选择</Option>
-              {planLevelList.map(item => (
-                <Option
-                  key={item.emgcLevelID}
-                  value={item.emgcLevelID}
-                >{item.levelName}
-                </Option>))
-              }
-            </Select>
-          </div>
-        </div>
         <div className={styles.planList}>
           <SearchForm
             planTypeList={planTypeList}

@@ -13,13 +13,17 @@ export default
   },
   "proxy": {
     "/emgc": {
-      // "target": "http://10.157.24.55:8080/",
-      "target": "http://192.168.0.6:8080/",
+      "target": "http://10.157.24.41:8080/",
       "changeOrigin": true,
       "pathRewrite": { "^/emgc": "" }
     },
+    "/upload": {
+      "target": "http://10.157.24.55:8080/",
+      "changeOrigin": true,
+      "pathRewrite": { "^/upload": "" }
+    },
     "/mapApi": {
-        "target": "http://192.168.0.6:80/arcgis/arcgis_js_api/library/4.9",
+        "target": "http://10.157.5.25:8888/arcgis/arcgis_js_api/library/4.9",
         "changeOrigin": true,
         "pathRewrite": { "^/mapApi": "" }
     },

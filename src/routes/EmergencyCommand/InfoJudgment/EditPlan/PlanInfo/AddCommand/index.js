@@ -60,6 +60,7 @@ const SearchArea = Form.create()((props) => {
   commandReceiver: emergency.commandReceiver,
   checkedUser: emergency.checkedUser,
   existCommandPage: emergency.existCommandPage,
+  allCommandModelList: emergency.allCommandModelList,
 }))
 export default class AddFeature extends PureComponent {
   state = {
@@ -78,6 +79,10 @@ export default class AddFeature extends PureComponent {
     dispatch({
       type: 'emergency/getCommandReceiverList',
       payload: { eventID, name: null },
+    });
+    // 获取指令所有类型
+    dispatch({
+      type: 'emergency/allCommandModelList',
     });
     const { pageNum, pageSize } = this.state;
     // 获取已有指令列表
@@ -160,6 +165,10 @@ export default class AddFeature extends PureComponent {
           return commandType(text);
         },
       }, {
+        title: '指令类型',
+        dataIndex: 'commandModelName',
+        width: 120,
+      }, {
         title: '指令内容',
         dataIndex: 'commandContent',
         width: 200,
@@ -197,7 +206,6 @@ export default class AddFeature extends PureComponent {
       onChange: (selectedRowKeys, selectedRows) => {
         const command = selectedRows[0];
         const arr = command.excutePostionList.map(item => item.postionID);
-        console.log(999, arr);
         this.props.form.setFieldsValue({
           // flowNodeID: command.flowNodeID,
           commandType: command.commandType,
@@ -274,6 +282,31 @@ export default class AddFeature extends PureComponent {
                             <Option value="">请选择</Option>
                             <Option value={1}>指令</Option>
                             <Option value={2}>通知</Option>
+                          </Select>
+                        )}
+                        </FormItem>
+                      </Col>
+                      <Col md={24}>
+                        <FormItem
+                          labelCol={{ span: 8 }}
+                          wrapperCol={{ span: 15 }}
+                          label="指令类型"
+                        >
+                          {form.getFieldDecorator('commandModel', {
+                          initialValue: isAdd ? '' : commandInfo.commandModel,
+                          rules: [
+                            { required: true, message: '指令类型不能为空' },
+                          ],
+                        })(
+                          <Select placeholder="请选择" style={{ width: '100%' }}>
+                            <Option value="">请选择</Option>
+                            {this.props.allCommandModelList.map(type => (
+                              <Option
+                                key={type.commandModelID}
+                                value={type.modelCode}
+                              >{type.modelName}
+                              </Option>
+                            ))}
                           </Select>
                         )}
                         </FormItem>
@@ -376,13 +409,13 @@ export default class AddFeature extends PureComponent {
                       columns={commandCols}
                       rowSelection={rowSelection}
                       pagination={{
-                    onChange: this.page,
-                    current: this.state.pageNum,
-                    pageSize: this.state.pageSize,
-                    total: this.state.total,
+                        onChange: this.page,
+                        current: this.state.pageNum,
+                        pageSize: this.state.pageSize,
+                        total: this.state.total,
                   }}
                       dataSource={this.props.existCommandPage.result}
-                      scroll={{ x: 840 }}
+                      scroll={{ x: 960 }}
                     />
                   </div>
                 </Card>

@@ -148,6 +148,7 @@ export default class AddTemplate extends PureComponent {
       const { form } = this.props;
       const name = {};
       name[`reportUserName[${this.state.key}]`] = row[0].userName;
+      name[`reportUserPhone[${this.state.key}]`] = row[0].mobile;
       name[`reportUserId[${this.state.key}]`] = row[0].userID;
       form.setFieldsValue(name);
       this.setState({

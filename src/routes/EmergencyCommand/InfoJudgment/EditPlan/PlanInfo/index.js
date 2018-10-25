@@ -42,6 +42,7 @@ export default class PlanInfo extends PureComponent {
   };
   componentDidMount() {
     const { eventID } = this.props;
+    this.props.onRef(this);
   }
   // 打开事件特征的新增弹窗
   openAddFeatureModel = () => {
@@ -60,7 +61,6 @@ export default class PlanInfo extends PureComponent {
   addFeature = (form) => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      console.log('receive form:', fieldsValue);
       this.setState({
         featureVisible: false,
       });
@@ -160,7 +160,6 @@ export default class PlanInfo extends PureComponent {
   addAnnex = (form) => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      console.log('receive form:', fieldsValue);
       this.setState({
         commandVisible: false,
       });
@@ -242,6 +241,11 @@ export default class PlanInfo extends PureComponent {
       type: 'emergency/clearPlan',
       payload: { eventID },
     }).then(() => {
+      // 根据事件ID查询关联的预案
+      dispatch({
+        type: 'emergency/getPlansByEventID',
+        payload: { eventID },
+      });
       // 根据eventID获取预案基本信息
       this.props.dispatch({
         type: 'emergency/getPlanBaseInfo',
@@ -438,7 +442,7 @@ export default class PlanInfo extends PureComponent {
       {
         title: '流程节点',
         dataIndex: 'emgcFlowNode',
-        width: 80,
+        width: 100,
         key: 'emgcFlowNode',
         render: (text, record) => {
           return record.emgcFlowNode.nodeName;
@@ -446,15 +450,20 @@ export default class PlanInfo extends PureComponent {
       }, {
         title: '指令分类',
         dataIndex: 'commandType',
-        width: 80,
+        width: 100,
         key: 'commandType',
         render: (text) => {
           return commandType(text);
         },
       }, {
+        title: '指令类型',
+        dataIndex: 'commandModelName',
+        width: 100,
+        key: 'commandModelName',
+      }, {
         title: '指令内容',
         dataIndex: 'commandContent',
-        width: 200,
+        width: 250,
         key: 'commandContent',
       }, {
         title: '执行岗位',
@@ -477,16 +486,16 @@ export default class PlanInfo extends PureComponent {
       }, {
         title: '执行时长',
         dataIndex: 'executeTime',
-        width: 80,
+        width: 100,
         key: 'executeTime',
       }, {
         title: '注意事项',
         dataIndex: 'attention',
-        width: 100,
         key: 'attention',
       }, {
         title: isEdit ? '操作' : '',
         width: 140,
+        fixed: 'right',
         key: 'action',
         render: (text, record) => (
           isEdit ? (
@@ -684,6 +693,7 @@ export default class PlanInfo extends PureComponent {
                 columns={commandCols}
                 rowKey={record => record.cmdExecID}
                 dataSource={emgcCommand}
+                scroll={{ x: 1100 }}
                 pagination={{ pageSize: 5 }}
               />
             </Card>
@@ -743,9 +753,6 @@ export default class PlanInfo extends PureComponent {
         {
           isEdit ? (
             <div>
-              {
-                (hideFooter || this.props.viewNode < this.props.current) ?
-                  null : <Footer save={this.savePlan} cancel={this.clearPlan} />}
               <AddFeature
                 handleCancel={this.handleCancelFeature}
                 add={this.addFeature}

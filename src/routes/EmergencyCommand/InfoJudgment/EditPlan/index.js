@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Select, Table, Card, Row, Col } from 'antd';
+import { Select, Table, Card, Row, Col, Button } from 'antd';
 import { connect } from 'dva';
 import PlanInfo from './PlanInfo/index';
 import styles from './index.less';
@@ -22,15 +22,6 @@ const Option = Select.Option;
 export default class EditPlan extends PureComponent {
   componentDidMount() {
     const { eventID, dispatch } = this.props;
-    // dispatch({
-    //   type: 'emergency/getEventInfo',
-    //   payload: { eventID },
-    // }).then(() => {
-    //   dispatch({
-    //     type: 'emergency/saveEventLevel',
-    //     payload: this.props.eventInfo.eventLevel,
-    //   });
-    // });
     dispatch({
       type: 'emergency/getIfFromPlan',
       payload: { eventID },
@@ -47,6 +38,10 @@ export default class EditPlan extends PureComponent {
         payload: value,
       });
     });
+  };
+  // 拿到组件的this
+  onRef = (ref) => {
+    this.child = ref;
   };
   // 选择方案
   onExecuteChange = (value) => {
@@ -121,29 +116,14 @@ export default class EditPlan extends PureComponent {
         ) : null
         }
         <Col span={12} offset={viewNode === current ? 12 : 0}>
-          <span style={{ marginRight: 16 }}>应急响应等级</span>
-          <Select
-            disabled={!!(viewNode < current || isFromPlan)}
-            value={this.props.eventLevel}
-            style={{ width: 180 }}
-            onChange={this.onLevelChange}
-          >
-            <Option value="">请选择</Option>
-            {planLevelList.map(item => (
-              <Option
-                key={item.emgcLevelID}
-                value={item.emgcLevelID}
-              >{item.levelName}
-              </Option>
-))}
-          </Select>
+          <Button type="primary" onClick={() => { this.child.clearPlan(); }}>清空实施方案</Button>
         </Col>
       </Row>
     );
     return (
       <div className={styles.extra}>
         <Card extra={extra} bordered={false}>
-          <PlanInfo isEdit={this.props.viewNode === this.props.current} hideFooter={hideFooter} />
+          <PlanInfo isEdit={this.props.viewNode === this.props.current} onRef={this.onRef} />
         </Card>
       </div>
     );

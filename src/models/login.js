@@ -1,5 +1,5 @@
 import { routerRedux } from 'dva/router';
-import { accountLogin, loginOut, fakeAccountLogin, getInfoByAccountID } from '../services/api';
+import { accountLogin, loginOut, fakeAccountLogin, getInfoByAccountID, getPublicKey } from '../services/api';
 import { reloadAuthorized } from '../utils/Authorized';
 
 const setCookies = (user, accountInfo) => {
@@ -18,6 +18,7 @@ export default {
   state: {
     code: '',
     status: '',
+    pubKey: null,
   },
 
   effects: {
@@ -68,6 +69,13 @@ export default {
         // }
       }
     },
+    *getPublicKey({ payload }, { call, put }) {
+      const response = yield call(getPublicKey, payload);
+      yield put({
+        type: 'savePubKey',
+        payload: response.data,
+      });
+    },
   },
 
   reducers: {
@@ -75,6 +83,12 @@ export default {
       return {
         ...state,
         code: payload.code,
+      };
+    },
+    savePubKey(state, { payload }) {
+      return {
+        ...state,
+        pubKey: payload,
       };
     },
   },

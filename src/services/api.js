@@ -2265,3 +2265,7 @@ export async function queryAreaListByAreaType(params) {
     body: params,
   });
 }
+// 请求公钥
+export async function getPublicKey() {
+  return request(`${path}/system/getPubKey`);
+}

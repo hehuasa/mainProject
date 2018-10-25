@@ -95,7 +95,7 @@ export default class CommandList extends PureComponent {
   // 保存行编辑
   saveRow = () => {
     const { executeContent, editingKey } = this.state;
-    const { dispatch, eventID } = this.props;
+    const { dispatch, eventID, commandList } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
     }).then(() => {
@@ -104,10 +104,18 @@ export default class CommandList extends PureComponent {
         type: 'emergency/updateExecuteContent',
         payload: { executeContent, cmdExecID: editingKey, userID },
       }).then(() => {
-        dispatch({
-          type: 'emergency/getCommandList',
-          payload: { eventID, nodeType: this.props.viewNodeType },
+        const arr = commandList.map((item) => {
+          if (item.cmdExecID === editingKey) { return { ...item, executeContent }; }
+          return item;
         });
+        dispatch({
+          type: 'emergency/saveCommandList',
+          payload: arr,
+        });
+        // dispatch({
+        //   type: 'emergency/getCommandList',
+        //   payload: { eventID, nodeType: this.props.viewNodeType },
+        // });
         this.setState({
           editingKey: '',
           visible: false,

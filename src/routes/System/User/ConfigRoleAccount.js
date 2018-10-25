@@ -57,7 +57,7 @@ export default class TableList extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'accountInfo/page',
-      payload: page,
+      payload: { ...page, isQuery: true, fuzzy: true },
     });
   };
   // 初始化表格数据

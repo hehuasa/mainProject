@@ -355,9 +355,9 @@ export const returnHome = (that) => {
           resolve();
         });
       }
-      });
     });
-  };
+  });
+};
 // 视频栏隐藏与显示
 export const switchVideo = (videoFooterHeight, dispatch) => {
   // 视频栏是否隐藏，没有的话执行隐藏
@@ -452,17 +452,17 @@ export const changeVideoSize = (videoFooterHeight, dispatch, type) => {
 export const resetAccessStyle = (accessControlShow, view, dispatch, accessInfoExtent) => {
   return new Promise((resolve) => {
     // if (accessControlShow) {
-      if (view.height) {
-        view.goTo({ extent: accessInfoExtent }).then(() => {
-          getBordStyle(view).then((style) => {
-            dispatch({
-              type: 'accessControl/queryStyle',
-              payload: style,
-            });
-            resolve();
+    if (view.height) {
+      view.goTo({ extent: accessInfoExtent }).then(() => {
+        getBordStyle(view).then((style) => {
+          dispatch({
+            type: 'accessControl/queryStyle',
+            payload: style,
           });
+          resolve();
         });
-      }
+      });
+    }
     // }
-  })
+  });
 };
