@@ -2545,7 +2545,7 @@ export const trueMapLocate = async (map, view, roadLine, dispatch) => {
           });
           layerView.watch('updating', (loding) => {
             if (!loding) {
-              layerView.queryFeatures().then((graphics) => {
+              roadLinelayer.queryFeatures().then((graphics) => {
                 // 实景地图示意图层
                 trueMapLayer = new GraphicsLayer({ id: '实景地图' });
                 cursorMapLayer = new GraphicsLayer({ id: '鼠标示意' });
@@ -2557,7 +2557,7 @@ export const trueMapLocate = async (map, view, roadLine, dispatch) => {
                 };
                 map.add(trueMapLayer);
                 map.add(cursorMapLayer);
-                for (const road of graphics) {
+                for (const road of graphics.features) {
                   trueMapLayer.graphics.add(new Graphic(road.geometry, trueMapFill));
                 }
               });

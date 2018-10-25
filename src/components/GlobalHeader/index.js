@@ -458,6 +458,12 @@ export default class GlobalHeader extends PureComponent {
       payload: Number(value),
     });
   };
+  handleVideoLinkChange = (value) => {
+    this.props.dispatch({
+      type: 'alarm/linkVideo',
+      payload: Number(value),
+    });
+  };
     handleMin = () => {
       this.props.dispatch({
         type: 'video/devTools',
@@ -533,8 +539,16 @@ export default class GlobalHeader extends PureComponent {
           <div>
             <Select defaultValue="0" className={styles.selectStyle} getPopupContainer={triggerNode => triggerNode.parentNode} onChange={this.handleMapLinkChange} >
               <Option value="0" title="自动定位">自动定位</Option>
-              {/* <Option value="1" title="在显示时报警总览图时，保持报警总览">在显示时报警总览图时，保持报警总览</Option> */}
-              <Option value="2" title="不定位">不定位</Option>
+              <Option value="1" title="不定位">不定位</Option>
+            </Select>
+          </div>
+        </div>
+        <div className={styles.controlIcon}>
+          <div>视频联动</div>
+          <div>
+            <Select defaultValue="0" className={styles.selectStyle} getPopupContainer={triggerNode => triggerNode.parentNode} onChange={this.handleVideoLinkChange} >
+              <Option value="0" title="执行联动">执行联动</Option>
+              <Option value="1" title="不执行">不执行</Option>
             </Select>
           </div>
         </div>

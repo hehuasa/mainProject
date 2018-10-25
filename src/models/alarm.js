@@ -8,6 +8,7 @@ export default {
   state: {
     count: 0,
     linkMap: 0,
+    linkVideo: 0,
     alarmTypeList: [],
     overviewShow: {
       showSafety: false,
@@ -213,6 +214,13 @@ export default {
       return {
         ...state,
         linkMap: payload,
+      };
+    },
+    // 报警是否联动地图
+    linkVideo(state, { payload }) {
+      return {
+        ...state,
+        linkVideo: payload,
       };
     },
     queryDrawing(state, { payload }) {

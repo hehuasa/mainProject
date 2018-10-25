@@ -403,7 +403,7 @@ class BasicLayout extends React.PureComponent {
   onmessage = ({ data }) => {
     const { dispatch, map, alarm } = this.props;
     const { mainMap, view } = mapConstants;
-    const { linkMap } = alarm;
+    const { linkMap, linkVideo } = alarm;
     const { popupScale } = map;
     const socketMessage = JSON.parse(data);
     const that = this;
@@ -453,6 +453,10 @@ class BasicLayout extends React.PureComponent {
                 message: '接收到新报警消息',
                 description: `设备名称: ${socketMessage.B.resourceName}`,
                 placement: 'bottomRight',
+                style: {
+                  width: 300,
+                  marginLeft: 80,
+                },
               });
               if (alarm.alarmType) {
                 if (alarm.alarmType.profession !== '107.901') {
@@ -466,6 +470,10 @@ class BasicLayout extends React.PureComponent {
                 message: '报警消息有更新',
                 description: `设备名称: ${socketMessage.B.resourceName}`,
                 placement: 'bottomRight',
+                style: {
+                  width: 300,
+                  marginLeft: 80,
+                },
               });
             }
             dispatch({
@@ -490,16 +498,18 @@ class BasicLayout extends React.PureComponent {
                   subLayer.queryFeatures(queryArea).then((res) => {
                     clustering({ view, dispatch, alarms: that.props.alarm.groupByOverview.list, graphics: res.features, overviewShow: that.props.alarm.overviewShow, clusterRes, popupScale, resourceGroupByArea });
                   });
-                  // 播放该设备关联的视频
-                  dispatch({
-                    type: 'resourceTree/getBeMonitorsByResourceID',
-                    payload: { resourceID: socketMessage.B.resourceID, ctrlResourceType: '101.102.101' },
-                  }).then(() => {
-                    if (this.props.resourceTree.resourceInfo.beMonitorObjs && this.props.resourceTree.resourceInfo.beMonitorObjs.length > 0) {
-                      // 视频播放
-                      this.handleVideoPlay(this.props.resourceTree.resourceInfo.beMonitorObjs[0]);
-                    }
-                  });
+                  if (linkVideo === 0) {
+                    // 播放该设备关联的视频
+                    dispatch({
+                      type: 'resourceTree/getBeMonitorsByResourceID',
+                      payload: { resourceID: socketMessage.B.resourceID, ctrlResourceType: '101.102.101' },
+                    }).then(() => {
+                      if (this.props.resourceTree.resourceInfo.beMonitorObjs && this.props.resourceTree.resourceInfo.beMonitorObjs.length > 0) {
+                        // 视频播放
+                        this.handleVideoPlay(this.props.resourceTree.resourceInfo.beMonitorObjs[0]);
+                      }
+                    });
+                  }
                 }
               });
             });
@@ -528,32 +538,7 @@ class BasicLayout extends React.PureComponent {
                       });
                     }
                     break;
-                    // case 1:
-                    //   const layer = mainMap.findLayerById('装置界区');
-                    //   if (layer) {
-                    //     alarmCounting(mainMap, view, dispatch, alarm.groupByArea, layer, layer.graphics);
-                    //     alarmAnimation(
-                    //       mainMap,
-                    //       socketMessage.B.alarmType,
-                    //       that.props.map.searchDeviceArray[0].feature.geometry,
-                    //       socketMessage.B,
-                    //       alarm.iconObj,
-                    //       dispatch);
-                    //   } else {
-                    //     view.goTo({
-                    //       center: that.props.map.searchDeviceArray[0].feature.geometry,
-                    //       scale: scale - 10,
-                    //     }).then(() => {
-                    //       alarmAnimation(mainMap,
-                    //         socketMessage.B.alarmType,
-                    //         that.props.map.searchDeviceArray[0].feature.geometry,
-                    //         socketMessage.B,
-                    //         alarm.iconObj,
-                    //         dispatch);
-                    //     });
-                    //   }
-                    //   break;
-                  case 2:
+                  case 1:
                     alarmAnimation(
 
                       {
@@ -568,37 +553,6 @@ class BasicLayout extends React.PureComponent {
                   default:
                     break;
                 }
-                // if (linkMap) {
-                //   view.goTo({ center: that.props.map.searchDeviceArray[0].feature.geometry, scale: scale - 10 }).then(() => {
-                //     alarmAnimation(mainMap,
-                //       socketMessage.B.alarmType,
-                //       that.props.map.searchDeviceArray[0].feature.geometry,
-                //       socketMessage.B,
-                //       alarm.iconObj,
-                //       dispatch);
-                //   });
-                // } else {
-                //   const layer = mainMap.findLayerById('装置界区');
-                //   if (layer) {
-                //     alarmCounting(mainMap, view, dispatch, alarm.groupByArea, layer, layer.graphics);
-                //     alarmAnimation(
-                //       mainMap,
-                //       socketMessage.B.alarmType,
-                //       that.props.map.searchDeviceArray[0].feature.geometry,
-                //       socketMessage.B,
-                //       alarm.iconObj,
-                //       dispatch);
-                //   } else {
-                //     view.goTo({ center: that.props.map.searchDeviceArray[0].feature.geometry, scale: scale - 10 }).then(() => {
-                //       alarmAnimation(mainMap,
-                //         socketMessage.B.alarmType,
-                //         that.props.map.searchDeviceArray[0].feature.geometry,
-                //         socketMessage.B,
-                //         alarm.iconObj,
-                //         dispatch);
-                //     });
-                //   }
-                // }
               });
             }
           }
@@ -608,6 +562,10 @@ class BasicLayout extends React.PureComponent {
             message: '报警已处理或取消',
             description: `设备名称: ${socketMessage.B.resourceName}`,
             placement: 'bottomRight',
+            style: {
+              width: 300,
+              marginLeft: 80,
+            },
           });
           // 删除报警消息
           for (const item of alarm.list) {
