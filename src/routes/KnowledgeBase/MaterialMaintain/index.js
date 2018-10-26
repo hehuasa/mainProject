@@ -290,21 +290,6 @@ const CreateForm = Form.create()((props) => {
           <FormItem
             labelCol={{ span: 7 }}
             wrapperCol={{ span: 15 }}
-            label="毒性"
-          >
-            {form.getFieldDecorator('instructions', {
-              initialValue: isAdd ? '' : materialInfo.instructions,
-              rules: [
-              ],
-            })(
-              <Input placeholder="请输入毒性" />
-            )}
-          </FormItem>
-        </Col>
-        <Col md={8} sm={24}>
-          <FormItem
-            labelCol={{ span: 7 }}
-            wrapperCol={{ span: 15 }}
             label="溶解性"
           >
             {form.getFieldDecorator('solubility', {
@@ -684,9 +669,6 @@ export default class TableList extends PureComponent {
               </Button>
               <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit">查询</Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-              <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                展开 <Icon type="down" />
-              </a>
             </span>
           </Col>
         </Row>
@@ -713,20 +695,6 @@ export default class TableList extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
-            <FormItem label="主要成份">
-              {getFieldDecorator('userName')(
-                <Input placeholder="请输入" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={6} sm={24}>
-            <FormItem label="物料毒性">
-              {getFieldDecorator('instructions')(
-                <Input placeholder="请输入" />
-              )}
-            </FormItem>
-          </Col>
         </Row>
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right', marginBottom: 24 }}>
@@ -742,7 +710,7 @@ export default class TableList extends PureComponent {
   }
 
   renderForm() {
-    return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
+    this.renderSimpleForm();
   }
   render() {
     const { loading, materialPage, materialInfo } = this.props;
@@ -758,7 +726,7 @@ export default class TableList extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>
-              {this.renderForm()}
+              {this.renderSimpleForm()}
             </div>
             <StandardTable
               selectedRows={selectedRows}

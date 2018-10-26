@@ -6,7 +6,8 @@ import {
   getProRptRawInfoHistoryData, getRptPowerConsumeHistoryData,
   getEquipmentProductInfoHistoryData, getDissociationHistoryData, getThermoelectricFurnace,
   getDynamotor, getOrganicProduct, getResinProduct, getSolidDefects,
-  getTimeUsePre, productionStatusPage, getRecycledWater, getWasteWater, uploadHistoryPage,
+  getTimeUsePre, productionStatusPage, getRecycledWater, getWasteWater, uploadHistoryPage, getLimisReportData,
+  getCarInOut, getMaterialInFactory, getTakeCargoList,
 } from '../services/api';
 import { checkCode } from '../utils/utils';
 
@@ -54,6 +55,10 @@ export default {
       data: [],
       pagination: {},
     },
+    limisRawMaterial: [], // 质量日报数据
+    carInOut: [], // 车辆实时进出厂监控
+    materialInFactory: [], // 实时物资进厂列表
+    takeCargoList: [], // 实时提货列表清单
   },
   effects: {
     // 请求所有信息列表
@@ -377,6 +382,38 @@ export default {
         payload: response.data,
       });
     },
+    // 质量日报-原料
+    *getLimisReportData({ payload }, { put, call }) {
+      const response = yield call(getLimisReportData, payload);
+      yield put({
+        type: 'saveLimisReportData',
+        payload: response.data,
+      });
+    },
+    // 仓储物流-车辆实时进出厂监控
+    *getCarInOut({ payload }, { put, call }) {
+      const response = yield call(getCarInOut, payload);
+      yield put({
+        type: 'saveCarInOut',
+        payload: response.data,
+      });
+    },
+    // 仓储物流-实时物资进厂列表
+    *getMaterialInFactory({ payload }, { put, call }) {
+      const response = yield call(getMaterialInFactory, payload);
+      yield put({
+        type: 'saveMaterialInFactory',
+        payload: response.data,
+      });
+    },
+    // 仓储物流-实时物资进厂列表
+    *getTakeCargoList({ payload }, { put, call }) {
+      const response = yield call(getTakeCargoList, payload);
+      yield put({
+        type: 'saveTakeCargoList',
+        payload: response.data,
+      });
+    },
   },
   reducers: {
     queryList(state, { payload }) {
@@ -505,6 +542,30 @@ export default {
             total: payload.sumCount,
           },
         },
+      };
+    },
+    saveLimisReportData(state, { payload }) {
+      return {
+        ...state,
+        limisRawMaterial: payload,
+      };
+    },
+    saveCarInOut(state, { payload }) {
+      return {
+        ...state,
+        carInOut: payload,
+      };
+    },
+    saveMaterialInFactory(state, { payload }) {
+      return {
+        ...state,
+        materialInFactory: payload,
+      };
+    },
+    saveTakeCargoList(state, { payload }) {
+      return {
+        ...state,
+        takeCargoList: payload,
       };
     },
   },

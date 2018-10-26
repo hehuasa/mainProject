@@ -1,5 +1,62 @@
 export const fakeData = [
   {
+    // 质量日报固定数据
+    // 指令日报原料
+    // itemRowSpan: 分析项目合并行
+    // sampleRowSpan:原料名称与罐号/批号合并行
+    limisRawMaterial: [
+      { key: 1, sampleRowSpan: 11, sampleName: '石脑油', item: null, name: '密度（20℃）/（kg/m3）' },
+      { key: 2, sampleRowSpan: 0, sampleName: '石脑油', item: '馏程/℃', itemRowSpan: 3, name: '初馏点' },
+      { key: 3, sampleRowSpan: 0, sampleName: '石脑油', item: '馏程/℃', itemRowSpan: 0, name: '馏程50%' },
+      { key: 4, sampleRowSpan: 0, sampleName: '石脑油', item: '馏程/℃', itemRowSpan: 0, name: '终馏点' },
+      { key: 5, sampleRowSpan: 0, sampleName: '石脑油', item: '族组成（PONA值，质量分数）/%', itemRowSpan: 5, name: '烷烃（P）含量' },
+      { key: 6, sampleRowSpan: 0, sampleName: '石脑油', item: '族组成（PONA值，质量分数）/%', itemRowSpan: 0, name: '正构烷烃（n-P）含量' },
+      { key: 7, sampleRowSpan: 0, sampleName: '石脑油', item: '族组成（PONA值，质量分数）/%', itemRowSpan: 0, name: '烯烃（O）含量' },
+      { key: 8, sampleRowSpan: 0, sampleName: '石脑油', item: '族组成（PONA值，质量分数）/%', itemRowSpan: 0, name: '芳香烃（A）含量' },
+      { key: 9, sampleRowSpan: 0, sampleName: '石脑油', item: '族组成（PONA值，质量分数）/%', itemRowSpan: 0, name: '环烷烃（N）含量' },
+      { key: 10, sampleRowSpan: 0, sampleName: '石脑油', item: null, name: '硫含量/（mg/kg）' },
+      { key: 11, sampleRowSpan: 0, sampleName: '石脑油', item: null, name: '含氧化合物/（mg/kg）' },
+      { key: 12, sampleRowSpan: 5, sampleName: '轻烃', item: null, name: '总烷烃/ %（体积分数）' },
+      { key: 13, sampleRowSpan: 0, sampleName: '轻烃', item: null, name: '总烯烃/ %（体积分数）' },
+      { key: 14, sampleRowSpan: 0, sampleName: '轻烃', item: null, name: '丙烷/%+正丁烷/%（体积分数）' },
+      { key: 15, sampleRowSpan: 0, sampleName: '轻烃', item: null, name: '碳五及碳五以上/%（体积分数）' },
+      { key: 16, sampleRowSpan: 0, sampleName: '轻烃', item: null, name: '总硫含量/（mg/kg）' },
+      { key: 17, sampleRowSpan: 6, sampleName: '碳五拔头油', item: '族组成（PONA值，质量分数）/%', itemRowSpan: 5, name: '烷烃（P）含量' },
+      { key: 18, sampleRowSpan: 0, sampleName: '碳五拔头油', item: '族组成（PONA值，质量分数）/%', itemRowSpan: 0, name: '正构烷烃（n-P）含量' },
+      { key: 19, sampleRowSpan: 0, sampleName: '碳五拔头油', item: '族组成（PONA值，质量分数）/%', itemRowSpan: 0, name: '烯烃（O）含量' },
+      { key: 20, sampleRowSpan: 0, sampleName: '碳五拔头油', item: '族组成（PONA值，质量分数）/%', itemRowSpan: 0, name: '芳香烃（A）含量' },
+      { key: 21, sampleRowSpan: 0, sampleName: '碳五拔头油', item: '族组成（PONA值，质量分数）/%', itemRowSpan: 0, name: '环烷烃（N）含量' },
+      { key: 22, sampleRowSpan: 0, sampleName: '碳五拔头油', item: null, name: '总硫含量/（mg/kg）' },
+      { key: 23, sampleRowSpan: 4, sampleName: '富乙烷气（凯顺）', item: null, name: '乙烷含量/%（体积分数）' },
+      { key: 24, sampleRowSpan: 0, sampleName: '富乙烷气（凯顺）', item: null, name: '碳三及以上烃类/ %（体积分数）' },
+      { key: 25, sampleRowSpan: 0, sampleName: '富乙烷气（凯顺）', item: null, name: '不饱和烃类/ %（体积分数）' },
+      { key: 26, sampleRowSpan: 0, sampleName: '富乙烷气（凯顺）', item: null, name: '总硫含量/（mg/kg）' },
+      { key: 27, sampleRowSpan: 4, sampleName: '液化丙烷（凯顺）', item: null, name: '丙烷/ %（体积分数）' },
+      { key: 28, sampleRowSpan: 0, sampleName: '液化丙烷（凯顺）', item: null, name: '总烯烃/ %（体积分数）' },
+      { key: 29, sampleRowSpan: 0, sampleName: '液化丙烷（凯顺）', item: null, name: '碳四及以上烃类/ %（体积分数）' },
+      { key: 30, sampleRowSpan: 0, sampleName: '液化丙烷（凯顺）', item: null, name: '总硫含量/（mg/kg）' },
+      { key: 31, sampleRowSpan: 4, sampleName: '工业用氢气（凯顺）', item: null, name: '氢气/ %（体积分数）' },
+      { key: 32, sampleRowSpan: 0, sampleName: '工业用氢气（凯顺）', item: null, name: '氮气/%（体积分数）' },
+      { key: 33, sampleRowSpan: 0, sampleName: '工业用氢气（凯顺）', item: null, name: '甲烷/%（体积分数）' },
+      { key: 34, sampleRowSpan: 0, sampleName: '工业用氢气（凯顺）', item: null, name: '乙烷+乙烯/ %（体积分数）' },
+      { key: 35, sampleRowSpan: 7, sampleName: '富乙烯气', item: null, name: '乙烯含量/%（体积分数）' },
+      { key: 36, sampleRowSpan: 0, sampleName: '富乙烯气', item: null, name: '丙烷含量/ %（体积分数）' },
+      { key: 37, sampleRowSpan: 0, sampleName: '富乙烯气', item: null, name: '丙烯含量/ %（体积分数）' },
+      { key: 38, sampleRowSpan: 0, sampleName: '富乙烯气', item: null, name: 'C4和C4以上含量/ %（体积分数）' },
+      { key: 39, sampleRowSpan: 0, sampleName: '富乙烯气', item: null, name: '一氧化碳含量/ %（体积分数）' },
+      { key: 40, sampleRowSpan: 0, sampleName: '富乙烯气', item: null, name: '二氧化碳含量/ %（体积分数）' },
+      { key: 41, sampleRowSpan: 0, sampleName: '富乙烯气', item: null, name: '总硫含量/ %（体积分数）' },
+      { key: 42, sampleRowSpan: 6, sampleName: '入厂煤', item: null, name: '全水分Mt/%' },
+      { key: 43, sampleRowSpan: 0, sampleName: '入厂煤', item: null, name: '干燥基灰分Ad/％' },
+      { key: 44, sampleRowSpan: 0, sampleName: '入厂煤', item: null, name: '干燥无灰基挥发分Vdaf/%' },
+      { key: 45, sampleRowSpan: 0, sampleName: '入厂煤', item: null, name: '空干基高位发热量Qgr，ad/kcal/kg' },
+      { key: 46, sampleRowSpan: 0, sampleName: '入厂煤', item: null, name: '收到基低位热值Qnet，ar/kcal/kg' },
+      { key: 47, sampleRowSpan: 0, sampleName: '入厂煤', item: null, name: '干燥基全硫St，d/%' },
+    ],
+    // 质量日报 -> 中控 -> 馏出口
+    outlet: [
+      { key: 1, sampleRowSpan: 11, location: '石脑油', sampleName: '', item: null, name: '密度（20℃）/（kg/m3）' },
+    ],
     zhuangzhi: [
       { equipmentProductInfoID: 1, equipmentName: '裂解', inOutType: '投入', rawName: '石脑油', monthPlan: 157510, dayOver: 5531, monthOver: 126680, yieldPre: null, monthPre: 80.4 },
       { equipmentProductInfoID: 2, equipmentName: '裂解', inOutType: '投入', rawName: '加氢尾油', monthPlan: 32000, dayOver: 1140, monthOver: 25327, yieldPre: null, monthPre: 79.1 },
@@ -406,7 +463,9 @@ export const fakeData = [
     wushui: [
       { gasWaterBalanceValueID: 10, 低压氮气: 15778.0000, itemType: 2, resourceID: 48834, 生产污水: 0.0000, resourceName: '空分', startDate: 1526389581000 },
       { gasWaterBalanceValueID: 12, 低压氮气: 50.0000, itemType: 2, resourceID: 48843, 生产污水: 174.0000, resourceName: 'MTBE/丁烯-1', startDate: 1526389581000 },
-    ] },
+    ],
+
+  },
 ];
 const a = [
   { reasourceName: '空分装置', planNum: parseInt(Math.random() * 10) },
