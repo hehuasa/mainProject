@@ -12,7 +12,6 @@ export default class AccessPopup extends PureComponent {
     //   const { cnLength, enLength } = getStrLength(popValue.name);
     //   style.width = cnLength * 14 + enLength * 10 + 24 + 24 + 8;
     // }
-    console.log('style', name, JSON.parse(JSON.stringify(style)));
     return (
       <div className={styles.simpleInfo} style={style} >
           <span className={styles.name}>{name}</span>

@@ -740,6 +740,10 @@ export async function getAllDoorCountArea() {
 export async function getAllDoorCount() {
   return request(`${path}/resource/door/getAllDoorCountAreaOfDoor`);
 }
+// Vocslist
+export async function vocsList() {
+  return request(`${path}vocs/ldarSceneDetectInfo/selectLadrInfo`);
+}
 // 作业监控list
 export async function constructMonitorList() {
   return request(`${path}/production/proJobMonitor/getAllUnEnd`);

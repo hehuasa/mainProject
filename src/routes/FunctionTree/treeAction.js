@@ -1,5 +1,5 @@
 import {
-  addLayer, delLayer, searchByAttr, transToPoint, clustering, addConstructIcon,
+  addLayer, delLayer, addVocsIcon, transToPoint, clustering, addConstructIcon,
   solidWarehouseDetail, paSystemDetail, addMapAlarms, getBordStyle,
 } from '../../utils/MapService';
 import { returnHome } from '../../utils/utils';
@@ -655,47 +655,21 @@ export const handleCheck = (event, treeId, treeNode, that) => {
           delLayer(mainMap, ['环保专题图'], dispatch);
         }
         break;
-      // VOCs治理专题图
-      case 'VocConstantly':
+      // VOCs监测
+      case 'VocsMonitor':
         if (treeNode.checked) {
-          let layerId;
-          for (const layer of mapLayers.FeatureLayers) {
-            if (layer.mapLayerName === layers[0]) {
-              const index = layer.layerAddress.indexOf('MapServer/');
-              layerId = layer.layerAddress.substr(index + 10);
-              break;
-            }
-          }
-          constantlyModal[deviceArrayIndex] = { data: [], mapData: [] };
           dispatch({
-            type: 'vocs/mapQuery',
+            type: 'vocsMonitor/fetchList',
           }).then(() => {
-            const { constantlyComponents } = that.props;
-            if (constantlyComponents.findIndex(value => value.type === deviceArrayIndex) === -1) {
-              constantlyComponents.push({ type: deviceArrayIndex });
-            }
-            const devices = [];
-            const domType = 'VocConstantly';
-            for (const [key, value] of Object.entries(that.props.vocsMap)) {
-              searchByAttr({ searchText: key, layerIds: [layerId], searchFields: ['区域编码'] }).then((res) => {
-                devices.push({ device: res[0], attributes: { areaCode: key, value } });
-                constantlyInfo(mainMap, view, dispatch, devices, deviceArrayIndex, constantlyComponents, domType, popupScale);
-              });
-            }
+            const { list } = that.props.vocsMonitor;
+            addVocsIcon({ map: mainMap, layer: subLayers[0], scale: popupScale, list, dispatch });
           });
         } else {
-          delLayer(mainMap, [`${treeNode.checkClickFunTemplate + treeNode.treeID}专题图`], dispatch);
-          // 清除实时专题组件及数据
-          const { constantlyComponents } = that.props;
-          const index = constantlyComponents.findIndex(value => value.type === treeNode.checkClickFunTemplate + treeNode.treeID);
-          if (index !== -1) {
-            constantlyComponents.splice(index, 1);
-          }
+          addVocsIcon({ map: mainMap, dispatch });
           dispatch({
-            type: 'constantlyData/queryConstantlyComponents',
-            payload: constantlyComponents,
+            type: 'map/queryVocsPopup',
+            payload: { show: true, load: true, data },
           });
-          delete constantlyModal[treeNode.checkClickFunTemplate + treeNode.treeID];
         }
         break;
       // 危险源专题图

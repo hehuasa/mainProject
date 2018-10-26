@@ -74,7 +74,7 @@ function getFlatMenuData(menus) {
 export const getRouterData = (app) => {
   const routerConfig = {
     '/': {
-      component: dynamicWrapper(app, ['user', 'login', 'tabs', 'sysFunction', 'commonTree', 'majorList', 'video', 'oftenFunction', 'alarmDeal', 'emergency', 'accessControl', 'constructMonitor'], () => import('../layouts/BasicLayout')),
+      component: dynamicWrapper(app, ['user', 'login', 'tabs', 'sysFunction', 'commonTree', 'majorList', 'video', 'oftenFunction', 'alarmDeal', 'emergency', 'vocsMonitor', 'accessControl', 'constructMonitor'], () => import('../layouts/BasicLayout')),
     },
     '/user': {
       component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
@@ -83,7 +83,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
     },
     '/homePage': {
-      component: dynamicWrapper(app, ['homepage', 'panelBoard', 'map', 'tabs', 'resourceTree', 'websocket', 'paSystem', 'alarm', 'video', 'combustibleGas', 'outerDrain', 'vocs', 'constantlyData', 'flow', 'accessControl', 'constructMonitor', 'organization'], () => import('../routes/HomePage/HomePage')),
+      component: dynamicWrapper(app, ['homepage', 'panelBoard', 'map', 'tabs', 'resourceTree', 'websocket', 'paSystem', 'alarm', 'video', 'combustibleGas', 'outerDrain', 'vocsMonitor', 'constantlyData', 'flow', 'accessControl', 'constructMonitor', 'organization'], () => import('../routes/HomePage/HomePage')),
     },
     '/monitorWarning/evr': {
       component: dynamicWrapper(app, ['homepage', 'sidebar', 'map'], () => import('../routes/MonitorWarning/evr')),

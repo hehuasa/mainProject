@@ -24,7 +24,7 @@ const setStyle = (node, array) => {
     node.style[item[0]] = item[1];
   }
 };
-@connect(({ sysFunction, user, accessControl, loading, tabs, resourceTree, emergency, panelBoard, homepage, video, alarm, map, constructMonitor, paSystem, global }) => {
+@connect(({ sysFunction, user, accessControl, loading, tabs, resourceTree, vocsMonitor, emergency, panelBoard, homepage, video, alarm, map, constructMonitor, paSystem, global }) => {
   return {
     treeData: sysFunction.treeData,
     contextMenu: sysFunction.contextMenu,
@@ -49,6 +49,7 @@ const setStyle = (node, array) => {
     constantlyValue: map.constantlyValue,
     searchDeviceArray: map.searchDeviceArray,
     load: map.load,
+    vocsMonitor,
     fetchingAlarm: loading.effects['alarm/fetch'],
     loading,
     tabs,

@@ -3,6 +3,7 @@ import OrgInfo from './OrgInfo';
 import FactoryInfo from './FactoryInfo';
 import SmoothDay from './SmoothDay';
 import SmoothWeek from './SmoothWeek';
+import moment from 'moment';
 import styles from './index.less';
 
 const timerId = { getData: undefined, switchTable: undefined };
@@ -118,7 +119,7 @@ export default class AccessInfo extends PureComponent {
         <div className={styles.warpTitle}><span className={styles.b}>门禁监测 </span><span className={styles.c}>—— {secTitle()}</span></div>
         <div className={styles.header}>
           <span>{`今日入场: ${count.inCount} 人`}</span>
-          <span>{`当前在场: ${count.sunCount} 人`}</span>
+          <span>{`当前在场: ${count.sunCount} 人`}{`--更新时间:  ${allDoorCountArea.dateTimes}`}</span>
           {allDoorCountArea.length > 1 ?
             <span>{`${allDoorCountArea[0].areaName}/${allDoorCountArea[1].areaName}: ${allDoorCountArea[0].sumNum}/${allDoorCountArea[1].sumNum} 人`}</span> : null}
 

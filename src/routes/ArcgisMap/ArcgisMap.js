@@ -325,6 +325,21 @@ export default class ArcgisMap extends PureComponent {
                             type: 'constructMonitor/queryMapSelectedList',
                             payload: { list, area, keys },
                           });
+                        } else if (graphic.attributes.isVocsMonitor) {
+                          const { list, areaName, keys } = graphic.attributes;
+                          // vocs 单独处理
+                          dispatch({
+                            type: 'resourceTree/saveCtrlResourceType',
+                            payload: '',
+                          });
+                          dispatch({
+                            type: 'resourceTree/saveCtrlResourceType',
+                            payload: 'vocsMonitor',
+                          });
+                          dispatch({
+                            type: 'vocsMonitor/queryMapSelectedList',
+                            payload: { list, areaName, keys },
+                          });
                         } else {
                           message.error('未请求到资源相关数据');
                         }
@@ -690,7 +705,6 @@ export default class ArcgisMap extends PureComponent {
                         const screenPoint = mapConstants.view.toScreen(item.data.geometry);
                         item.data.style = { left: screenPoint.x, top: screenPoint.y - 48 };
                         item.uniqueKey = Math.random() * new Date().getTime();
-                        console.log('style0', item.data.name, JSON.parse(JSON.stringify(item.data.style)));
                       }
                       dispatch({
                         type: 'map/queryPAPopup',

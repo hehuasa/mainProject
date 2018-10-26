@@ -1836,6 +1836,86 @@ export const addConstructIcon = ({ map, layer, list, dispatch }) => {
     });
   });
 };
+// Vocs监控
+export const addVocsIcon = ({ map, layer, list, dispatch }) => {
+  esriLoader.loadModules([
+    'esri/layers/GraphicsLayer',
+    'esri/Graphic',
+  ]).then(([GraphicsLayer, Graphic]) => {
+    if (map.findLayerById('Vocs监控专题图')) {
+      delLayer(map, ['Vocs监控专题图'], dispatch);
+      return false;
+    }
+    const markerSymbol = {
+      type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
+      style: 'circle',
+      color: '#27afff',
+      size: '40px', // pixels
+      outline: { // autocasts as new SimpleLineSymbol()
+        color: '#fff',
+        width: '1px',
+      },
+    };
+    const vocsLayer = new GraphicsLayer({ id: 'Vocs监控专题图' });
+    map.add(vocsLayer);
+    const graphics = [];
+    const query = layer.createQuery();
+    query.outFields = ['*'];
+    const data = []; // 用于popup展示
+    layer.queryFeatures(query).then((res) => {
+      graphics.push(...res.features);
+      for (const graphic of graphics) {
+        const items = list.filter(value => Number(value.gisCode) === Number(graphic.attributes.ObjCode));
+        const keys = [];
+        const obj = { count: 0, data: { maintNumber: 0, alreadyMaintNumber: 0, notMaintNumber: 0, waitMaintNumber: 0 }, uniqueKey: new Date() * Math.random(), list: items, keys, areaName: graphic.attributes['分区名称'] };
+
+        if (items.length > 0) {
+          for (const item of items) {
+            keys.push(String(item.ldarSceneDetectID));
+            const { maintNumber, alreadyMaintNumber, notMaintNumber, waitMaintNumber } = item;
+            obj.count += maintNumber;
+            obj.data.maintNumber += maintNumber;
+            obj.data.alreadyMaintNumber += alreadyMaintNumber;
+            obj.data.notMaintNumber += notMaintNumber;
+            obj.data.waitMaintNumber += waitMaintNumber;
+          }
+          const screenPoint = mapConstants.view.toScreen(graphic.geometry.centroid);
+          const style = { left: screenPoint.x, top: screenPoint.y };
+          obj.attributes = { geometry: graphic.geometry.centroid, style　};
+          data.push(obj);
+            const point = graphic.geometry.centroid;
+            const textSymbol = {
+              type: 'text', // autocasts as new TextSymbol()
+              color: 'white',
+              angle,
+              text: items.length + 1,
+              xoffset: '-5px',
+              yoffset: '-2px',
+              font: {
+                size: '12px',
+                family: '微软雅黑',
+              },
+            };
+          //   const cirGraphic = new Graphic({
+          //     geometry: point,
+          //     symbol: markerSymbol,
+          //     attributes: { isVocsMonitor: true, list: items, keys, areaName: graphic.attributes['分区名称'] },
+          //   });
+          //   const textGraphic = new Graphic({
+          //     geometry: point,
+          //     symbol: textSymbol,
+          //     attributes: { isVocsMonitor: true, list: items, keys, areaName: graphic.attributes['分区名称'] },
+          //   });
+          // vocsLayer.addMany([cirGraphic, textGraphic]);
+        }
+      }
+      dispatch({
+        type: 'map/queryVocsPopup',
+        payload: { show: true, load: true, data },
+      });
+    });
+  });
+};
 // 固体仓库专题图
 export const solidWarehouseDetail = ({ map, layer, dispatch }) => {
   esriLoader.loadModules([

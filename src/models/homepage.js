@@ -7,7 +7,7 @@ export default {
     mapHeight: 0,
     videoFooterHeight: { current: 190, cache: 190 },
     bottomCollapsed: false,
-      modalType: '',
+    modalType: '',
     // 门禁及区域实时值
     guardAreaCounting: [],
     guardDoorCounting: [],
@@ -75,13 +75,13 @@ export default {
         deviceMonitor: payload,
       };
     },
-      // 首页弹窗显示顺序
-      queryModalType(state, { payload }) {
-          return {
-              ...state,
-              modalType: payload,
-          };
-      }
+    // 首页弹窗显示顺序
+    queryModalType(state, { payload }) {
+      return {
+        ...state,
+        modalType: payload,
+      };
+    },
   },
 
 };

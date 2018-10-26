@@ -204,6 +204,7 @@ export default {
     paSystemInfo: [],
     paPopup: { show: false, load: false, data: [] },
     accessPops: { show: false, load: false, data: [] },
+    vocsPops: { show: false, load: false, data: [] },
     paBordInfo: {},
     resourceInfo: {}, // 报警对应的资源信息
   },
@@ -583,6 +584,13 @@ export default {
       return {
         ...state,
         clusterPopup: payload,
+      };
+    },
+    // vocs的popup
+    queryVocsPopup(state, { payload }) {
+      return {
+        ...state,
+        vocsPops: payload,
       };
     },
     // 地图搜索半径

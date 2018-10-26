@@ -10,6 +10,7 @@ import ConstantlyTemplate from './infoWindow/ConstantlyTem/ConstantlyTemplate';
 import InfoPops from './infoWindow/Template/InfoPops';
 import ClusterPopup from './infoWindow/ClusterPopup/ClusterPopup';
 import AccessPopup from './infoWindow/AccessPopup/AccessPopup';
+import VOCsPopup from './infoWindow/VOCsPopup/VOCsPopup';
 import PAPopup from './infoWindow/PApopup/PApopup';
 import { constantlyModal, infoPopsModal } from '../../services/constantlyModal';
 import { mapLayers, mapConstants } from '../../services/mapConstant';
@@ -30,7 +31,7 @@ const mapStateToProps = ({ map, homepage, websocket, alarm, resourceTree, consta
   const { infoWindow, scale, popupScale, baseLayer, trueMapShow, locateTrueMap, mapPoint, screenBeforePoint, searchDeviceArray, screenPoint, popupShow,
     constantlyValue, doorConstantlyValue, doorAreaConstantlyValue, gasConstantlyValue, envConstantlyValue, paPopup, stopPropagation, accessPops,
     vocConstantlyValue, waterConstantlyValue, steamConstantlyValue, contextPosition, clusterPopup, isDraw,
-    crackingConstantlyValue, generatorConstantlyValue, largeUnitConstantlyValue, boilerConstantlyValue, infoPops, spaceQueryPop,
+    crackingConstantlyValue, generatorConstantlyValue, largeUnitConstantlyValue, boilerConstantlyValue, infoPops, spaceQueryPop, vocsPops,
   } = map;
   const data = [];
   for (const item of constantlyData.constantlyComponents) {
@@ -77,6 +78,7 @@ const mapStateToProps = ({ map, homepage, websocket, alarm, resourceTree, consta
     infoPops,
     clusterPopup,
     spaceQueryPop,
+    vocsPops,
     accessPops: newAccessPops,
     paPopup,
     resourceTree,
@@ -146,7 +148,7 @@ export default class MapRelation extends PureComponent {
   };
 
   render() {
-    const { stopPropagation, popupShow, trueMapShow, dispatch, serviceUrl, contextPosition, screenPoint, mapPoint, constantlyComponents, infoPops, clusterPopup, accessPops, baseLayer, paPopup, mapHeight } = this.props;
+    const { stopPropagation, popupShow, trueMapShow, dispatch, serviceUrl, contextPosition, screenPoint, mapPoint, constantlyComponents, infoPops, clusterPopup, vocsPops, accessPops, baseLayer, paPopup, mapHeight } = this.props;
     const { legendIndex } = this.state;
     const { allSublayers } = baseLayer;
     // 实时专题图气泡窗
@@ -159,11 +161,14 @@ export default class MapRelation extends PureComponent {
     );
     // 聚合气泡窗
     const clusterPropComponents = () => {
-      return clusterPopup.show && clusterPopup.load ? clusterPopup.data.map(item => <ClusterPopup key={item.key} uniqueKey={item.uniqueKey} popValue={item} popKey={item.key} />) : null
+      return clusterPopup.show && clusterPopup.load ? clusterPopup.data.map(item => <ClusterPopup key={item.key} uniqueKey={item.uniqueKey} popValue={item} popKey={item.key} />) : null;
+    };
+    const VOCsComponents = () => {
+      return vocsPops.show && vocsPops.load ? vocsPops.data.map(item => <VOCsPopup key={item.uniqueKey} uniqueKey={item.uniqueKey} popValue={item} popKey={item.uniqueKey} />) : null;
     };
     // 扩音对讲气泡窗
     const paPopupComponents = () => {
-      return paPopup.show && paPopup.load ? paPopup.data.map(item => <PAPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null
+      return paPopup.show && paPopup.load ? paPopup.data.map(item => <PAPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null;
     };
     // 门禁气泡窗
     const accessPopupComponents = () => {
@@ -196,6 +201,7 @@ export default class MapRelation extends PureComponent {
             { popupShow ? paPopupComponents() : null }
             { popupShow ? clusterPropComponents() : null }
             { popupShow ? accessPopupComponents() : null }
+            { popupShow ? VOCsComponents() : null }
             <AlarmCount />
             <MeasurePop />
             <SpaceQuery />

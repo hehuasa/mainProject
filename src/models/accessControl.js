@@ -21,6 +21,7 @@ export default {
     // 门禁区域统计
     *getAllDoorCountArea({ payload }, { call, put }) {
       const response = yield call(getAllDoorCountArea, payload);
+      response.data.dateTimes = moment().format('HH:mm:ss');
       yield put({
         type: 'queryAllDoorCountArea',
         payload: response.data,

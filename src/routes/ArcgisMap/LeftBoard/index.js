@@ -6,7 +6,7 @@ import AlarmInfo from './Alarminfo/index';
 import PAInfo from './PAInfo/PAInfo';
 import AccessControl from './AccessControl/index';
 import SourceOfRisk from './SourceOfRisk/index';
-import VOCs from './VOCs/index';
+import VOCsMonitor from './VOCsMonitor/VOCsMonitor';
 import QualityMonitor from './QualityMonitor/index';
 import WarehouseLogistics from './WarehouseLogistics/index';
 import styles from './index.less';
@@ -97,8 +97,8 @@ class LeftBoard extends PureComponent {
             {/* 危险源专题图 或则 安全风险专题图 */}
             {ctrlResourceType.indexOf('sourceOfRisk') === 0 || ctrlResourceType.indexOf('securityRisk') === 0 ?
               <SourceOfRisk /> : null}
-            {/* VOCs治理 */}
-            {ctrlResourceType.indexOf('voc') === 0 ? <VOCs /> : null}
+            {/* VOCs监控 */}
+            {ctrlResourceType.indexOf('vocsMonitor') === 0 ? <VOCsMonitor /> : null}
             {/* 质量监测信息窗 */}
             {ctrlResourceType.indexOf('qualityMonitor') === 0 ? <QualityMonitor /> : null}
             {/* 仓储物流 */}

@@ -16,14 +16,12 @@ let timerId;
 // };
 export default class FromComponent extends PureComponent {
   state = {
-    opacityObj: { left: { 0: 1 }, right: { 0: 1 } },
     leftIndex: 0,
     rightIndex: 0,
     leftPageNum: 0,
     rightPageNum: 0,
   };
   componentDidMount() {
-
     // // 自动滚动
     // let progress = 0;
     // let scrollTop = 0;
@@ -39,7 +37,7 @@ export default class FromComponent extends PureComponent {
     //   }
     // }, 1000);
     const a = setInterval(() => {
-        const { onWheel } = this.props;
+      const { onWheel } = this.props;
       if (!onWheel) {
         const { leftPageNum, rightPageNum, leftIndex, rightIndex } = this.state;
         let newLeftIndex;
@@ -102,20 +100,6 @@ export default class FromComponent extends PureComponent {
     const rowNum = Math.ceil((height - titleHeight) / 24);
     const leftNum = Math.ceil(arrayLeft.length / rowNum);
     const rightNum = Math.ceil(arrayRight.length / rowNum);
-    // const { opacityObj } = this.state;
-    // const getOpacityObj = (num, type) => {
-    //   let index = 0;
-    //   const obj = {};
-    //   while (index <= num) {
-    //     if (!opacityObj[type][index]) {
-    //       obj[index] = 0;
-    //     }
-    //     index += 1;
-    //   }
-    //   return obj;
-    // };
-    // opacityObj.left = getOpacityObj(leftNum, 'left');
-    // opacityObj.right = getOpacityObj(rightNum, 'right');
     this.setState({
       leftPageNum: leftNum,
       rightPageNum: rightNum,
@@ -126,12 +110,15 @@ export default class FromComponent extends PureComponent {
   };
   // 分解数组
   handleData = (array) => {
+    const middle = Math.ceil(array.length / 2);
     const obj = { arrayLeft: [], arrayRight: [] };
-    let index = 0;
     if (array.length > 0) {
-      while (index < array.length) {
-        index % 2 === 0 ? obj.arrayLeft.push(array[index]) : obj.arrayRight.push(array[index]);
-        index += 1;
+      for (const [index, item] of array.entries()) {
+        if (index < middle - 1) {
+          obj.arrayLeft.push(item);
+        } else {
+          obj.arrayRight.push(item);
+        }
       }
     }
     return obj;

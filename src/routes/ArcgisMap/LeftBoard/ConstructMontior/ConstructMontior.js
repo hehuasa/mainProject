@@ -27,6 +27,14 @@ export default class ConstructMontior extends PureComponent {
       payload: '',
     });
   };
+  handleChange = (keys) => {
+    const { list, dispatch } = this.props;
+    const { area } = list;
+    dispatch({
+      type: 'constructMonitor/queryMapSelectedList',
+      payload: { list: list.list, area, keys },
+    });
+  };
   // 打开看板
   openBoard = () => {
     const openBoard = (param, name) => {
@@ -74,6 +82,7 @@ export default class ConstructMontior extends PureComponent {
             <Collapse
               bordered={false}
               activeKey={list.keys}
+              onChange={this.handleChange}
             >
               { list.list.map((item) => {
                 return (
