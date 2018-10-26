@@ -511,14 +511,6 @@ export const commonData = {
             key: 'explosionPoint',
           },
           {
-            title: '毒性',
-            dataIndex: 'instructions',
-            isExport: true,
-            isTableItem: true,
-            width: 100,
-            key: 'instructions',
-          },
-          {
             title: '溶解性',
             dataIndex: 'solubility',
             isExport: true,

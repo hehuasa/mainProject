@@ -306,6 +306,22 @@ export const getRouterData = (app) => {
     '/productionDispatch/wastewaterBalance': {
       component: dynamicWrapper(app, ['productionDaily'], () => import('../routes/DailyProduction/WastWaterBalance')),
     },
+    // 质量日报 原料
+    '/productionDispatch/limisRawMaterial': {
+      component: dynamicWrapper(app, ['productionDaily'], () => import('../routes/DailyProduction/LimisReportData/LimisRawMaterial')),
+    },
+    // 仓储物流 车辆实时进出厂监控
+    '/productionDispatch/carInOut': {
+      component: dynamicWrapper(app, ['productionDaily'], () => import('../routes/DailyProduction/Logistics/CarInOut')),
+    },
+    // 仓储物流 实时物资进厂列表
+    '/productionDispatch/materialInFactory': {
+      component: dynamicWrapper(app, ['productionDaily'], () => import('../routes/DailyProduction/Logistics/MaterialInFactory')),
+    },
+    // 仓储物流 实时提货列表清单
+    '/productionDispatch/takeCargoList': {
+      component: dynamicWrapper(app, ['productionDaily'], () => import('../routes/DailyProduction/Logistics/TakeCargoList')),
+    },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },
