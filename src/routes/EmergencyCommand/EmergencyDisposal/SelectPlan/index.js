@@ -157,7 +157,7 @@ export default class SelectPlan extends PureComponent {
       if (err) return;
       dispatch({
         type: 'emergency/getPlanInfoPage',
-        payload: { pageNum: 1, pageSize: 5, isQuery, fuzzy: true, status: 0, ...fieldsValue },
+        payload: { pageNum: 1, pageSize: 5, isQuery, fuzzy: true, statu: 0, ...fieldsValue },
       }).then(() => {
         const { planInfoPage } = this.props;
         this.setState({

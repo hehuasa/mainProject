@@ -422,10 +422,10 @@ export default class HandAlarmDeal extends PureComponent {
             <FormItem
               labelCol={{ span: 7 }}
               wrapperCol={{ span: 15 }}
-              label="报警来源类别"
+              label="报警现状"
             >
               {form.getFieldDecorator('alarmStatuInfo')(
-                <Input placeholder="请输入报警现状" />
+                <Input placeholder="报警现状" />
               )}
             </FormItem>
           </Col>

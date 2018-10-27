@@ -31,7 +31,7 @@ const RealEvent = Form.create()((props) => {
           </FormItem>
         </Col>
       </Row>
-      <Footer save={() => save(props.form, type, event)} cancel={cancel} />
+      <Footer save={() => save(props.form, type)} cancel={cancel} />
     </div>
   );
 });
@@ -56,11 +56,12 @@ export default class AlarmDeal extends PureComponent {
     });
   }
   // 保存报警处理信息
-  save = (form, type, e) => {
+  save = (form, type) => {
     // e.preventDefault();
     const { dispatch, alarmInfo } = this.props;
     const { alarmId } = alarmInfo;
     form.validateFields((err, fieldsValue) => {
+      if (err) return;
       if (!err) {
         const rawMaterialIds = [fieldsValue.rawMaterialIds];
         fieldsValue.rawMaterialIds = [fieldsValue.rawMaterialIds];

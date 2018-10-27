@@ -10,9 +10,10 @@ import styles from '../index.less';
 import Progress from '../../../components/Progress/Progress';
 
 const { Option } = Select;
-@connect(({ productionDaily }) => ({
+@connect(({ productionDaily, homepage }) => ({
   carInOut: productionDaily.carInOut,
   timeUsePre: productionDaily.timeUsePre,
+  videoFooterHeight: homepage.videoFooterHeight,
 }))
 export default class EquipmentProductInfo extends PureComponent {
   state = {
@@ -24,28 +25,16 @@ export default class EquipmentProductInfo extends PureComponent {
   componentDidMount() {
     this.props.dispatch({
       type: 'productionDaily/getCarInOut',
-      // payload: { sampleType: '原料' },
+      payload: 0,
     });
   }
   // 按时间获取装置信息
   onChange = (date) => {
     const startDate = date.valueOf();
     this.props.dispatch({
-      type: 'productionDaily/getTimeUsePre',
-      payload: { startDate },
+      type: 'productionDaily/getCarInOut',
+      payload: startDate,
     });
-    this.props.dispatch({
-      type: 'productionDaily/getDeviceProduction',
-      payload: { startDate },
-    }).then(() => {
-      this.dealData(this.props.deviceProduction);
-    });
-  };
-  // 获取制表时间
-  getStartTime = (dataArr) => {
-    if (dataArr && dataArr.length > 0) {
-      this.setState({ dateTimes: dataArr[0].startDate });
-    }
   };
   // 点击行
   rawClick = (record) => {
@@ -53,7 +42,6 @@ export default class EquipmentProductInfo extends PureComponent {
       showChart: !this.state.showChart,
       sortIndex: record.sortIndex,
       chartName: record.rawName,
-      dateTimes: record.startDate,
     });
   };
     renderView = (props) => {
@@ -72,17 +60,17 @@ export default class EquipmentProductInfo extends PureComponent {
           dataIndex: 'runState',
           width: 100,
         }, { title: '排队号',
-          dataIndex: 'oueuingNumbe',
+          dataIndex: 'queuingNumbe',
           width: 100,
         }, { title: '卡/单号',
-          dataIndex: 'oderNumber',
+          dataIndex: 'orderNumber',
           width: 100,
         }, { title: '产品名称',
           dataIndex: 'productName',
           width: 200,
         }, { title: '前车牌号',
           dataIndex: 'frontCarNumber',
-          width: 100,
+          width: 120,
         }, { title: '车辆类型',
           dataIndex: 'carType',
           width: 100,
@@ -94,34 +82,34 @@ export default class EquipmentProductInfo extends PureComponent {
           width: 110,
         }, { title: '驾驶员身份证',
           dataIndex: 'driverIDCard',
-          width: 180,
+          width: 190,
         }, { title: '联系手机',
           dataIndex: 'mobile',
-          width: 120,
+          width: 140,
         }, { title: '领取防火罩时间',
           dataIndex: 'receaveFlashHider',
-          width: 160,
+          width: 180,
         }, { title: '通知进厂时间',
           dataIndex: 'notifyInFatoryTime',
-          width: 160,
+          width: 180,
         }, { title: '车位',
           dataIndex: 'parkingLot',
           width: 100,
         }, { title: '进厂门岗',
           dataIndex: 'inFatoryDoor',
-          width: 100,
+          width: 120,
         }, { title: '进厂时间',
           dataIndex: 'inFatoryTime',
-          width: 160,
+          width: 180,
         }, { title: '发货时间',
           dataIndex: 'deliveryTime',
-          width: 160,
+          width: 180,
         }, { title: '出厂门岗',
           dataIndex: 'outFatoryDoor',
-          width: 100,
+          width: 120,
         }, { title: '出厂时间',
           dataIndex: 'outFatoryTime',
-          width: 160,
+          width: 180,
         },
       ];
       return (
@@ -136,7 +124,7 @@ export default class EquipmentProductInfo extends PureComponent {
               <div className={styles.timeArea}>
                 <div className={styles.creatTime}>制表时间:
                   <DatePicker
-                    defaultValue={this.state.dateTimes ? moment(this.state.dateTimes) : moment()}
+                    defaultValue={moment(moment().subtract(1, 'days').valueOf())}
                     allowClear={false}
                     onChange={this.onChange}
                   />
@@ -144,14 +132,14 @@ export default class EquipmentProductInfo extends PureComponent {
               </div>
               <Scrollbars >
                 <Table
-                  dataSource={fakeData[0].limisRawMaterial}
+                  dataSource={this.props.carInOut}
                   columns={cols}
                   pagination={false}
                   rowClassName={(record, index) => {
                     return index % 2 === 0 ? styles.blue : styles.blueRow;
                         }}
                   bordered
-                  scroll={{ x: 2290 }}
+                  scroll={{ x: 2480, y: 540 }}
                 />
               </Scrollbars>
             </div>

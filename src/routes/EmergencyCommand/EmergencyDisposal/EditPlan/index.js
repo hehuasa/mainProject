@@ -53,7 +53,7 @@ export default class EditPlan extends PureComponent {
         // 通过eventID获取事件特征
         this.props.dispatch({
           type: 'emergency/getEmgcFeatureByEventID',
-          payload: { eventID },
+          payload: { eventID, eventExecPlanID: value },
         });
         //  获取处置卡 eventID uploadType:1 为组织、2为附件、3为处置卡 4.应急流程
         this.props.dispatch({
@@ -103,7 +103,7 @@ export default class EditPlan extends PureComponent {
     // 通过eventID获取事件特征
     this.props.dispatch({
       type: 'emergency/getEmgcFeatureByEventID',
-      payload: { eventID },
+      payload: { eventID, eventExecPlanID: value },
     });
     //  获取处置卡 eventID uploadType:1 为组织、2为附件、3为处置卡 4.应急流程
     this.props.dispatch({
