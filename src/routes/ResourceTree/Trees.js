@@ -128,7 +128,7 @@ export const handleBeforeAsync = (treeId, parentNode) => {
     }
   }
 };
-@connect(({ resourceTree, map, sidebar, loading, alarm, panelBoard, homepage, user, vocs, constantlyData, global, constructMonitor, paSystem, video }) => {
+@connect(({ resourceTree, map, sidebar, loading, alarm, panelBoard, homepage, user, constantlyData, global, constructMonitor, paSystem, video }) => {
   return {
     treeData: resourceTree.treeData,
     appendData: resourceTree.appendData,
@@ -172,7 +172,6 @@ export const handleBeforeAsync = (treeId, parentNode) => {
     fetchingAlarm: loading.effects['alarm/fetch'],
     fetchLayers: loading.effects['map/fetchLayers'],
     panelBoard,
-    vocsMap: vocs.map,
     currentUser: user.currentUser,
   };
 })

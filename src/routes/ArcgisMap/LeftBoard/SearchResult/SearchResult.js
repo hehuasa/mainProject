@@ -71,10 +71,10 @@ class SearchResult extends PureComponent {
   handleClick = (item) => {
     const { mainMap, dispatch, mapView } = this.props;
     // 根据ObjCode 作为giscode 请求资源数据
-    const { ObjCode } = item.feature.attributes;
+    const GISCode = item.feature.attributes.ObjCode || item.feature.attributes['唯一编码'];
     dispatch({
       type: 'resourceTree/selectByGISCode',
-      payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, GISCode: ObjCode },
+      payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, GISCode },
     }).then(() => {
       if (this.props.resourceTree.resourceInfo === undefined || this.props.resourceTree.resourceInfo === {}) {
         message.error('未请求到资源相关数据');
