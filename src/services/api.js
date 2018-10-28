@@ -2280,24 +2280,15 @@ export async function getLimisReportData(params) {
     body: params,
   });
 }
-// 仓储物流 车辆实时进出厂监控
+// 仓储物流 车辆实时进出厂监控 参数: data
 export async function getCarInOut(params) {
-  return request(`${path}/production/proRptCarInOutRealTime`, {
-    method: 'POST',
-    body: params,
-  });
+  return request(`${path}/production/proRptCarInOutRealTime/getByDay?date=${params}`);
 }
 // 仓储物流 实时物资进厂列表
 export async function getMaterialInFactory(params) {
-  return request(`${path}/production/proRptMaterialInFactoryRealTime`, {
-    method: 'POST',
-    body: params,
-  });
+  return request(`${path}/production/proRptMaterialInFactoryRealTime/getByDay?date=${params}`);
 }
 // 仓储物流 实时提货列表清单
 export async function getTakeCargoList(params) {
-  return request(`${path}/production/proRptRealTimeTakeCargoList`, {
-    method: 'POST',
-    body: params,
-  });
+  return request(`${path}/production/proRptRealTimeTakeCargoList/getByDay?date=${params}`);
 }

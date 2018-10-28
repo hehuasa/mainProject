@@ -1,19 +1,20 @@
 import React, { PureComponent } from 'react';
-import { Form, Row, Col, Input, Icon } from 'antd';
+import { Form, Row, Col, Input, Select } from 'antd';
 import { connect } from 'dva';
 import { alarmStatus } from '../../../../utils/utils';
 import styles from './InfoContent.less';
 
 const { TextArea } = Input;
+const { Option } = Select;
 const FormItem = Form.Item;
 
-@connect(({ alarmDeal, emergency }) => ({
+@connect(({ alarmDeal, emergency, alarm }) => ({
   alarmDeal,
   eventID: emergency.eventId,
   emergency,
+  alarm,
 }))
 export default class HandAlarmDeal extends PureComponent {
-
   // componentDidMount() {
   //   const {  eventID } = this.props;
   //   this.props.dispatch({
@@ -34,7 +35,8 @@ export default class HandAlarmDeal extends PureComponent {
           <Col>
             <FormItem
               labelCol={{ span: 0 }}
-              wrapperCol={{ span: 0 }}>
+              wrapperCol={{ span: 0 }}
+            >
               {form.getFieldDecorator('probeResource', {
                 initialValue: eventInfoReport.probeResource ? eventInfoReport.probeResource.resourceID : null,
               })(
@@ -45,7 +47,8 @@ export default class HandAlarmDeal extends PureComponent {
           <Col>
             <FormItem
               labelCol={{ span: 0 }}
-              wrapperCol={{ span: 0 }}>
+              wrapperCol={{ span: 0 }}
+            >
               {form.getFieldDecorator('resResourceInfo', {
                 initialValue: eventInfoReport.resResourceInfo ? eventInfoReport.resResourceInfo.resourceID : null,
               })(
@@ -56,7 +59,8 @@ export default class HandAlarmDeal extends PureComponent {
           <Col>
             <FormItem
               labelCol={{ span: 0 }}
-              wrapperCol={{ span: 0 }}>
+              wrapperCol={{ span: 0 }}
+            >
               {form.getFieldDecorator('rawMaterialIds', {
                 initialValue: eventInfoReport.resRawMaterialInfos && eventInfoReport.resRawMaterialInfos[0] ? eventInfoReport.resRawMaterialInfos[0].rawMaterialID : null,
               })(
@@ -67,7 +71,8 @@ export default class HandAlarmDeal extends PureComponent {
           <Col>
             <FormItem
               labelCol={{ span: 0 }}
-              wrapperCol={{ span: 0 }}>
+              wrapperCol={{ span: 0 }}
+            >
               {form.getFieldDecorator('organization', {
                 initialValue: eventInfoReport.organization ? eventInfoReport.organization.orgID : null,
               })(
@@ -75,8 +80,6 @@ export default class HandAlarmDeal extends PureComponent {
               )}
             </FormItem>
           </Col>
-
-
           <Col md={12} sm={24}>
             <FormItem
               labelCol={{ span: 5 }}
@@ -87,6 +90,44 @@ export default class HandAlarmDeal extends PureComponent {
                 initialValue: eventInfoReport.eventName,
               })(
                 <Input disabled />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={12} sm={24}>
+            <FormItem
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            />
+          </Col>
+          <Col md={12} sm={24}>
+            <FormItem
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+              label="事发位置"
+            >
+              {form.getFieldDecorator('place', {
+                initialValue: eventInfoReport.eventPlace,
+              })(
+                <Input disabled />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={12} sm={24}>
+            <FormItem
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+              label="报警类型"
+            >
+              {form.getFieldDecorator('alarmTypeId', {
+                initialValue: eventInfoReport.alarmTypeId,
+              })(
+                <Select disabled style={{ width: '100%' }} >
+                  {
+                    this.props.alarm.alarmTypeList.map(item => (
+                      <Option value={item.alarmTypeID}>{item.alarmTypeName}</Option>
+                    ))
+                  }
+                </Select>
               )}
             </FormItem>
           </Col>
@@ -133,10 +174,10 @@ export default class HandAlarmDeal extends PureComponent {
             <FormItem
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
-              label="事发位置"
+              label="设备位置"
             >
-              {form.getFieldDecorator('place', {
-                initialValue: eventInfoReport.eventPlace,
+              {form.getFieldDecorator('installPosition', {
+                initialValue: eventInfoReport.installPosition,
               })(
                 <Input disabled />
               )}

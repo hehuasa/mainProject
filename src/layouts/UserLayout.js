@@ -3,7 +3,8 @@ import { Switch, Route } from 'dva/router';
 import DocumentTitle from 'react-document-title';
 import { Icon, Tooltip, Modal } from 'antd';
 import styles from './UserLayout.less';
-import logo from '../assets/login/logoNew.gif';
+// import logo from '../assets/login/logoNew.gif';
+import logo from '../assets/login/login_logo.png';
 import { getRoutes } from '../utils/utils';
 import Login from "../components/Login";
 

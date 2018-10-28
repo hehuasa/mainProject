@@ -255,7 +255,7 @@ export default class EmergencyDisposal extends PureComponent {
         <TabPane tab="查看实施方案" key="4">
           <div className={styles.planExtra}>
             <Card bordered={false} extra={extra}>
-              <PlanInfo />
+              <PlanInfo onRef={() => {}} />
             </Card>
           </div>
         </TabPane>

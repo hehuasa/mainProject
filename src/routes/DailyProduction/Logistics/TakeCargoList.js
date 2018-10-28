@@ -24,21 +24,15 @@ export default class EquipmentProductInfo extends PureComponent {
   componentDidMount() {
     this.props.dispatch({
       type: 'productionDaily/getTakeCargoList',
-      // payload: { sampleType: '原料' },
+      payload: 0,
     });
   }
   // 按时间获取装置信息
   onChange = (date) => {
     const startDate = date.valueOf();
     this.props.dispatch({
-      type: 'productionDaily/getTimeUsePre',
-      payload: { startDate },
-    });
-    this.props.dispatch({
-      type: 'productionDaily/getDeviceProduction',
-      payload: { startDate },
-    }).then(() => {
-      this.dealData(this.props.deviceProduction);
+      type: 'productionDaily/getTakeCargoList',
+      payload: startDate,
     });
   };
   // 获取制表时间
@@ -71,6 +65,7 @@ export default class EquipmentProductInfo extends PureComponent {
         }, { title: '发货时间',
           dataIndex: 'sendTime',
           width: 180,
+          render: value => moment(value).format('YYYY-MM-DD HH:mm:ss'),
         }, { title: '产品名称',
           dataIndex: 'productName',
           width: 160,
@@ -121,7 +116,7 @@ export default class EquipmentProductInfo extends PureComponent {
               <div className={styles.timeArea}>
                 <div className={styles.creatTime}>制表时间:
                   <DatePicker
-                    defaultValue={this.state.dateTimes ? moment(this.state.dateTimes) : moment()}
+                    defaultValue={moment(moment().subtract(1, 'days').valueOf())}
                     allowClear={false}
                     onChange={this.onChange}
                   />
@@ -129,14 +124,14 @@ export default class EquipmentProductInfo extends PureComponent {
               </div>
               <Scrollbars >
                 <Table
-                  dataSource={fakeData[0].limisRawMaterial}
+                  dataSource={this.props.takeCargoList}
                   columns={cols}
                   pagination={false}
                   rowClassName={(record, index) => {
                     return index % 2 === 0 ? styles.blue : styles.blueRow;
                         }}
                   bordered
-                  scroll={{ x: 1780 }}
+                  scroll={{ x: 1780, y: 540 }}
                 />
               </Scrollbars>
             </div>

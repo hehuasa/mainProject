@@ -29,7 +29,7 @@ export default class AlarmInfo extends PureComponent {
       <div>
         <AlarmEventInfo isEvent={isEvent} alarmInfoConten={alarmDeal.alarmInfoConten} form={form} />
         { isEvent ? <AddTemplate casualtiesData={alarmDeal.alarmInfoConten.casualtys} form={form} /> : null}
-        <Footer save={() => save(form, 1, event)} cancel={cancel} onChange={onChange} />
+        <Footer save={() => save(form, 1)} cancel={cancel} onChange={onChange} />
       </div>
     );
   }
