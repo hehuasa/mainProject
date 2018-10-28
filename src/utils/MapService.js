@@ -15,6 +15,8 @@ import door from '../assets/map/door.png';
 import doorInfo from '../assets/map/doorInfo2.png';
 import closePic from '../assets/map/tools/close.png';
 import locateHover from '../assets/map/search/locate-hover.png';
+import videoLegend from '../assets/map/video/video.png';
+import videoLegendHover from '../assets/map/video/videoHover.png';
 import video from '../assets/map/truemap/video.png';
 import locate from '../assets/map/search/locate.png';
 import noAlarm from '../assets/map/search/noAlarm.png';
@@ -2807,20 +2809,22 @@ export const addVideoIcon = async (map, view, checkedVideos, dispatch) => {
   });
 };
 // 定位图标切换
-export const changeIcon = async (map, id, searchText, searchFields, url) => {
+export const changeIcon = async (map, id, searchText, searchFields, url, width, height) => {
   esriLoader.loadModules([
     'esri/symbols/PictureMarkerSymbol',
   ]).then(([PictureMarkerSymbol]) => {
     const imgObj = {
       locate,
       locateHover,
+      videoLegend,
+      videoLegendHover,
     };
     // 新建或获取报警动画图层
     const layer = map.findLayerById(id);
     if (layer === undefined) {
       return false;
     }
-    const pictureMarkerSymbol = new PictureMarkerSymbol({ url: imgObj[url], width: '25px', height: '40px', angle });
+    const pictureMarkerSymbol = new PictureMarkerSymbol({ url: imgObj[url], width: width || '25px', height: height || '40px', angle });
     for (const graphic of layer.graphics.items) {
       if (graphic.attributes[searchFields] === searchText) {
         graphic.symbol = pictureMarkerSymbol;

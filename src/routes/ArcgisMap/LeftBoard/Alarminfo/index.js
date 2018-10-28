@@ -253,14 +253,14 @@ class AlarmInfo extends PureComponent {
       return false;
     }
     const { mainMap } = this.props;
-    changeIcon(mainMap, '视频搜索结果', Number(e.target.title), 'sort', 'locateHover');
+    changeIcon(mainMap, '视频搜索结果', Number(e.target.title), 'sort', 'videoLegendHover', '32px', '32px');
   };
   handleMouseOut= (e) => {
     if (e.target.title === '') {
       return false;
     }
     const { mainMap } = this.props;
-    changeIcon(mainMap, '视频搜索结果', Number(e.target.title), 'sort', 'locate');
+    changeIcon(mainMap, '视频搜索结果', Number(e.target.title), 'sort', 'videoLegend', '32px', '32px');
   };
   // 视频播放
   handleVideoPlay = (videoArray) => {
