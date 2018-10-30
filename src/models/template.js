@@ -34,9 +34,9 @@ export default {
     }, // 短信分页信息
     msgInfo: {}, // 短信详情
     alarmRange: 1, // 报警范围 1.部门+专业系统 2.点位
-    byOrg: 1, // 按部门 1.全部门 2.本部门 3.指定部门
-    byProfession: 1, // 按专业系统 1.全专业系统 2.制定专业系统
-    alarmType: 1, // 报警类型 1.全类型 2.指定类型
+    byOrg: 3, // 按部门 1.全部门 2.本部门 3.指定部门
+    byProfession: 2, // 按专业系统 1.全专业系统 2.制定专业系统
+    alarmType: 2, // 报警类型 1.全类型 2.指定类型
     resourcePage: {
       data: [],
       pagination: {},

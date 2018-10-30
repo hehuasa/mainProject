@@ -492,7 +492,7 @@ class BasicLayout extends React.PureComponent {
                   const { resourceGroupByArea, clusterRes } = this.props;
                   // 更新报警聚合
                   const area = mapLayers.AreaLayers[0];
-                  const subLayer = mapConstants.baseLayer.findSublayerById(area.id);
+                  const subLayer = mapConstants.baseLayer.findSublayerById(area.id || null);
                   const queryArea = subLayer.createQuery();
                   queryArea.outFields = ['*'];
                   subLayer.queryFeatures(queryArea).then((res) => {
