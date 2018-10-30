@@ -13,8 +13,13 @@ export default
   },
   "proxy": {
     "/emgc": {
+<<<<<<< Updated upstream
       "target": "http://192.168.0.6:8080/",
       // "target": "http://10.157.24.55:8080/",
+=======
+      // "target": "http://192.168.0.6:8080/",
+      "target": "http://10.157.24.55:8080/",
+>>>>>>> Stashed changes
       "changeOrigin": true,
       "pathRewrite": { "^/emgc": "" }
     },

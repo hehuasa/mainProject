@@ -56,11 +56,11 @@ export default class Analysis extends PureComponent {
     this.props.dispatch({
       type: 'planManagement/planLevelData',
     });
-    // 请求实体组织机构树
+    // 请求应急组织机构树
     this.props.dispatch({
       type: 'organization/getEmgcOrgTree',
     });
-    // 请求应急组织机构树
+    // 请求实体组织机构树
     this.props.dispatch({
       type: 'organization/getOrgTree',
     });

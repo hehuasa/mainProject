@@ -1837,7 +1837,8 @@ export async function getDrillList() {
 }
 // 请求应急演练方案分页数据
 export async function getDrillPage(params) {
-  return request(`${path}/emgc/emgcEmgcDrillPlan/page`, {
+  // return request(`${path}/emgc/emgcEmgcDrillPlan/page`, {
+  return request(`${path}/emgc/emgcEmgcDrillPlan/selectPage`, {
     method: 'POST',
     body: params,
   });

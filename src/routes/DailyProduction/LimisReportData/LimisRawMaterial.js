@@ -33,22 +33,14 @@ export default class EquipmentProductInfo extends PureComponent {
     this.props.dispatch({
       type: 'productionDaily/getLimisReportData',
       payload: { sampleType: '原料' },
-    }).then(() => {
-      console.log(999, this.props.limisRawMaterial);
     });
   }
   // 按时间获取装置信息
   onChange = (date) => {
     const startDate = date.valueOf();
     this.props.dispatch({
-      type: 'productionDaily/getTimeUsePre',
-      payload: { startDate },
-    });
-    this.props.dispatch({
-      type: 'productionDaily/getDeviceProduction',
-      payload: { startDate },
-    }).then(() => {
-      this.dealData(this.props.deviceProduction);
+      type: 'productionDaily/getLimisReportData',
+      payload: { sampleType: '原料', sampledDate: startDate },
     });
   };
   // 获取制表时间
@@ -66,102 +58,161 @@ export default class EquipmentProductInfo extends PureComponent {
       dateTimes: record.startDate,
     });
   };
-    renderView = (props) => {
-      props.style.right = 100;
-      return (
-        <div {...props} />
-      );
-    };
-    render() {
-      const { showChart, sortIndex, chartName, dateTimes } = this.state;
-      const renderContent = (value, rowSpan, colSpan) => {
-        const obj = {
-          children: value,
-          props: {},
-        };
-        obj.props.rowSpan = rowSpan === undefined ? 1 : rowSpan;
-        obj.props.colSpan = colSpan === undefined ? 1 : colSpan;
-        return obj;
+  // 获取指标值
+  getMplDesc = (record) => {
+    const { limisRawMaterial } = this.props;
+    const arr = limisRawMaterial.filter(item =>
+      record.sampleSearchValue.findIndex(value => value === item.sampleName) !== -1
+    && record.nameSearchValue.findIndex(value => value === item.nameContent) !== -1);
+    const { length } = arr;
+    if (length > 0) {
+      return arr[0].mplDesc;
+    } else {
+      return '/';
+    }
+  };
+  // 获取罐号批号
+  getSamplingPoint = (record) => {
+    const { limisRawMaterial } = this.props;
+    const arr = limisRawMaterial.filter(item =>
+      record.sampleSearchValue.findIndex(value => value === item.sampleName) !== -1);
+    const { length } = arr;
+    let str = '';
+    if (length > 0) {
+      const pointObj = {};
+      arr.forEach((item, index) => {
+        pointObj[item.samplingPoint] = index;
+      });
+      for (const key in pointObj) {
+        str += `${key}<br>`;
+      }
+      return str;
+    } else {
+      return '/';
+    }
+  };
+  // 获取实测值
+  getText = (record) => {
+    const { limisRawMaterial } = this.props;
+    const arr = limisRawMaterial.filter(item =>
+      record.sampleSearchValue.findIndex(value => value === item.sampleName) !== -1
+      && record.nameSearchValue.findIndex(value => value === item.nameContent) !== -1);
+    const { length } = arr;
+    let str = '';
+    if (length > 0) {
+      arr.forEach((item, index) => {
+        index === arr.length - 1 ? str += `${item.textContent}` : str += `${item.textContent}/`;
+      });
+      return str;
+    } else {
+      return '/';
+    }
+  };
+  renderView = (props) => {
+    props.style.right = 100;
+    return (
+      <div {...props} />
+    );
+  };
+  render() {
+    const { showChart, sortIndex, chartName, dateTimes } = this.state;
+    const renderContent = (value, rowSpan, colSpan) => {
+      const obj = {
+        children: <div dangerouslySetInnerHTML={{ __html: value }} />,
+        props: {},
       };
-      const cols = [
-        {
-          title: '原料名称',
-          dataIndex: 'sampleName',
-          width: 100,
-          render: (value, row) => renderContent(value, row.sampleRowSpan),
-        }, {
-          title: '分析项目',
-          dataIndex: 'item',
-          colSpan: 2,
-          width: 140,
-          render: (value, row) => {
-            if (row.item === null) {
-              return renderContent(row.name, row.itemRowSpan, 2);
-            } else {
-              return renderContent(value, row.itemRowSpan);
-            }
-          },
-        }, {
-          title: '项目值',
-          dataIndex: 'name',
-          colSpan: 0,
-          width: 100,
-          render: (value, row) => {
-            if (row.item === null) {
-              return renderContent(value, 1, 0);
-            } else {
-              return renderContent(value);
-            }
-          },
-        }, {
-          title: '控制指标',
-          dataIndex: 'mplDesc',
-          width: 80,
-        }, {
-          title: '罐号/批号',
-          dataIndex: 'samplingPoint',
-          width: 80,
-          render: (value, row) => renderContent(value, row.sampleRowSpan),
-        }, {
-          title: '实测值',
-          dataIndex: 'text',
-          width: 80,
+      obj.props.rowSpan = rowSpan === undefined ? 1 : rowSpan;
+      obj.props.colSpan = colSpan === undefined ? 1 : colSpan;
+      return obj;
+    };
+    const cols = [
+      {
+        title: '原料名称',
+        dataIndex: 'sampleName',
+        width: 100,
+        render: (value, row) => renderContent(value, row.sampleRowSpan),
+      }, {
+        title: '分析项目',
+        dataIndex: 'item',
+        colSpan: 2,
+        width: 140,
+        render: (value, row) => {
+          if (row.item === null) {
+            return renderContent(row.name, row.itemRowSpan, 2);
+          } else {
+            return renderContent(value, row.itemRowSpan);
+          }
         },
-      ];
-      return (
-        <div className={styles.warp}>
-          <div className={styles.title}>
-            <div className={styles.left} />
-            <div className={styles.text}>原材料质量情况</div>
-            <div className={styles.left} />
-          </div>
-          { showChart ? <Trend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> : (
-            <div className={styles.content}>
-              <div className={styles.timeArea}>
-                <div className={styles.timeProcess}>时间进度: {this.props.timeUsePre ? `${this.props.timeUsePre} %` : '' }</div>
-                <div className={styles.creatTime}>制表时间:
-                  <DatePicker
-                    defaultValue={this.state.dateTimes ? moment(this.state.dateTimes) : moment()}
-                    allowClear={false}
-                    onChange={this.onChange}
-                  />
-                </div>
+      }, {
+        title: '项目值',
+        dataIndex: 'name',
+        colSpan: 0,
+        width: 100,
+        render: (value, row) => {
+          if (row.item === null) {
+            return renderContent(value, 1, 0);
+          } else {
+            return renderContent(value);
+          }
+        },
+      }, {
+        title: '控制指标',
+        dataIndex: 'mplDesc',
+        width: 80,
+        render: (text, record) => {
+          const str = this.getMplDesc(record);
+          return str;
+        },
+      }, {
+        title: '罐号/批号',
+        dataIndex: 'samplingPoint',
+        width: 80,
+        render: (value, row) => {
+          return renderContent(this.getSamplingPoint(row), row.sampleRowSpan);
+        },
+      }, {
+        title: '实测值',
+        dataIndex: 'text',
+        width: 80,
+        render: (value, row) => {
+          return this.getText(row);
+        },
+      },
+    ];
+    return (
+      <div className={styles.warp}>
+        <div className={styles.title}>
+          <div className={styles.left} />
+          <div className={styles.text}>原材料质量情况</div>
+          <div className={styles.left} />
+        </div>
+        { showChart ? <Trend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> : (
+          <div className={styles.content}>
+            <div className={styles.timeArea}>
+              <div className={styles.timeProcess}>时间进度: {this.props.timeUsePre ? `${this.props.timeUsePre} %` : '' }</div>
+              <div className={styles.creatTime}>制表时间:
+                <DatePicker
+                  defaultValue={this.state.dateTimes ? moment(this.state.dateTimes) : moment()}
+                  allowClear={false}
+                  onChange={this.onChange}
+                />
               </div>
-              <Scrollbars >
-                <Table
-                  dataSource={fakeData[0].limisRawMaterial}
-                  columns={cols}
-                  pagination={false}
-                  rowClassName={(record, index) => {
+            </div>
+            <Scrollbars >
+              <Table
+                dataSource={fakeData[0].limisRawMaterial}
+                columns={cols}
+                pagination={false}
+                rowClassName={(record, index) => {
                     return index % 2 === 0 ? styles.blue : styles.blueRow;
                         }}
-                  bordered
-                  scroll={{ x: 580 }}
-                />
-              </Scrollbars>
-            </div>
+                bordered
+                scroll={{ x: 580 }}
+              />
+            </Scrollbars>
+          </div>
         ) }
-        </div>
-      );
-    }
+      </div>
+    );
+  }
 }

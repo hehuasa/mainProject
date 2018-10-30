@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Form, Input, Button, Select, Icon, Row, Col, Table } from 'antd';
+import { getUUID } from '../../utils/utils';
 import styles from './index.less';
 
 const FormItem = Form.Item;
@@ -25,29 +26,18 @@ const columns = [
     key: 'specialityName',
   },
 ];
-const receptorCols = [
-  {
-    title: '姓名',
-    dataIndex: 'userName',
-    key: 'userName',
-  }, {
-    title: '手机号码',
-    dataIndex: 'mobile',
-    key: 'mobile',
-  },
-];
-@connect(({ template, userList, sendMsg, tabs, sysFunction }) => ({
+@connect(({ template, userList, sendMsg, loading }) => ({
   template,
   userPage: userList.data,
   sendMsg,
-  tabs,
-  sysFunction,
+  loading: loading.effects['sendMsg/add'],
 }))
 @Form.create()
 export default class TableList extends PureComponent {
   state = {
     userList: [], // 选择的系统短信接收人员
     mobileList: [], // 手动添加的短信接收人员
+    selectedRowKeys: [], // 选中的系统用户的ID
   };
   componentDidMount() {
     const { dispatch } = this.props;
@@ -68,49 +58,95 @@ export default class TableList extends PureComponent {
   };
   // 手动添加报警接收人员
   addReceptor = () => {
-    const { form, dispatch } = this.props;
-    const error = form.getFieldsError(['userName', 'mobile']);
-    const obj = form.getFieldsValue(['userName', 'mobile']);
-    form.validateFields([['userName', 'mobile']], (err, fieldsValue) => {
+    const { form } = this.props;
+    const { mobileList } = this.state;
+    form.validateFields(['userName', 'mobile'], (err, fieldsValue) => {
       if (err) return;
-      console.log(777, fieldsValue);
+      mobileList.unshift({ ...fieldsValue, uuid: getUUID() });
+      this.setState({
+        mobileList,
+      });
+      form.setFieldsValue({
+        userName: null,
+        mobile: null,
+      });
     });
+  };
+  // 移除接收人员
+  remove = (record) => {
+    const { userList, mobileList, selectedRowKeys } = this.state;
+    // 手动添加的人员
+    console.log(555, record);
+    if (record.uuid) {
+      this.setState({
+        mobileList: mobileList.filter(item => item.uuid !== record.uuid),
+      });
+    } else {
+      this.setState({
+        userList: userList.filter(item => item.userID !== record.userID),
+        selectedRowKeys: selectedRowKeys.filter(item => item !== record.userID),
+      });
+    }
   };
   doAdd = () => {
     const { form, dispatch } = this.props;
-    form.validateFields((err, fieldsValue) => {
+    const { userList, mobileList } = this.state;
+    form.validateFields(['msgContent'], (err, fieldsValue) => {
       if (err) return;
+      if (!userList.concat(mobileList).length > 0) {
+        form.setFields({
+          list: {
+            errors: [new Error('接收人员列表不能为空')],
+          },
+        });
+        return;
+      }
+      const obj = {
+        userList: userList.concat(mobileList),
+        msgContent: fieldsValue.msgContent,
+      };
       dispatch({
         type: 'sendMsg/add',
-        payload: fieldsValue,
+        payload: { infoJson: JSON.stringify(obj) },
       }).then(() => {
-        const { tabs, sysFunction } = this.props;
-        const { currentFunctions } = sysFunction;
-        const key = 'tools/history';
-        const list = currentFunctions;
-        if (tabs.tabs.find(value => value.key === `/${key}`)) {
-          this.props.dispatch({
-            type: 'tabs/active',
-            payload: { key: `/${key}` },
-          });
-        } else {
-          this.props.dispatch({
-            type: 'tabs/add',
-            payload: { key: `/${key}`, list },
-          });
-        }
+        this.setState({
+          userList: [],
+          mobileList: [],
+          selectedRowKeys: [],
+        });
+        form.setFieldsValue({
+          msgContent: null,
+        });
       });
     });
   };
   rowCheckedChange = (selectedRowKeys, selectedRows) => {
     this.setState({
       userList: selectedRows,
+      selectedRowKeys,
     });
   };
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { templateList } = this.props.template;
+    const receptorCols = [
+      {
+        title: '姓名',
+        dataIndex: 'userName',
+        key: 'userName',
+      }, {
+        title: '手机号码',
+        dataIndex: 'mobile',
+        key: 'mobile',
+      }, {
+        title: '操作',
+        dataIndex: 'action',
+        key: 'action',
+        render: (text, record) => {
+          return <a href="javascript: void(0)" onClick={() => this.remove(record)}>移除</a>;
+        },
+      },
+    ];
     return (
       <div className={styles.sedMsg}>
         <Form onSubmit={this.handleSubmit}>
@@ -122,11 +158,13 @@ export default class TableList extends PureComponent {
                 columns={columns}
                 rowSelection={{
                   onChange: this.rowCheckedChange,
+                  selectedRowKeys: this.state.selectedRowKeys,
                 }}
                 pagination={{
                   ...this.props.userPage.pagination,
                   onChange: this.userPage,
                 }}
+                rowKey={record => record.userID}
               />
             </Col>
             <Col span={12}>
@@ -152,10 +190,10 @@ export default class TableList extends PureComponent {
                   >
                     {getFieldDecorator('mobile', {
                         rules: [
-                          { pattern: /^[1][3,4,5,7,8][0-9]{9}$/, message: '请输入正确的手机号码' },
+                          { pattern: /^(17[0-9]|13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/, message: '请输入正确的手机号码' },
                         ],
                       })(
-                        <Input placeholder="电话" />
+                        <Input placeholder="手机号码" />
                       )
                       }
                   </FormItem>
@@ -182,15 +220,18 @@ export default class TableList extends PureComponent {
                   labelCol={{ span: 5 }}
                   wrapperCol={{ span: 12 }}
                 >
-                  <Table
-                    size="small"
-                    dataSource={this.state.userList}
-                    columns={receptorCols}
-                    style={{ marginBottom: 8 }}
-                    pagination={{
-                      pageSize: 5,
-                    }}
-                  />
+                  {getFieldDecorator('list')(
+                    <Table
+                      size="small"
+                      dataSource={this.state.mobileList.concat(this.state.userList)}
+                      columns={receptorCols}
+                      style={{ marginBottom: 8 }}
+                      pagination={{
+                        pageSize: 5,
+                      }}
+                    />
+                  )
+                  }
                 </FormItem>
               </Row>
               <FormItem
@@ -207,8 +248,8 @@ export default class TableList extends PureComponent {
               <FormItem
                 wrapperCol={{ span: 12, offset: 5 }}
               >
-                <Button type="primary" onClick={() => this.doAdd()}>
-                  确定
+                <Button type="primary" loading={this.props.loading} onClick={() => this.doAdd()}>
+                  发送
                 </Button>
               </FormItem>
             </Col>
