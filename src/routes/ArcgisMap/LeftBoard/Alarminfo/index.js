@@ -524,28 +524,30 @@ class AlarmInfo extends PureComponent {
         return false;
       }
       const newGeometry = transToPoint(res[0].feature.geometry);
-      mapView.goTo({ center: newGeometry, scale: popupScale });
-      // 弹窗
-      const index = infoPops.findIndex(value => value.key === 'deviceInfo');
-      const pop = {
-        show: true,
-        key: 'deviceInfo',
-        uniqueKey: Math.random() * new Date().getTime(),
-      };
-      if (index === -1) {
-        infoPops.push(pop);
-      } else {
-        infoPops.splice(index, 1, pop);
-      }
-      const screenPoint = mapView.toScreen(newGeometry);
-      const name = resourceInfo.ctrlResourceType !== '101.102.101.101.103' ? processNumber + resourceName : resourceName;
-      infoPopsModal.deviceInfo = {
-        screenPoint, screenPointBefore: screenPoint, mapStyle: { width: mapView.width, height: mapView.height }, attributes: res[0].feature.attributes, geometry: newGeometry, name,
-      };
-      dispatch({
-        type: 'map/queryInfoPops',
-        payload: infoPops,
+      mapView.goTo({ center: newGeometry, scale: popupScale }).then(() => {
+        // 弹窗
+        const index = infoPops.findIndex(value => value.key === 'deviceInfo');
+        const pop = {
+          show: true,
+          key: 'deviceInfo',
+          uniqueKey: Math.random() * new Date().getTime(),
+        };
+        if (index === -1) {
+          infoPops.push(pop);
+        } else {
+          infoPops.splice(index, 1, pop);
+        }
+        const screenPoint = mapView.toScreen(newGeometry);
+        const name = resourceInfo.ctrlResourceType !== '101.102.101.101.103' ? processNumber + resourceName : resourceName;
+        infoPopsModal.deviceInfo = {
+          screenPoint, screenPointBefore: screenPoint, mapStyle: { width: mapView.width, height: mapView.height }, attributes: res[0].feature.attributes, geometry: newGeometry, name,
+        };
+        dispatch({
+          type: 'map/queryInfoPops',
+          payload: infoPops,
+        });
       });
+
     });
   };
   /**

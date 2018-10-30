@@ -1,4 +1,4 @@
-import { searchByAttr, space } from '../utils/MapService';
+import { searchByAttr, searchByAttrBySorting, space } from '../utils/MapService';
 import { selectByGISCode, getMonitorResourceObj, getMonitorResource, getMapLayer } from '../services/api';
 import { mapLayers } from '../services/mapConstant';
 // 计算地图弹窗的箭头方向，宽高等
@@ -219,6 +219,14 @@ export default {
     // 地图搜索（属性）
     * searchDeviceByAttr({ payload }, { call, put }) {
       const response = yield call(searchByAttr, payload);// 搜索设备
+      yield put({
+        type: 'getDeviceArray',
+        payload: response,
+      });
+    },
+    // 地图搜索（属性 + 排序）
+    * searchDeviceByAttrSorting({ payload }, { call, put }) {
+      const response = yield call(searchByAttrBySorting, payload);// 搜索设备
       yield put({
         type: 'getDeviceArray',
         payload: response,

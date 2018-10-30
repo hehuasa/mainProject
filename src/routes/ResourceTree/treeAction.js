@@ -182,36 +182,37 @@ export const handleSelected = (treeId, treeNode, d, that) => {
             return false;
           }
           const newGeometry = transToPoint(searchDeviceArray[0].feature.geometry);
-          const screenPoint = view.toScreen(searchDeviceArray[0].feature.geometry);
-          dispatch({
-            type: 'map/screenPoint',
-            payload: screenPoint,
+          view.goTo({ center: newGeometry, scale: popupScale - 10 }).then(() => {
+            const screenPoint = view.toScreen(newGeometry);
+            dispatch({
+              type: 'map/screenPoint',
+              payload: screenPoint,
+            });
+            dispatch({
+              type: 'map/mapPoint',
+              payload: newGeometry,
+            });
+            // 弹窗
+            const { infoPops } = that.props;
+            const index1 = infoPops.findIndex(value => value.key === 'deviceInfo');
+            const pop = {
+              show: true,
+              key: 'deviceInfo',
+              uniqueKey: Math.random() * new Date().getTime(),
+            };
+            if (index1 === -1) {
+              infoPops.push(pop);
+            } else {
+              infoPops.splice(index1, 1, pop);
+            }
+            infoPopsModal.deviceInfo = {
+              screenPoint, screenPointBefore: screenPoint, mapStyle: { width: view.width, height: view.height }, attributes: searchDeviceArray[0].feature.attributes, geometry: newGeometry, name: treeNode.name,
+            };
+            dispatch({
+              type: 'map/queryInfoPops',
+              payload: infoPops,
+            });
           });
-          dispatch({
-            type: 'map/mapPoint',
-            payload: newGeometry,
-          });
-          // 弹窗
-          const { infoPops } = that.props;
-          const index1 = infoPops.findIndex(value => value.key === 'deviceInfo');
-          const pop = {
-            show: true,
-            key: 'deviceInfo',
-            uniqueKey: Math.random() * new Date().getTime(),
-          };
-          if (index1 === -1) {
-            infoPops.push(pop);
-          } else {
-            infoPops.splice(index1, 1, pop);
-          }
-          infoPopsModal.deviceInfo = {
-            screenPoint, screenPointBefore: screenPoint, mapStyle: { width: view.width, height: view.height }, attributes: searchDeviceArray[0].feature.attributes, geometry: newGeometry, name: treeNode.name,
-          };
-          dispatch({
-            type: 'map/queryInfoPops',
-            payload: infoPops,
-          });
-          view.goTo({ center: newGeometry, scale: popupScale - 10 }).then(() => { });
         }
       }
       );

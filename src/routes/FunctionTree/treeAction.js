@@ -2,7 +2,7 @@ import {
   addLayer, delLayer, addVocsIcon, transToPoint, clustering, addConstructIcon,
   solidWarehouseDetail, paSystemDetail, addMapAlarms, getBordStyle,
 } from '../../utils/MapService';
-import { returnHome } from '../../utils/utils';
+import {changeVideoPosition, changeVideoSize, resetAccessStyle, returnHome} from '../../utils/utils';
 import { constantlyModal, infoConstantly, infoPopsModal } from '../../services/constantlyModal';
 import { mapConstants, mapLayers } from '../../services/mapConstant';
 
@@ -40,21 +40,17 @@ export const handleClick = (event, treeId, treeNode, that) => {
   };
   const openOrCloseBoard = (nameKeys) => {
     if (that.props.rightCollapsed) {
-      that.props.dispatch({
+      const { video, dispatch, rightCollapsed } = that.props;
+      const { position } = video;
+      changeVideoPosition('homePage', rightCollapsed, position, dispatch);
+      dispatch({
         type: 'global/changeRightCollapsed',
         payload: false,
       }).then(() => {
-        const { view, extent } = mapConstants;
-        if (view.height) {
-          view.goTo({ extent }).then(() => {
-            getBordStyle(view).then((style) => {
-              dispatch({
-                type: 'accessControl/queryStyle',
-                payload: style,
-              });
-            });
-          });
-        }
+        const { videoFooterHeight, accessControlShow } = that.props;
+        const { view, accessInfoExtent } = mapConstants;
+        changeVideoSize(videoFooterHeight, dispatch, 'show');
+        resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
         setTimeout(() => {
           const param = { alarmType: treeNode.checkFunctionCode, title: treeNode.name };
           openBoard(treeNode.checkFunctionCode, param, treeNode.checkClickFunTemplate, nameKeys);

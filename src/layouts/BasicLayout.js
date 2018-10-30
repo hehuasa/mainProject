@@ -237,7 +237,7 @@ class BasicLayout extends React.PureComponent {
         resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
       }
     }
-  }
+  };
   onClickSpeed = (key) => {
     switch (key) {
       case 'sk1':
@@ -265,7 +265,7 @@ class BasicLayout extends React.PureComponent {
         });
         break;
     }
-  }
+  };
   onClickQuit = () => {
     const { dispatch, tabs } = this.props;
     const newArray = JSON.parse(JSON.stringify(tabs.tabs));

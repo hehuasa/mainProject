@@ -74,6 +74,51 @@ export const addLegend = async ({ view, container, legendLayer, dispatch }) => {
   });
 };
 // 根据属性查询设备
+export const searchByAttrBySorting = async ({ searchText, layerIds = getLayerIds(), searchFields = ['设备名称', 'ObjCode'] }) => {
+  return new Promise(resolve =>
+    esriLoader.loadModules(
+      [
+        'esri/tasks/FindTask',
+        'esri/tasks/support/FindParameters',
+      ]).then(([FindTask, FindParameters]) => {
+      // 搜索完成的回调
+      const ShowFindResult = (findTaskResult) => {
+        findTaskResult.results.sort((a, b) => {
+          if (a.feature && b.feature) {
+            if (a.feature.attributes && b.feature.attributes) {
+              return Number(a.feature.attributes.ObjCode || a.feature.attributes['唯一编码']) - Number(b.feature.attributes.ObjCode || b.feature.attributes['唯一编码']) > 0 ? -1 : 1;
+            } else {
+              return 0;
+            }
+          } else {
+            return 0;
+          }
+        });
+        resolve(findTaskResult.results);
+      };
+      // 创建属性查询对象
+      const findTask = new FindTask(mapLayers.baseLayer.layerAddress);
+      // 创建属性查询参数
+      const findParams = new FindParameters();
+      // 返回几何信息
+      findParams.returnGeometry = true;
+      // 对哪一个图层进行属性查询,筛选基础图层
+      const layerIdArray = [];
+      for (const id of layerIdArray) {
+        const index = layerIds.indexOf(id);
+        if (index !== -1) {
+          layerIds.splice(index, 1);
+        }
+      }
+      findParams.layerIds = layerIds === 'all' ? getLayerIds() : layerIds;
+      // 查询的字段
+      findParams.searchFields = searchFields;
+      findParams.searchText = searchText;
+      // 执行查询对象
+      findTask.execute(findParams, ShowFindResult).then(ShowFindResult);
+    })
+  );
+};
 export const searchByAttr = async ({ searchText, layerIds = getLayerIds(), searchFields = ['设备名称', 'ObjCode'] }) => {
   return new Promise(resolve =>
     esriLoader.loadModules(
@@ -83,19 +128,6 @@ export const searchByAttr = async ({ searchText, layerIds = getLayerIds(), searc
       ]).then(([FindTask, FindParameters]) => {
       // 搜索完成的回调
       const ShowFindResult = (findTaskResult) => {
-        console.log('searchByAttr1', findTaskResult);
-        findTaskResult.results.sort((a, b) => {
-          if (a.feature && b.feature) {
-            if (a.feature.attributes && b.feature.attributes) {
-                return Number(a.feature.attributes.ObjCode || a.feature.attributes['唯一编码']) - Number(b.feature.attributes.ObjCode || b.feature.attributes['唯一编码']) > 0 ? -1 : 1;
-            } else {
-              return 0;
-            }
-          } else {
-            return 0;
-          }
-        });
-        console.log('searchByAttr2', findTaskResult);
         resolve(findTaskResult.results);
       };
       // 创建属性查询对象
