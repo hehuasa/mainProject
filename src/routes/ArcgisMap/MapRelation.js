@@ -163,6 +163,7 @@ export default class MapRelation extends PureComponent {
     const clusterPropComponents = () => {
       return clusterPopup.show && clusterPopup.load ? clusterPopup.data.map(item => <ClusterPopup key={item.key} uniqueKey={item.uniqueKey} popValue={item} popKey={item.key} />) : null;
     };
+    // Vocs气泡窗
     const VOCsComponents = () => {
       return vocsPops.show && vocsPops.load ? vocsPops.data.map(item => <VOCsPopup key={item.uniqueKey} uniqueKey={item.uniqueKey} popValue={item} popKey={item.uniqueKey} />) : null;
     };

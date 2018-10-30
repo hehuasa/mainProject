@@ -6,7 +6,7 @@ const Socket = ({ onmessage, currentUser }) => {
   // if (window.serviceUrl.socketUrl !== '') {
   const id = (Math.ceil(currentUser.baseUserInfo.userID *　Math.random() * 100 * Math.random() * 10));
   // return new Sockette(`${window.serviceUrl.socketUrl}websocket?${id}`, {
-  return new Sockette(`ws://10.157.24.23:8081/websocket?${id}`, {
+  return new Sockette(`ws://10.157.24.41:8088/websocket?${id}`, {
     timeout: 5e3,
     maxAttempts: 10,
     onmessage,

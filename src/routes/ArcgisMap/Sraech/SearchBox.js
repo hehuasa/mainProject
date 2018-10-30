@@ -60,6 +60,7 @@ class SearchBox extends PureComponent {
   state = {
     showOption: false,
     opacity: 0,
+    visibility: 'hidden',
     searchText: '',
     optionCheck: '',
   };
@@ -175,6 +176,7 @@ class SearchBox extends PureComponent {
     setTimeout(() => {
       this.setState({
         opacity: 1,
+        visibility: 'visible',
       });
     }, 1);
   };
@@ -184,6 +186,7 @@ class SearchBox extends PureComponent {
       this.setState({
         showOption: true,
         opacity: 0,
+        visibility: 'hidden',
       });
     }, 200);
   };
@@ -247,10 +250,10 @@ class SearchBox extends PureComponent {
   };
   render() {
     const { searchDeviceArray, searchHistory } = this.props;
-    const { showOption, opacity, optionCheck, searchText } = this.state;
+    const { showOption, opacity, optionCheck, searchText, visibility } = this.state;
     const suffix = searchText !== '' || searchDeviceArray !== null ? <Icon type="close-circle" onClick={this.emitEmpty} style={{ marginRight: 8, cursor: 'pointer' }} /> : null;
     const options = (showOption && searchDeviceArray === null) ? (
-      <div className={styles.option} style={{ opacity }}>
+      <div className={styles.option} style={{ opacity, visibility }}>
         <div className={styles.groups} onClick={this.handleSearchOption}>
           <div key={1} title="火灾探测"><img alt="火灾探测" title="火灾探测" src={fire} />火灾探测</div>
           <div key={2} title="燃气探测"><img alt="燃气探测" title="燃气探测" src={gas} />燃气探测</div>

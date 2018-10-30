@@ -155,14 +155,12 @@ const CreateForm = Form.create()((props) => {
       onCancel={() => handleModalVisible()}
     >
       <Scrollbars
-        // autoHide
-        // autoHideTimeout={1000}
-        // autoHideDuration={200}
-        // autoHeight
-        // autoHeightMin={200}
-        // autoHeightMax={600}
-        // renderTrackHorizontal={() => <div />}
-        // hideTracksWhenNotNeeded
+        autoHide
+        autoHideTimeout={1000}
+        autoHideDuration={200}
+        autoHeight
+        autoHeightMin={400}
+        autoHeightMax={600}
       >
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <FormItem>
@@ -497,7 +495,9 @@ const CreateForm = Form.create()((props) => {
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <AddResourceTemplate depList={depList} />
+          <Col span={22} offset={1}>
+            <AddResourceTemplate depList={depList} />
+          </Col>
         </Row>
       </Scrollbars>
 

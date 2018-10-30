@@ -1,4 +1,4 @@
-import { vocsList } from '../services/api';
+import { response } from '../../mock/vocsData';
 
 export default {
   namespace: 'vocsMonitor',

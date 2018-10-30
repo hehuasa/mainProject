@@ -9,7 +9,6 @@ import { mapConstants, mapLayers } from '../../services/mapConstant';
 const loopObj = {};
 export const handleClick = (event, treeId, treeNode, that) => {
   const openBoard = (boardType, param, name, nameKeys) => {
-    debugger;
     const { expandKeys, activeKeys } = that.props.panelBoard;
     const newArr = [];
     for (const arr of activeKeys) {

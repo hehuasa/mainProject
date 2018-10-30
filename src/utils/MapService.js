@@ -2,12 +2,6 @@ import esriLoader from 'esri-loader';
 // import { Notification } from 'antd';
 import { mapConstants, mapLayers } from '../services/mapConstant';
 import { groupingByOverview } from '../utils/alarmService';
-import fire0 from '../assets/map/alarm/fire-0.png';
-import fire1 from '../assets/map/alarm/fire-1.png';
-import gas0 from '../assets/map/alarm/gas-0.png';
-import gas1 from '../assets/map/alarm/gas-1.png';
-import evr0 from '../assets/map/alarm/evr-0.png';
-import evr1 from '../assets/map/alarm/evr-1.png';
 import measureLabel from '../assets/map/tools/measureLabel.png';
 // import alarmHover from '../assets/map/alarm/alarm-hover.png';
 import pull from '../assets/map/pull.png';
@@ -15,8 +9,8 @@ import door from '../assets/map/door.png';
 import doorInfo from '../assets/map/doorInfo2.png';
 import closePic from '../assets/map/tools/close.png';
 import locateHover from '../assets/map/search/locate-hover.png';
-import videoLegend from '../assets/map/video/video.png';
-import videoLegendHover from '../assets/map/video/videoHover.png';
+import videoLegend from '../assets/map/search/video.png';
+import videoLegendHover from '../assets/map/search/videoHover.png';
 import video from '../assets/map/truemap/video.png';
 import locate from '../assets/map/search/locate.png';
 import noAlarm from '../assets/map/search/noAlarm.png';
@@ -1370,277 +1364,277 @@ export const clustering = async ({ view, dispatch, alarms, graphics, overviewSho
   });
 };
 // 实时专题图
-export const constantlyInfo = async (map, view, dispatch, devices, type, constantlyComponents, domType, scale, disablePop) => {
-  esriLoader.loadModules([
-    'esri/layers/GraphicsLayer',
-    'esri/symbols/PictureMarkerSymbol',
-    'esri/symbols/SimpleFillSymbol',
-    'esri/symbols/SimpleLineSymbol',
-    'esri/Color',
-    'esri/Graphic',
-  ]).then(([GraphicsLayer, PictureMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, Color, Graphic]) => {
-    // 找到装置分区图层 的各个装置，添加一个 统计弹窗
-    let constantlyLayer; let pictureMarkerSymbol;
-    const addConstantlyLayer = (_type, noIcon) => {
-      let height;
-      if (noIcon) {
-        height = 0;
-      } else {
-        height = '40px';
-      }
-      pictureMarkerSymbol = new PictureMarkerSymbol({ url: noAlarm, width: '25px', height, angle });
-      constantlyLayer = map.findLayerById(`${_type}专题图`);
-      if (!constantlyLayer) {
-        constantlyLayer = new GraphicsLayer({ id: `${_type}专题图`, minScale: scale });
-        map.add(constantlyLayer);
-        view.on('click', (e) => {
-          view.hitTest(e).then(({ results }) => {
-            if (results.length > 0) {
-              const { graphic } = results.filter((result) => {
-                return result.graphic.layer === constantlyLayer;
-              })[0];
-              if (graphic) {
-                dispatch({
-                  type: 'resourceTree/selectByGISCode',
-                  payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, gISCode: graphic.attributes.gISCode },
-                });
-              }
-            }
-          });
-        });
-      } else {
-        constantlyLayer.graphics.removeAll();
-      }
-    };
-    switch (domType) {
-      case 'constantly':
-        addConstantlyLayer(type);
-        break;
-      case 'GasConstantly':
-        addConstantlyLayer(type);
-        break;
-      case 'EnvConstantly':
-        addConstantlyLayer(type);
-        break;
-      case 'GuardAreaConstantly':
-        addConstantlyLayer(type, true);
-        break;
-      case 'GuardDoorConstantly':
-        pictureMarkerSymbol = new PictureMarkerSymbol({ url: door, width: '25px', height: '40px', angle });
-        constantlyLayer = map.findLayerById(`${type}专题图`);
-        if (!constantlyLayer) {
-          constantlyLayer = new GraphicsLayer({ id: `${type}专题图`, minScale: 10000 });
-          map.add(constantlyLayer);
-          view.on('click', (e) => {
-            view.hitTest(e).then(({ results }) => {
-              if (results.length > 0) {
-                const { graphic } = results.filter((result) => {
-                  return result.graphic.layer === constantlyLayer;
-                })[0];
-                if (graphic) {
-                  dispatch({
-                    type: 'resourceTree/saveCtrlResourceType',
-                    payload: '101.104',
-                  });
-                  dispatch({
-                    type: 'resourceTree/saveSelectResourceGisCode',
-                    payload: { gISCode: graphic.attributes.gISCode, type },
-                  });
-                  e.stopPropagation();
-                }
-              }
-            });
-          });
-        } else {
-          constantlyLayer.graphics.removeAll();
-        }
-        break;
-      case 'VocConstantly':
-        pictureMarkerSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
-          new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-            new Color([255, 255, 0]), 2), new Color([255, 255, 0])
-        );
-        constantlyLayer = map.findLayerById(`${type}专题图`);
-        if (!constantlyLayer) {
-          constantlyLayer = new GraphicsLayer({ id: `${type}专题图` });
-          map.add(constantlyLayer);
-          view.on('click', (e) => {
-            view.hitTest(e).then(({ results }) => {
-              if (results.length > 0) {
-                const { graphic } = results.filter((result) => {
-                  return result.graphic.layer === constantlyLayer;
-                })[0];
-                if (graphic) {
-                  dispatch({
-                    type: 'vocs/saveAreaCode',
-                    payload: graphic.attributes.areaCode,
-                  });
-                  dispatch({
-                    type: 'resourceTree/saveCtrlResourceType',
-                    payload: 'vocs',
-                  });
-                }
-              }
-            });
-            e.stopPropagation();
-          });
-        } else {
-          constantlyLayer.graphics.removeAll();
-        }
-        break;
-      case 'WaterConstantly':
-        addConstantlyLayer(type);
-        break;
-      case 'Electric':
-        addConstantlyLayer(type);
-        break;
-      case 'Steam':
-        addConstantlyLayer(type);
-        break;
-      case 'Wind':
-        addConstantlyLayer(type);
-        break;
-      case 'Cracking':
-        constantlyLayer = map.findLayerById('裂解炉实时数据专题图');
-        if (!constantlyLayer) {
-          constantlyLayer = new GraphicsLayer({ id: '裂解炉实时数据专题图' });
-          map.add(constantlyLayer);
-        } else {
-          constantlyLayer.clear();
-        }
-        break;
-      case 'Generator':
-        pictureMarkerSymbol = new PictureMarkerSymbol(gas0, 20, 30);
-        constantlyLayer = map.findLayerById('发电机实时数据专题图');
-        if (!constantlyLayer) {
-          constantlyLayer = new GraphicsLayer({ id: '发电机实时数据专题图' });
-          map.add(constantlyLayer);
-        } else {
-          constantlyLayer.clear();
-        }
-        break;
-      case 'LargeUnit':
-        pictureMarkerSymbol = new PictureMarkerSymbol(gas0, 20, 30);
-        constantlyLayer = map.findLayerById('大机组实时数据专题图');
-        if (!constantlyLayer) {
-          constantlyLayer = new GraphicsLayer({ id: '大机组实时数据专题图' });
-          map.add(constantlyLayer);
-        } else {
-          constantlyLayer.clear();
-        }
-        break;
-      case 'Boiler':
-        pictureMarkerSymbol = new PictureMarkerSymbol(gas0, 20, 30);
-        constantlyLayer = map.findLayerById('锅炉实时数据专题图');
-        if (!constantlyLayer) {
-          constantlyLayer = new GraphicsLayer({ id: '锅炉实时数据专题图' });
-          map.add(constantlyLayer);
-        } else {
-          constantlyLayer.clear();
-        }
-        break;
-      default: break;
-    }
-    const data = [];
-    const editDom = (domText, attributes) => {
-      for (const item of attributes.valueArry) {
-        domText.push(`${item.dataTypeName}：${item.value} `);
-      }
-      return domText;
-    };
-    for (const device of devices) {
-      const { attributes } = device;
-      const { geometry } = device.device.feature || device.device;
-      let pointGeometry = geometry;
-      // 如果地理信息不为点，先做一个转换
-      switch (pointGeometry.type) {
-        case 'point': break;
-        case 'polygon': pointGeometry = pointGeometry.centroid; break;
-        case 'polyline': pointGeometry = device.feature.geometry.extent.center; break;
-        default: break;
-      }
-      let constantGraphic;
-      constantGraphic = new Graphic(pointGeometry, pictureMarkerSymbol, { gISCode: attributes.gISCode });
-      // constantGraphic = new Graphic({ geometry: pointGeometry, attributes: { gISCode: attributes.gISCode }});
-      const screenPoint = view.toScreen(pointGeometry);
-      const style = { left: screenPoint.x, top: screenPoint.y };
-      const currentStyle = { left: screenPoint.x, top: screenPoint.y };
-      let domText = []; let domTitle = '';
-      // 统一修改展示的dom信息
-      switch (domType) {
-        case 'constantly':
-          domText = editDom(domText, attributes);
-          break;
-        case 'GasConstantly':
-          domText = editDom(domText, attributes);
-          break;
-        case 'EnvConstantly':
-          domText = editDom(domText, attributes);
-          break;
-        case 'GuardAreaConstantly':
-          domTitle = `${attributes.areaName}进出人数统计`;
-          domText.push(`进：${attributes.inNum}人   出${attributes.outNum}人`);
-          break;
-        case 'GuardDoorConstantly':
-          domTitle = `${attributes.doorName}进出人数统计`;
-          domText.push(`进：${attributes.inNum}人   出${attributes.outNum}人`);
-          break;
-        case 'VocConstantly':
-          {
-            const attr = { areaCode: attributes.areaCode };
-            constantGraphic = new Graphic(geometry, pictureMarkerSymbol, attr);
-            domTitle = `${device.device.feature.attributes['装置区名称']}检测计划统计`;
-            domText.push(`检测计划总数：${attributes.value}`);
-          }
-          break;
-        case 'WaterConstantly':
-          for (const item of attributes.valueArry) {
-            domText.push(`${item.dataTypeName}：${item.value} `);
-          }
-          break;
-        case 'Electric':
-          domTitle = `${device.device.feature.attributes['设备名称']}用电统计`;
-          domText = `用电量：${attributes.level}电流：${attributes.flow}`;
-          break;
-        case 'Steam':
-          for (const item of attributes.valueArry) {
-            domText.push(`${item.dataTypeName}：${item.value} `);
-          }
-          break;
-        case 'Wind':
-          domTitle = `${device.device.feature.attributes['设备名称']}实时数据`;
-          domText = `风压：${attributes.pressure}用量：${attributes.flow}`;
-          break;
-        case 'Cracking':
-          switch (attributes.type) {
-            case 0: pictureMarkerSymbol = new PictureMarkerSymbol(cracking0, 40, 40); break;
-            case 1: pictureMarkerSymbol = new PictureMarkerSymbol(cracking1, 40, 40); break;
-            case 2: pictureMarkerSymbol = new PictureMarkerSymbol(cracking2, 40, 40); break;
-            case 3: pictureMarkerSymbol = new PictureMarkerSymbol(cracking3, 40, 40); break;
-            default: break;
-          }
-          domText = `${device.device.feature.attributes['点位号']}`;
-          break;
-        default:
-          constantGraphic = new Graphic(pointGeometry, pictureMarkerSymbol);
-          break;
-      }
-      constantlyLayer.graphics.add(constantGraphic);
-      data.push({ screenPoint, attributes, currentStyle, style, geometry: pointGeometry, domText, domTitle });
-    }
-    // if (domType !== 'VocConstantly') {
-    constantlyModal[type].mapData = data;
-    if (!disablePop) {
-      const array = constantlyComponents;
-      array[array.findIndex(value => value.type === type)].uniqueKey = Math.random() * new Date().getTime();
-      array[array.findIndex(value => value.type === type)].show = true;
-      dispatch({
-        type: 'constantlyData/queryConstantlyComponents',
-        payload: array,
-      });
-    }
-  });
-};
+// export const constantlyInfo = async (map, view, dispatch, devices, type, constantlyComponents, domType, scale, disablePop) => {
+//   esriLoader.loadModules([
+//     'esri/layers/GraphicsLayer',
+//     'esri/symbols/PictureMarkerSymbol',
+//     'esri/symbols/SimpleFillSymbol',
+//     'esri/symbols/SimpleLineSymbol',
+//     'esri/Color',
+//     'esri/Graphic',
+//   ]).then(([GraphicsLayer, PictureMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, Color, Graphic]) => {
+//     // 找到装置分区图层 的各个装置，添加一个 统计弹窗
+//     let constantlyLayer; let pictureMarkerSymbol;
+//     const addConstantlyLayer = (_type, noIcon) => {
+//       let height;
+//       if (noIcon) {
+//         height = 0;
+//       } else {
+//         height = '40px';
+//       }
+//       pictureMarkerSymbol = new PictureMarkerSymbol({ url: noAlarm, width: '25px', height, angle });
+//       constantlyLayer = map.findLayerById(`${_type}专题图`);
+//       if (!constantlyLayer) {
+//         constantlyLayer = new GraphicsLayer({ id: `${_type}专题图`, minScale: scale });
+//         map.add(constantlyLayer);
+//         view.on('click', (e) => {
+//           view.hitTest(e).then(({ results }) => {
+//             if (results.length > 0) {
+//               const { graphic } = results.filter((result) => {
+//                 return result.graphic.layer === constantlyLayer;
+//               })[0];
+//               if (graphic) {
+//                 dispatch({
+//                   type: 'resourceTree/selectByGISCode',
+//                   payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, gISCode: graphic.attributes.gISCode },
+//                 });
+//               }
+//             }
+//           });
+//         });
+//       } else {
+//         constantlyLayer.graphics.removeAll();
+//       }
+//     };
+//     switch (domType) {
+//       case 'constantly':
+//         addConstantlyLayer(type);
+//         break;
+//       case 'GasConstantly':
+//         addConstantlyLayer(type);
+//         break;
+//       case 'EnvConstantly':
+//         addConstantlyLayer(type);
+//         break;
+//       case 'GuardAreaConstantly':
+//         addConstantlyLayer(type, true);
+//         break;
+//       case 'GuardDoorConstantly':
+//         pictureMarkerSymbol = new PictureMarkerSymbol({ url: door, width: '25px', height: '40px', angle });
+//         constantlyLayer = map.findLayerById(`${type}专题图`);
+//         if (!constantlyLayer) {
+//           constantlyLayer = new GraphicsLayer({ id: `${type}专题图`, minScale: 10000 });
+//           map.add(constantlyLayer);
+//           view.on('click', (e) => {
+//             view.hitTest(e).then(({ results }) => {
+//               if (results.length > 0) {
+//                 const { graphic } = results.filter((result) => {
+//                   return result.graphic.layer === constantlyLayer;
+//                 })[0];
+//                 if (graphic) {
+//                   dispatch({
+//                     type: 'resourceTree/saveCtrlResourceType',
+//                     payload: '101.104',
+//                   });
+//                   dispatch({
+//                     type: 'resourceTree/saveSelectResourceGisCode',
+//                     payload: { gISCode: graphic.attributes.gISCode, type },
+//                   });
+//                   e.stopPropagation();
+//                 }
+//               }
+//             });
+//           });
+//         } else {
+//           constantlyLayer.graphics.removeAll();
+//         }
+//         break;
+//       case 'VocConstantly':
+//         pictureMarkerSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+//           new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+//             new Color([255, 255, 0]), 2), new Color([255, 255, 0])
+//         );
+//         constantlyLayer = map.findLayerById(`${type}专题图`);
+//         if (!constantlyLayer) {
+//           constantlyLayer = new GraphicsLayer({ id: `${type}专题图` });
+//           map.add(constantlyLayer);
+//           view.on('click', (e) => {
+//             view.hitTest(e).then(({ results }) => {
+//               if (results.length > 0) {
+//                 const { graphic } = results.filter((result) => {
+//                   return result.graphic.layer === constantlyLayer;
+//                 })[0];
+//                 if (graphic) {
+//                   dispatch({
+//                     type: 'vocs/saveAreaCode',
+//                     payload: graphic.attributes.areaCode,
+//                   });
+//                   dispatch({
+//                     type: 'resourceTree/saveCtrlResourceType',
+//                     payload: 'vocs',
+//                   });
+//                 }
+//               }
+//             });
+//             e.stopPropagation();
+//           });
+//         } else {
+//           constantlyLayer.graphics.removeAll();
+//         }
+//         break;
+//       case 'WaterConstantly':
+//         addConstantlyLayer(type);
+//         break;
+//       case 'Electric':
+//         addConstantlyLayer(type);
+//         break;
+//       case 'Steam':
+//         addConstantlyLayer(type);
+//         break;
+//       case 'Wind':
+//         addConstantlyLayer(type);
+//         break;
+//       case 'Cracking':
+//         constantlyLayer = map.findLayerById('裂解炉实时数据专题图');
+//         if (!constantlyLayer) {
+//           constantlyLayer = new GraphicsLayer({ id: '裂解炉实时数据专题图' });
+//           map.add(constantlyLayer);
+//         } else {
+//           constantlyLayer.clear();
+//         }
+//         break;
+//       case 'Generator':
+//         pictureMarkerSymbol = new PictureMarkerSymbol(gas0, 20, 30);
+//         constantlyLayer = map.findLayerById('发电机实时数据专题图');
+//         if (!constantlyLayer) {
+//           constantlyLayer = new GraphicsLayer({ id: '发电机实时数据专题图' });
+//           map.add(constantlyLayer);
+//         } else {
+//           constantlyLayer.clear();
+//         }
+//         break;
+//       case 'LargeUnit':
+//         pictureMarkerSymbol = new PictureMarkerSymbol(gas0, 20, 30);
+//         constantlyLayer = map.findLayerById('大机组实时数据专题图');
+//         if (!constantlyLayer) {
+//           constantlyLayer = new GraphicsLayer({ id: '大机组实时数据专题图' });
+//           map.add(constantlyLayer);
+//         } else {
+//           constantlyLayer.clear();
+//         }
+//         break;
+//       case 'Boiler':
+//         pictureMarkerSymbol = new PictureMarkerSymbol(gas0, 20, 30);
+//         constantlyLayer = map.findLayerById('锅炉实时数据专题图');
+//         if (!constantlyLayer) {
+//           constantlyLayer = new GraphicsLayer({ id: '锅炉实时数据专题图' });
+//           map.add(constantlyLayer);
+//         } else {
+//           constantlyLayer.clear();
+//         }
+//         break;
+//       default: break;
+//     }
+//     const data = [];
+//     const editDom = (domText, attributes) => {
+//       for (const item of attributes.valueArry) {
+//         domText.push(`${item.dataTypeName}：${item.value} `);
+//       }
+//       return domText;
+//     };
+//     for (const device of devices) {
+//       const { attributes } = device;
+//       const { geometry } = device.device.feature || device.device;
+//       let pointGeometry = geometry;
+//       // 如果地理信息不为点，先做一个转换
+//       switch (pointGeometry.type) {
+//         case 'point': break;
+//         case 'polygon': pointGeometry = pointGeometry.centroid; break;
+//         case 'polyline': pointGeometry = device.feature.geometry.extent.center; break;
+//         default: break;
+//       }
+//       let constantGraphic;
+//       constantGraphic = new Graphic(pointGeometry, pictureMarkerSymbol, { gISCode: attributes.gISCode });
+//       // constantGraphic = new Graphic({ geometry: pointGeometry, attributes: { gISCode: attributes.gISCode }});
+//       const screenPoint = view.toScreen(pointGeometry);
+//       const style = { left: screenPoint.x, top: screenPoint.y };
+//       const currentStyle = { left: screenPoint.x, top: screenPoint.y };
+//       let domText = []; let domTitle = '';
+//       // 统一修改展示的dom信息
+//       switch (domType) {
+//         case 'constantly':
+//           domText = editDom(domText, attributes);
+//           break;
+//         case 'GasConstantly':
+//           domText = editDom(domText, attributes);
+//           break;
+//         case 'EnvConstantly':
+//           domText = editDom(domText, attributes);
+//           break;
+//         case 'GuardAreaConstantly':
+//           domTitle = `${attributes.areaName}进出人数统计`;
+//           domText.push(`进：${attributes.inNum}人   出${attributes.outNum}人`);
+//           break;
+//         case 'GuardDoorConstantly':
+//           domTitle = `${attributes.doorName}进出人数统计`;
+//           domText.push(`进：${attributes.inNum}人   出${attributes.outNum}人`);
+//           break;
+//         case 'VocConstantly':
+//           {
+//             const attr = { areaCode: attributes.areaCode };
+//             constantGraphic = new Graphic(geometry, pictureMarkerSymbol, attr);
+//             domTitle = `${device.device.feature.attributes['装置区名称']}检测计划统计`;
+//             domText.push(`检测计划总数：${attributes.value}`);
+//           }
+//           break;
+//         case 'WaterConstantly':
+//           for (const item of attributes.valueArry) {
+//             domText.push(`${item.dataTypeName}：${item.value} `);
+//           }
+//           break;
+//         case 'Electric':
+//           domTitle = `${device.device.feature.attributes['设备名称']}用电统计`;
+//           domText = `用电量：${attributes.level}电流：${attributes.flow}`;
+//           break;
+//         case 'Steam':
+//           for (const item of attributes.valueArry) {
+//             domText.push(`${item.dataTypeName}：${item.value} `);
+//           }
+//           break;
+//         case 'Wind':
+//           domTitle = `${device.device.feature.attributes['设备名称']}实时数据`;
+//           domText = `风压：${attributes.pressure}用量：${attributes.flow}`;
+//           break;
+//         case 'Cracking':
+//           switch (attributes.type) {
+//             case 0: pictureMarkerSymbol = new PictureMarkerSymbol(cracking0, 40, 40); break;
+//             case 1: pictureMarkerSymbol = new PictureMarkerSymbol(cracking1, 40, 40); break;
+//             case 2: pictureMarkerSymbol = new PictureMarkerSymbol(cracking2, 40, 40); break;
+//             case 3: pictureMarkerSymbol = new PictureMarkerSymbol(cracking3, 40, 40); break;
+//             default: break;
+//           }
+//           domText = `${device.device.feature.attributes['点位号']}`;
+//           break;
+//         default:
+//           constantGraphic = new Graphic(pointGeometry, pictureMarkerSymbol);
+//           break;
+//       }
+//       constantlyLayer.graphics.add(constantGraphic);
+//       data.push({ screenPoint, attributes, currentStyle, style, geometry: pointGeometry, domText, domTitle });
+//     }
+//     // if (domType !== 'VocConstantly') {
+//     constantlyModal[type].mapData = data;
+//     if (!disablePop) {
+//       const array = constantlyComponents;
+//       array[array.findIndex(value => value.type === type)].uniqueKey = Math.random() * new Date().getTime();
+//       array[array.findIndex(value => value.type === type)].show = true;
+//       dispatch({
+//         type: 'constantlyData/queryConstantlyComponents',
+//         payload: array,
+//       });
+//     }
+//   });
+// };
 // 添加门禁图标
 export const addDoorIcon = async ({ map, view, data, graphics, dispatch }) => {
   esriLoader.loadModules([
@@ -1793,10 +1787,21 @@ export const addConstructIcon = ({ map, layer, list, dispatch }) => {
       },
     };
     const constructLayer = new GraphicsLayer({ id: '作业监控专题图' });
+    const constructHoverLayer = new GraphicsLayer({ id: '作业监控选中专题图' });
+    map.add(constructHoverLayer);
     map.add(constructLayer);
     const graphics = [];
     const query = layer.createQuery();
     query.outFields = ['*'];
+    const hoverSy = {
+      type: 'simple-fill',
+      color: 'rgba(255, 255, 255, 0.8)',
+      style: 'solid',
+      outline: {
+        color: '#27afff',
+        width: 1,
+      },
+    };
     layer.queryFeatures(query).then((res) => {
       graphics.push(...res.features);
       for (const graphic of graphics) {
@@ -1808,10 +1813,8 @@ export const addConstructIcon = ({ map, layer, list, dispatch }) => {
           }
           const point = graphic.geometry.centroid;
           const textSymbol = {
-            type: 'text', // autocasts as new TextSymbol()
+            type: 'text',
             color: 'white',
-            // haloColor: 'black',
-            // haloSize: '1px',
             angle,
             text: item.count,
             xoffset: '-5px',
@@ -1819,23 +1822,37 @@ export const addConstructIcon = ({ map, layer, list, dispatch }) => {
             font: {
               size: '12px',
               family: '微软雅黑',
-              // weight: 'bold',
             },
           };
           const cirGraphic = new Graphic({
             geometry: point,
             symbol: markerSymbol,
-            attributes: { isConstructMonitor: true, list: item.data, area: item.area, keys },
+            attributes: { isConstructMonitor: true, list: item.data, area: item.area, keys, geometry: graphic.geometry },
           });
           const textGraphic = new Graphic({
             geometry: point,
             symbol: textSymbol,
-            attributes: { isConstructMonitor: true, list: item.data, area: item.area, keys },
+            attributes: { isConstructMonitor: true, list: item.data, area: item.area, keys, geometry: graphic.geometry },
           });
           constructLayer.addMany([cirGraphic, textGraphic]);
         }
       }
     });
+    // 鼠标事件
+    const a = mapConstants.view.on('pointer-move', (evt) => {
+      mapConstants.view.hitTest(evt).then(({ results }) => {
+        const item = results.filter(value => value.graphic.layer === constructLayer)[0];
+        if (item) {
+          constructHoverLayer.graphics.removeAll();
+          evt.native.target.style.cursor = 'pointer';
+          const hoverGraphic = new Graphic(item.graphic.attributes.geometry, hoverSy);
+          constructHoverLayer.add(hoverGraphic);
+        } else {
+          constructHoverLayer.graphics.removeAll();
+          evt.native.target.style.cursor = 'default';
+        }
+      });
+    })
   });
 };
 // Vocs监控
@@ -1848,16 +1865,6 @@ export const addVocsIcon = ({ map, layer, list, dispatch }) => {
       delLayer(map, ['Vocs监控专题图'], dispatch);
       return false;
     }
-    const markerSymbol = {
-      type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
-      style: 'circle',
-      color: '#27afff',
-      size: '40px', // pixels
-      outline: { // autocasts as new SimpleLineSymbol()
-        color: '#fff',
-        width: '1px',
-      },
-    };
     const vocsLayer = new GraphicsLayer({ id: 'Vocs监控专题图' });
     map.add(vocsLayer);
     const graphics = [];
@@ -1883,32 +1890,8 @@ export const addVocsIcon = ({ map, layer, list, dispatch }) => {
           }
           const screenPoint = mapConstants.view.toScreen(graphic.geometry.centroid);
           const style = { left: screenPoint.x, top: screenPoint.y };
-          obj.attributes = { geometry: graphic.geometry.centroid, style　};
+          obj.attributes = { geometry: graphic.geometry.centroid, area: graphic.geometry, style };
           data.push(obj);
-            const point = graphic.geometry.centroid;
-            const textSymbol = {
-              type: 'text', // autocasts as new TextSymbol()
-              color: 'white',
-              angle,
-              text: items.length + 1,
-              xoffset: '-5px',
-              yoffset: '-2px',
-              font: {
-                size: '12px',
-                family: '微软雅黑',
-              },
-            };
-          //   const cirGraphic = new Graphic({
-          //     geometry: point,
-          //     symbol: markerSymbol,
-          //     attributes: { isVocsMonitor: true, list: items, keys, areaName: graphic.attributes['分区名称'] },
-          //   });
-          //   const textGraphic = new Graphic({
-          //     geometry: point,
-          //     symbol: textSymbol,
-          //     attributes: { isVocsMonitor: true, list: items, keys, areaName: graphic.attributes['分区名称'] },
-          //   });
-          // vocsLayer.addMany([cirGraphic, textGraphic]);
         }
       }
       dispatch({
@@ -1918,6 +1901,34 @@ export const addVocsIcon = ({ map, layer, list, dispatch }) => {
     });
   });
 };
+// Vocs监控--鼠标进入效果
+export const addVocsHover = (geometry) => {
+  esriLoader.loadModules([
+    'esri/layers/GraphicsLayer',
+    'esri/Graphic',
+  ]).then(([GraphicsLayer, Graphic]) => {
+    const map = mapConstants.mainMap;
+    let vocsLayer = map.findLayerById('Vocs监控鼠标效果');
+    if (!vocsLayer) {
+      vocsLayer = new GraphicsLayer({ id: 'Vocs监控鼠标效果' });
+      map.add(vocsLayer);
+    }
+    const hoverSy = {
+      type: 'simple-fill',
+      color: 'rgba(255, 255, 255, 0.8)',
+      style: 'solid',
+      outline: {
+        color: '#f0811a',
+        width: 1,
+      },
+    };
+    vocsLayer.graphics.removeAll();
+    if (geometry) {
+      const hoverGraphic = new Graphic(geometry, hoverSy);
+      vocsLayer.add(hoverGraphic);
+    }
+  });
+}
 // 固体仓库专题图
 export const solidWarehouseDetail = ({ map, layer, dispatch }) => {
   esriLoader.loadModules([
@@ -2017,21 +2028,21 @@ export const paSystemDetail = ({ view, map, layer, dispatch, paData }) => {
     let paLayer = map.findLayerById('扩音对讲专题图');
     let paTextLayer = map.findLayerById('扩音对讲标注专题图');
     const simpleFillSymbol = {
-      type: 'simple-fill', // autocasts as new SimpleMarkerSymbol()
-      color: '#27afff',
+      type: 'simple-fill',
+      color: 'rgba(255, 255, 255, 0.8)',
       style: 'solid',
       angle,
-      outline: { // autocasts as new SimpleLineSymbol()
-        color: '#fff',
+      outline: {
+        color: '#1890ff',
         width: 1, // points
       },
     };
     const simpleTextSymbol1 = {
-      type: 'text', // autocasts as new TextSymbol()
-      color: '#eee',
+      type: 'text',
+      color: '#005dff',
       text: '',
       angle,
-      font: { // autocast as new Font()
+      font: {
         size: 8,
         family: 'sans-serif',
       },
@@ -2760,8 +2771,11 @@ export const addVideoIcon = async (map, view, checkedVideos, dispatch) => {
       resultLayer.removeAll();
     }
     const pictureMarkerSymbol = new PictureMarkerSymbol({ url: videoLegend, width: '32px', height: '32px', angle });
+    const multipoint = []; // 居中;
+    let index = 0;
     for (const video of checkedVideos) {
       searchByAttr({ searchText: video.gISCode, searchFields: ['ObjCode'] }).then((res) => {
+        index += 1;
         const device = res[0];
         if (device === undefined) {
           return false;
@@ -2776,6 +2790,7 @@ export const addVideoIcon = async (map, view, checkedVideos, dispatch) => {
         }
         const resultGraphic = new Graphic(geometry, pictureMarkerSymbol, Object.assign(device.feature.attributes, { sort: video.sort }));
         videoLayer.add(resultGraphic);
+        multipoint.push(device);
         // 添加序号标识
         // const testGraphic = new Graphic(geometry, {
         //   type: 'text',
@@ -2790,6 +2805,9 @@ export const addVideoIcon = async (map, view, checkedVideos, dispatch) => {
         //   },
         // }, Object.assign(device.feature.attributes, { sort: video.sort }));
         // videoLayer.add(testGraphic);
+        if (index === checkedVideos.length) {
+          multipointExtent(map, view, multipoint);
+        }
       });
     }
     // 新建定位图标

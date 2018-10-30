@@ -48,8 +48,8 @@ export default class LoginPage extends Component {
       type: 'login/getPublicKey',
     }).then(() => {
       jsEncrypt.setPublicKey(this.props.login.pubKey);
-      console.log(111, values.password);
       values.password = jsEncrypt.encrypt(values.password);
+    // values.password = MD5(values.password).toString();
       if (!err) {
         this.props.dispatch({
           type: 'login/login',
@@ -65,14 +65,6 @@ export default class LoginPage extends Component {
         });
       }
     });
-    // const obj = {
-    //   login: 'admin',
-    //   password: jsEncrypt.encrypt(values.password),
-    // };
-    // console.log('obj', obj);
-    // $.post('/local/login', obj).then((res1) => {
-    //   console.log('res1', res1);
-    // });
   };
 close = () => {
   this.setState({

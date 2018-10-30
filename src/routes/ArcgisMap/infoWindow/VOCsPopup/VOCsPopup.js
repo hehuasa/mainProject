@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Popover, Row, Col } from 'antd';
 import styles from './index.less';
+import { addVocsHover } from '../../../../utils/MapService';
 
 const mapStateToProps = ({ map }) => {
   return {
@@ -25,6 +26,14 @@ class ClusterPopup extends PureComponent {
       payload: { list, areaName, keys },
     });
   };
+  handleMouseOver = () => {
+    const { popValue } = this.props;
+    const { attributes } = popValue;
+    addVocsHover(attributes.area);
+  };
+  handleMouseOut = () => {
+    addVocsHover();
+  };
   render() {
     const { popValue } = this.props;
     const { attributes, data } = popValue;
@@ -46,7 +55,7 @@ class ClusterPopup extends PureComponent {
     );
     const warp = (
       <Popover content={content} placement="rightTop" overlayClassName={styles.pop}>
-        <div className={styles.warp} style={style} onClick={this.handleClick}>
+        <div className={styles.warp} style={style} onClick={this.handleClick} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
           { count }
         </div>
       </Popover>

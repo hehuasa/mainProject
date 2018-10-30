@@ -206,6 +206,9 @@ export const getRouterData = (app) => {
     '/tools/msgRule': {
       component: dynamicWrapper(app, ['template'], () => import('../routes/UniversalTool/MsgRule')),
     },
+    '/tools/sendMsg': {
+      component: dynamicWrapper(app, ['template'], () => import('../routes/UniversalTool/SendMsg')),
+    },
     '/tools/flowEdior': {
       component: dynamicWrapper(app, ['flow'], () => import('../routes/FlowEditor')),
     },

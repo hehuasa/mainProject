@@ -12,7 +12,7 @@ import { hoveringAlarm, switchAlarmIcon } from '../../utils/MapService';
 const current = {};
 let symboltt = {};
 const mapStateToProps = ({ map, homepage, resourceTree, constantlyData, loading, tabs, global }) => {
-  const { popupScale, baseLayer, trueMapShow, paPopup, stopPropagation, clusterPopup, infoPops, spaceQueryPop, accessPops } = map;
+  const { popupScale, baseLayer, trueMapShow, paPopup, stopPropagation, clusterPopup, infoPops, spaceQueryPop, accessPops, vocsPops } = map;
   const data = [];
   for (const item of constantlyData.constantlyComponents) {
     data.push(item);
@@ -30,6 +30,7 @@ const mapStateToProps = ({ map, homepage, resourceTree, constantlyData, loading,
     spaceQueryPop,
     paPopup,
     accessPops,
+    vocsPops,
     activeKey: tabs.activeKey,
     resourceInfo: resourceTree.resourceInfo,
     fetchingMapApi: loading.effects['global/fetchUrl'],
@@ -709,6 +710,19 @@ export default class ArcgisMap extends PureComponent {
                       dispatch({
                         type: 'map/queryPAPopup',
                         payload: { show: true, load: true, data: accessPop.data },
+                      });
+                    }
+                    // Vocs弹窗处理
+                    const vocsPop = this.props.vocsPops;
+                    if (vocsPop.load) {
+                      for (const item of vocsPop.data) {
+                        const screenPoint = mapConstants.view.toScreen(item.attributes.geometry);
+                        item.attributes.style = { left: screenPoint.x, top: screenPoint.y };
+                        item.uniqueKey = Math.random() * new Date().getTime();
+                      }
+                      dispatch({
+                        type: 'map/queryVocsPopup',
+                        payload: { show: true, load: true, data: vocsPop.data },
                       });
                     }
                     // 空间查询菜单

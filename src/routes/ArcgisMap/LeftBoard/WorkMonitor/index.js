@@ -6,7 +6,6 @@ import { Icon, Row, Col, Radio, Button, Collapse, Table, Rate, Popover } from 'a
 import styles from './index.less';
 import DashBord from '../DashBord/index';
 import { formatDuring } from '../../../../utils/utils';
-import gasAlarm from '../../../../assets/map/alarm/gas-1.png';
 
 const Panel = Collapse.Panel;
 const mapStateToProps = ({ map, resourceTree }) => {

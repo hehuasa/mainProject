@@ -229,66 +229,87 @@ const CreateForm = Form.create()((props) => {
           {alarmRange === 1 ? (
             <Tabs defaultActiveKey="1">
               <TabPane tab="按部门" key="1">
-                <Row>
-                  <Col span={10}>
-                    <Scrollbars
-                      autoHeight
-                      autoHeightMax={400}
+                <RadioGroup onChange={onByOrgChange} value={byOrg}>
+                  {commonData.byOrg.map((obj) => {
+                    return (
+                      <Radio key={obj.id} value={obj.value}>{obj.text}</Radio>
+                    );
+                  })}
+                </RadioGroup>
+                { byOrg === 3 ? (
+                  <div className={styles.tree}>
+                    <Tree
+                      onCheck={orgTreeOnCheck}
+                      checkedKeys={checkedOrgIDs}
+                      defaultExpandedKeys={checkedOrgIDs}
+                      checkable
                     >
-                      <div className={styles.tree}>
-                        <Tree
-                          onCheck={orgTreeOnCheck}
-                          checkedKeys={checkedOrgIDs}
-                          defaultExpandedKeys={checkedOrgIDs}
-                          autoExpandParent
-                          checkable
-                        >
-                          {renderDeptTreeNodes([orgTree])}
-                        </Tree>
-                      </div>
-                    </Scrollbars>
-                  </Col>
-                  <Col span={14}>
-                    <Table
-                      style={{ marginTop: 8 }}
-                      columns={alarmTypeCols}
-                      rowSelection={{
-                          onChange: alarmTypeRowChange,
-                          selectedRowKeys: alarmTypeIDs,
-                        }}
-                      pagination={{
-                          ...alarmTypePage.pagination,
-                          onChange: alarmTypePageChange,
-                        }}
-                      dataSource={alarmTypePage.data}
-                      rowKey={record => record.alarmTypeID}
-                    />
-                  </Col>
-                </Row>
+                      {renderDeptTreeNodes([orgTree])}
+                    </Tree>
+                  </div>
+                ) : null
+                }
               </TabPane>
               <TabPane tab="按专业系统" key="2">
-                <Card style={{ marginTop: 8 }}>
-                  <Table
-                    style={{ marginTop: 8 }}
-                    columns={professionCols}
-                    rowSelection={{
-                      onChange: professionRowChange,
-                      selectedRowKeys: professionIDs,
-                    }}
-                    pagination={{
-                      ...professionPage.pagination,
-                      onChange: professionPageChange,
-                    }}
-                    dataSource={professionPage.data}
-                    rowKey={record => record.professionSystemID}
-                  />
-                </Card>
+                <RadioGroup onChange={onByProfessionChange} value={byProfession}>
+                  {commonData.byProfession.map((obj) => {
+                    return (
+                      <Radio key={obj.id} value={obj.value}>{obj.text}</Radio>
+                    );
+                  })}
+                </RadioGroup>
+                { byProfession === 2 ? (
+                  <Card style={{ marginTop: 8 }}>
+                    <Table
+                      style={{ marginTop: 8 }}
+                      columns={professionCols}
+                      rowSelection={{
+                        onChange: professionRowChange,
+                        selectedRowKeys: professionIDs,
+                      }}
+                      pagination={{
+                        ...professionPage.pagination,
+                        onChange: professionPageChange,
+                      }}
+                      dataSource={professionPage.data}
+                      rowKey={record => record.professionSystemID}
+                    />
+                  </Card>
+                ) : null
+                }
               </TabPane>
             </Tabs>
           ) : null}
           {alarmRange === 2 ? (
             <SelectResource />
           ) : null}
+          <Divider>报警类型</Divider>
+          <RadioGroup onChange={onAlarmTypeChange} value={alarmType}>
+            {commonData.byAlarmType.map((obj) => {
+              return (
+                <Radio key={obj.id} value={obj.value}>{obj.text}</Radio>
+              );
+            })}
+          </RadioGroup>
+          { alarmType === 2 ? (
+            <Card style={{ marginTop: 8 }}>
+              <Table
+                style={{ marginTop: 8 }}
+                columns={alarmTypeCols}
+                rowSelection={{
+                  onChange: alarmTypeRowChange,
+                  selectedRowKeys: alarmTypeIDs,
+                }}
+                pagination={{
+                  ...alarmTypePage.pagination,
+                  onChange: alarmTypePageChange,
+                }}
+                dataSource={alarmTypePage.data}
+                rowKey={record => record.alarmTypeID}
+              />
+            </Card>
+          ) : null
+          }
         </Card>
         <Card title="报警动作" style={{ marginTop: 8 }} extra={actionExtra}>
           <Tabs type="card">

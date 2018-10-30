@@ -403,7 +403,7 @@ export default class HomePageVideo extends PureComponent {
         style={{ height: current }}
         ref={(ref) => { this.warp = ref; }}
       >
-        {/*<div style={{ background: 'blue', position: 'fixed', whiteSpace: 'pre', top: video.position.y, left: video.position.x, width: video.size.width, height: video.size.height, lineHeight: `${video.size.height}px`, textAlign: 'center', fontSize: 32, color: '#fff', fontWeight: 900 }}>视    频    示    意    窗    口</div>*/}
+        <div style={{ background: 'blue', position: 'fixed', whiteSpace: 'pre', top: video.position.y, left: video.position.x, width: video.size.width, height: video.size.height, lineHeight: `${video.size.height}px`, textAlign: 'center', fontSize: 32, color: '#fff', fontWeight: 900 }}>视    频    示    意    窗    口</div>
         <img src={current === 0 ? toggleDown : toggleUp} alt="toggle" style={{ top: current === 0 ? -11 : -8 }} onClick={this.toggle} className={styles.toggle} />
         {current === 0 ? null : (
           <div className={styles['video-header']} >
