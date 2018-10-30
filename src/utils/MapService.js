@@ -2759,7 +2759,7 @@ export const addVideoIcon = async (map, view, checkedVideos, dispatch) => {
     if (resultLayer) {
       resultLayer.removeAll();
     }
-    const pictureMarkerSymbol = new PictureMarkerSymbol({ url: locate, width: '25px', height: '40px', angle });
+    const pictureMarkerSymbol = new PictureMarkerSymbol({ url: videoLegend, width: '32px', height: '32px', angle });
     for (const video of checkedVideos) {
       searchByAttr({ searchText: video.gISCode, searchFields: ['ObjCode'] }).then((res) => {
         const device = res[0];
@@ -2777,19 +2777,19 @@ export const addVideoIcon = async (map, view, checkedVideos, dispatch) => {
         const resultGraphic = new Graphic(geometry, pictureMarkerSymbol, Object.assign(device.feature.attributes, { sort: video.sort }));
         videoLayer.add(resultGraphic);
         // 添加序号标识
-        const testGraphic = new Graphic(geometry, {
-          type: 'text',
-          color: 'white',
-          haloColor: 'black',
-          haloSize: '1px',
-          text: video.sort,
-          angle,
-          font: {
-            size: 10,
-            family: 'sans-serif',
-          },
-        }, Object.assign(device.feature.attributes, { sort: video.sort }));
-        videoLayer.add(testGraphic);
+        // const testGraphic = new Graphic(geometry, {
+        //   type: 'text',
+        //   color: 'white',
+        //   haloColor: 'black',
+        //   haloSize: '1px',
+        //   text: video.sort,
+        //   angle,
+        //   font: {
+        //     size: 10,
+        //     family: 'sans-serif',
+        //   },
+        // }, Object.assign(device.feature.attributes, { sort: video.sort }));
+        // videoLayer.add(testGraphic);
       });
     }
     // 新建定位图标
