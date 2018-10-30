@@ -117,7 +117,7 @@ export default class Trees extends PureComponent {
                     isInit: true,
                   });
                 }
-              });
+              }, 200);
               // getAlarmCount = null;
               // const subLayer = this.props.baseLayer.findSublayerById(49);
               // // subLayer.visiable = true;
