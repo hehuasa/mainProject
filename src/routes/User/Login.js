@@ -50,26 +50,20 @@ export default class LoginPage extends Component {
       jsEncrypt.setPublicKey(this.props.login.pubKey);
       values.password = jsEncrypt.encrypt(values.password);
       // values.password = MD5(values.password).toString();
-      this.props.dispatch({
-        type: 'login/getPublicKey',
-      }).then(() => {
-        jsEncrypt.setPublicKey(this.props.login.pubKey);
-        values.password = jsEncrypt.encrypt(values.password);
-        if (!err) {
-          this.props.dispatch({
-            type: 'login/login',
-            payload: {
-              ...values,
-            },
-          }).then(() => {
-            if (this.props.login.code !== '1001') {
-              this.setState({
-                visible: true,
-              });
-            }
-          });
-        }
-      });
+      if (!err) {
+        this.props.dispatch({
+          type: 'login/login',
+          payload: {
+            ...values,
+          },
+        }).then(() => {
+          if (this.props.login.code !== '1001') {
+            this.setState({
+              visible: true,
+            });
+          }
+        });
+      }
     });
   };
 close = () => {
