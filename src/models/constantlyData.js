@@ -1,6 +1,6 @@
 
 import { lineData, getSelctData } from '../utils/Panel';
-import { constantlyInfo, addDoorIcon, envMap } from '../utils/MapService';
+import { addDoorIcon, envMap } from '../utils/MapService';
 import {
   getGuardCounting, getGuardDoorCounting, getConditionCalc, findByTime, getAllNewsData, getNewsData, getNewsDataByGroup, getNewsDataByCtrlResourceType,
   getHotFurnaceRunDay, getAlternatorRunDay, getDissociationRunDay,
@@ -67,7 +67,7 @@ const thematicMapingDoor = ({ type, deviceArray, view, searchText, searchFields 
         }
       }
     }
-    constantlyInfo(map, view, dispatch, devices, type, [], domType, scale, true);
+    // constantlyInfo(map, view, dispatch, devices, type, [], domType, scale, true);
   }
 };
 // 看板实时数据处理
