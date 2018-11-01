@@ -59,7 +59,7 @@ export default class ConstructMonitor extends PureComponent {
   };
   componentDidMount() {
     this.props.dispatch({
-      type: 'constructMonitor/fetchList',
+      type: 'constructMonitor/fetchConstructMonitorList',
     }).then(() => {
       const { list, groupingList } = this.state;
       this.handleChange(moment(range.start), 'start', list, groupingList);

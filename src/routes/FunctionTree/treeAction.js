@@ -571,7 +571,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
             type: 'constructMonitor/fetchOrgList',
           });
           dispatch({
-            type: 'constructMonitor/fetchList',
+            type: 'constructMonitor/fetchConstructMonitorList',
           }).then(() => {
             const list = that.props.constructMonitor.groupingList;
             addConstructIcon({ map: mainMap, layer: subLayers[0], scale: popupScale, list });

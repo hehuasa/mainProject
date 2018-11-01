@@ -378,7 +378,7 @@ export const delItem = async ({ map, device, id, dispatch }) => {
     }
   }
 };
-// 资源树在地图添加元素（新）
+// 资源树在地图添加元素（线、面元素）（新）
 export const addPolygonItem = async ({ map, layers, device, id, scale }) => {
   esriLoader.loadModules([
     'esri/layers/GraphicsLayer',
@@ -415,7 +415,7 @@ export const addPolygonItem = async ({ map, layers, device, id, scale }) => {
     }
   });
 };
-// 资源树在地图删除元素（新）
+// 资源树在地图删除元素（线、面元素）（新）
 export const delPolygonItem = async ({ map, device, id, dispatch }) => {
   // 删掉对应的资源，如果资源删除完毕，则删掉图层
   const cacheLayer = map.findLayerById(id);
@@ -1798,14 +1798,14 @@ export const addDoorIcon = async ({ map, view, data, graphics, dispatch }) => {
     })
   });
 };
-// 作业监控数量图标
+// 作业监控专题
 export const addConstructIcon = ({ map, layer, list, dispatch }) => {
   esriLoader.loadModules([
     'esri/layers/GraphicsLayer',
     'esri/Graphic',
   ]).then(([GraphicsLayer, Graphic]) => {
     if (map.findLayerById('作业监控专题图')) {
-      delLayer(map, ['作业监控专题图'], dispatch);
+      delLayer(map, ['作业监控专题图', '作业监控选中专题图'], dispatch);
       return false;
     }
     const markerSymbol = {
@@ -1818,10 +1818,23 @@ export const addConstructIcon = ({ map, layer, list, dispatch }) => {
         width: '1px',
       },
     };
+    const textSymbol = {
+      type: 'text',
+      color: 'white',
+      angle,
+      text: 0,
+      xoffset: '-5px',
+      yoffset: '-2px',
+      font: {
+        size: '12px',
+        family: '微软雅黑',
+      },
+    };
     const constructLayer = new GraphicsLayer({ id: '作业监控专题图' });
     const constructHoverLayer = new GraphicsLayer({ id: '作业监控选中专题图' });
     map.add(constructHoverLayer);
     map.add(constructLayer);
+    let a;
     const graphics = [];
     const query = layer.createQuery();
     query.outFields = ['*'];
@@ -1844,47 +1857,51 @@ export const addConstructIcon = ({ map, layer, list, dispatch }) => {
             keys.push(String(data.jobMonitorID));
           }
           const point = graphic.geometry.centroid;
-          const textSymbol = {
-            type: 'text',
-            color: 'white',
-            angle,
-            text: item.count,
-            xoffset: '-5px',
-            yoffset: '-2px',
-            font: {
-              size: '12px',
-              family: '微软雅黑',
-            },
-          };
+
           const cirGraphic = new Graphic({
             geometry: point,
             symbol: markerSymbol,
-            attributes: { isConstructMonitor: true, list: item.data, area: item.area, keys, geometry: graphic.geometry },
+            attributes: { isConstructMonitor: true, list: item.data, area: item.area, keys, geometry: graphic.geometry, index: graphic.attributes.ObjCode },
           });
+          textSymbol.text = item.count;
           const textGraphic = new Graphic({
             geometry: point,
             symbol: textSymbol,
-            attributes: { isConstructMonitor: true, list: item.data, area: item.area, keys, geometry: graphic.geometry },
+            attributes: { isConstructMonitor: true, list: item.data, area: item.area, keys, geometry: graphic.geometry, index: graphic.attributes.ObjCode },
           });
           constructLayer.addMany([cirGraphic, textGraphic]);
         }
       }
     });
     // 鼠标事件
-    const a = mapConstants.view.on('pointer-move', (evt) => {
-      mapConstants.view.hitTest(evt).then(({ results }) => {
-        const item = results.filter(value => value.graphic.layer === constructLayer)[0];
-        if (item) {
-          constructHoverLayer.graphics.removeAll();
-          evt.native.target.style.cursor = 'pointer';
-          const hoverGraphic = new Graphic(item.graphic.attributes.geometry, hoverSy);
-          constructHoverLayer.add(hoverGraphic);
-        } else {
-          constructHoverLayer.graphics.removeAll();
-          evt.native.target.style.cursor = 'default';
-        }
+    constructLayer.on('layerview-create', () => {
+      a = mapConstants.view.on('pointer-move', (evt) => {
+        mapConstants.view.hitTest(evt).then(({ results }) => {
+          const item = results.filter(value => value.graphic.layer === constructLayer)[0];
+          if (item) {
+            constructHoverLayer.graphics.removeAll();
+            // 模拟实现hover时元素浮至最上层的效果
+            const { attributes } = item.graphic;
+            const delGraphics = constructLayer.graphics.items.filter(value => value.attributes.index === attributes.index);
+            constructLayer.removeMany(delGraphics);
+            const newCirGraphic = new Graphic(item.graphic.geometry, markerSymbol, attributes);
+            textSymbol.text = attributes.list.length;
+            const newTextGraphic = new Graphic(item.graphic.geometry, textSymbol, attributes);
+            constructLayer.addMany([newCirGraphic, newTextGraphic]);
+            // 修改鼠标样式、添加背景图效果
+            evt.native.target.style.cursor = 'pointer';
+            const hoverGraphic = new Graphic(item.graphic.attributes.geometry, hoverSy);
+            constructHoverLayer.add(hoverGraphic);
+          } else {
+            constructHoverLayer.graphics.removeAll();
+            evt.native.target.style.cursor = 'default';
+          }
+        });
       });
-    })
+    });
+    constructLayer.on('layerview-destroy', () => {
+      a.remove();
+    });
   });
 };
 // Vocs监控
@@ -1960,7 +1977,7 @@ export const addVocsHover = (geometry) => {
       vocsLayer.add(hoverGraphic);
     }
   });
-}
+};
 // 固体仓库专题图
 export const solidWarehouseDetail = ({ map, layer, dispatch }) => {
   esriLoader.loadModules([

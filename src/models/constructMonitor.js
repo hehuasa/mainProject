@@ -2,8 +2,12 @@ import { constructMonitorList, getAreaByOrgID, orgList } from '../services/api';
 
 // 获取组织对应的区域
 const getAreas = (area, item) => {
-  for (const areaData of area.data) {
-    item.areas.push({ areaId: Number(areaData.gISCode), areaName: areaData.areaName });
+  console.log('area', area);
+  // for (const areaData of area.data) {
+  //   item.areas.push({ areaId: Number(areaData.gISCode), areaName: area.data[0].areaName });
+  // }
+  if (area.data[0]) {
+    item.areas.push({ areaId: Number(area.data[0].gISCode), areaName: area.data[0].areaName });
   }
 };
 // 将数据按照区域分组
@@ -38,12 +42,8 @@ export default {
 
   effects: {
     // 作业监控列表
-    * fetchList({ payload }, { call, put }) {
+    * fetchConstructMonitorList({ payload }, { call, put }) {
       const { data } = yield call(constructMonitorList, payload);
-      const today = new Date(new Date().toLocaleDateString()).getTime();
-      const newData = data.filter((value) => {
-        return Number(value.endTime) > today;
-      });
       // 获取对应的区域
       for (const item of data) {
         const { orgID } = item;
