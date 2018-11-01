@@ -515,7 +515,7 @@ const CreateForm = Form.create()((props) => {
   otherAnnex: drillManage.otherAnnex,
   planPage: drillManage.planPage,
   typeCode,
-  organization,
+  orgTree: organization.orgTree,
   loading,
 }))
 @Form.create()
@@ -542,7 +542,7 @@ export default class TableList extends PureComponent {
     const { dispatch } = this.props;
     // 请求部门数据
     dispatch({
-      type: 'organization/list',
+      type: 'organization/getOrgTree',
     });
     // 请求演练方案列表
     this.page(commonData.pageInitial);
@@ -1040,7 +1040,6 @@ export default class TableList extends PureComponent {
   }
   render() {
     const { loading, drillPage } = this.props;
-    const { list } = this.props.organization;
     const { selectedRows, modalVisible } = this.state;
     const columns = this.initData();
     const planCols = [
@@ -1109,7 +1108,7 @@ export default class TableList extends PureComponent {
             </div>
             <StandardTable
               selectedRows={selectedRows}
-              loading={loading.global}
+              loading={loading.effects['emgc/emgcEmgcDrillPlan/selectPage']}
               data={drillPage}
               scroll={{ x: 2580 }}
               columns={columns}
@@ -1123,14 +1122,14 @@ export default class TableList extends PureComponent {
           {...parentMethods}
           modalVisible={modalVisible}
           drill={this.props.drillInfo}
-          loading={this.props.loading}
+          loading={this.props.loading.global}
           drillStepAnnex={this.props.drillStepAnnex}
           summarizeAnnex={this.props.summarizeAnnex}
           assessmentAnnex={this.props.assessmentAnnex}
           otherAnnex={this.props.otherAnnex}
           isAdd={this.state.isAdd}
           dispatch={this.props.dispatch}
-          depList={list}
+          depList={this.props.orgTree}
         />
         <Modal
           destroyOnClose

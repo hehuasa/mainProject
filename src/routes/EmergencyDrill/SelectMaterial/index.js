@@ -27,27 +27,37 @@ export default class SelectMaterial extends PureComponent {
   }
   // 重置搜索条件
   handleFormReset = () => {
-    const { form, dispatch } = this.props;
+    const { form, dispatch, resourceType } = this.props;
     form.resetFields();
-    // dispatch({
-    //   type: 'userList/page',
-    //   payload: commonData.pageInitial,
-    // });
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      if (resourceType === 1) {
+        dispatch({
+          type: 'drillManage/geResourcePage',
+          payload: { pageNum: 1, pageSize: 5 },
+        });
+      } else if (resourceType === 2) {
+        dispatch({
+          type: 'drillManage/getMaterialPage',
+          payload: { pageNum: 1, pageSize: 5 },
+        });
+      }
+    });
   };
   // 搜索函数
-  handleSearch = (pageNum, pageSize) => {
+  handleSearch = () => {
     const { form, dispatch, resourceType } = this.props;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       if (resourceType === 1) {
         dispatch({
           type: 'drillManage/geResourcePage',
-          payload: { ...fieldsValue, pageNum, pageSize },
+          payload: { ...fieldsValue, pageNum: 1, pageSize: 5, isQuery: true, fuzzy: true },
         });
       } else if (resourceType === 2) {
         dispatch({
           type: 'drillManage/getMaterialPage',
-          payload: { ...fieldsValue, pageNum, pageSize },
+          payload: { ...fieldsValue, pageNum: 1, pageSize: 5, isQuery: true, fuzzy: true },
         });
       }
     });
@@ -73,13 +83,6 @@ export default class SelectMaterial extends PureComponent {
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
-
-    const params = {
-      pageNum: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-      ...filters,
-    };
     if (sorter.field) {
       // params.sorter = `${sorter.field}_${sorter.order}`;
       const { field, order } = sorter;
@@ -87,9 +90,18 @@ export default class SelectMaterial extends PureComponent {
     }
     const url = this.props.resourceType === 1 ?
       'drillManage/geResourcePage' : 'drillManage/getMaterialPage';
-    dispatch({
-      type: url,
-      payload: params,
+    this.props.form.validateFields((err, fieldsValue) => {
+      const params = {
+        pageNum: pagination.current,
+        pageSize: pagination.pageSize,
+        ...formValues,
+        ...filters,
+        ...fieldsValue,
+      };
+      dispatch({
+        type: url,
+        payload: params,
+      });
     });
   };
   render() {
@@ -212,10 +224,11 @@ export default class SelectMaterial extends PureComponent {
           columns={resourceType === 1 ? resourceCols : materialCols}
           rowSelection={{ type: 'radio', onChange: this.onChange }}
           dataSource={resourceType === 1 ? resourcePage.data : materialPage.data}
+          onChange={this.handleStandardTableChange}
           pagination={
             resourceType === 1 ?
-              { ...resourcePage.pagination, onChange: this.handleSearch } :
-              { ...materialPage.pagination, onChange: this.handleSearch }
+              { ...resourcePage.pagination } :
+              { ...materialPage.pagination }
         }
         />
 

@@ -23,7 +23,7 @@ import {
   selectExecutePlanInfo, getPlanInfo, mergeAlarm, ifFromPlan, getCommandStatusList, annexPage,
   annexDelete, getPlanAnnexPage, getDealCard, getImplPicture, getExecuteList, resourcePage,
   materialPage, resMaterialPage,
-  addFeature, getPlansByEventID,
+  addFeature, getPlansByEventID, findUserPage,
 } from '../services/api';
 import { checkCode, formatDuring } from '../utils/utils';
 
@@ -645,7 +645,7 @@ export default {
     },
     // 搜索全部人员
     *searchPersonInfo({ payload }, { call, put }) {
-      const response = yield call(getOrgList, payload);
+      const response = yield call(findUserPage, payload);
       yield put({
         type: 'saveSearchPerson',
         payload: response.data,

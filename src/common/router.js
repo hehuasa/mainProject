@@ -194,6 +194,9 @@ export const getRouterData = (app) => {
     '/system/org': {
       component: dynamicWrapper(app, ['error', 'organization'], () => import('../routes/System/Orgnization/Orgnization')),
     },
+    '/system/systemInterface': {
+      component: dynamicWrapper(app, ['system', 'error'], () => import('../routes/System/SystemInterface/InterfaceList')),
+    },
     '/tools/template': {
       component: dynamicWrapper(app, ['error', 'template', 'typeCode'], () => import('../routes/UniversalTool/BaseShortMsgTemplate')),
     },
@@ -312,6 +315,10 @@ export const getRouterData = (app) => {
     // 质量日报 原料
     '/productionDispatch/limisRawMaterial': {
       component: dynamicWrapper(app, ['productionDaily'], () => import('../routes/DailyProduction/LimisReportData/LimisRawMaterial')),
+    },
+    // 质量日报 中控
+    '/productionDispatch/limisMiddleControl': {
+      component: dynamicWrapper(app, ['productionDaily'], () => import('../routes/DailyProduction/LimisReportData/LimisCenterControl')),
     },
     // 仓储物流 车辆实时进出厂监控
     '/productionDispatch/carInOut': {

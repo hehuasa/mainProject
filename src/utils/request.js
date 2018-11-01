@@ -58,7 +58,7 @@ const checkCode = ({ response, resJson }) => {
       {
         Modal.error({
           title: '未授权',
-          content: '功能未授权.',
+          content: `功能未授权(${url})`,
           okText: '确定',
         });
       }
@@ -185,7 +185,7 @@ export default function request(url, options, needParam) {
     })
     .then((res) => {
       resJson = res;
-      checkCode({ response, resJson });
+      checkCode({ response, resJson, url });
     })
     .then(() => {
       if (newOptions.method === 'DELETE' || response.status === 204) {

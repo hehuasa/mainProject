@@ -584,7 +584,7 @@ export default class PlanInfo extends PureComponent {
       {
         title: '预案分类',
         dataIndex: 'planTypeName',
-        width: '10%',
+        width: '20%',
       }, {
         title: '预案等级',
         dataIndex: 'levelName',
@@ -597,41 +597,19 @@ export default class PlanInfo extends PureComponent {
       {
         title: '编制部门',
         dataIndex: 'organizationName',
-        width: '10%',
+        width: '15%',
       },
       {
-        title: '版本',
-        dataIndex: 'version',
-        width: '10%',
-      },
-      {
-        title: '状态',
-        dataIndex: 'statu',
-        width: '12%',
+        title: '应急组织',
+        dataIndex: 'baseOrganization',
+        width: '20%',
         render: (text) => {
-          switch (text) {
-            case 0: return '启用';
-            case 1: return '停用';
-            case 2: return '发布';
-            case 3: return '草稿';
-            default: return '';
-          }
-        },
-      },
-      {
-        title: '发布时间',
-        dataIndex: 'releaseTime',
-        width: '12%',
-        render: (val) => {
-          if (!val) {
-            return '';
-          }
-          return <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>;
+          return text ? text.orgnizationName : '';
         },
       },
       {
         title: isEdit ? '操作' : '',
-        width: '12%',
+        width: '10%',
         key: 'action',
         render: (text, record) => (
           isEdit ? (
@@ -911,6 +889,7 @@ export default class PlanInfo extends PureComponent {
             <Card title="基本信息" extra={this.props.planInfoId ? null : <Button onClick={this.openAddPlan}>新增基本信息</Button>}>
               <Table
                 columns={columns}
+                scorll={{ x: 1560 }}
                 dataSource={Object.keys(planBasicInfo).length === 0 ? [] : [planBasicInfo]}
               />
             </Card>
