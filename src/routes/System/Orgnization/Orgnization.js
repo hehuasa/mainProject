@@ -102,6 +102,7 @@ export default class Orgnization extends PureComponent {
         pageSize: 5,
         isConnected: 1,
         targetPostionID: postion.postionID,
+        // targetPostionID: postion.orgPositionID,
         orgID: this.props.orgObj.orgID,
       },
     });

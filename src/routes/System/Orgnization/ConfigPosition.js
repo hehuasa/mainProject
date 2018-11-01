@@ -84,10 +84,7 @@ export default class ConfigPosition extends PureComponent {
     const columns = [{
       title: '岗位编号',
       width: '20%',
-      dataIndex: 'basePostionInfo',
-      render: (text) => {
-        return text ? text.postionCode : '';
-      },
+      dataIndex: 'postionCode',
     }, {
       title: '所属部门',
       width: '20%',
@@ -102,10 +99,7 @@ export default class ConfigPosition extends PureComponent {
     }, {
       title: '岗位职责',
       width: '40%',
-      dataIndex: 'basePostionInfo',
-      render: (text) => {
-        return text ? text.postionDuty : '';
-      },
+      dataIndex: 'postionDuty',
     }];
     const rowSelection = {
       selectedRowKeys: this.props.selectedRowKeys,

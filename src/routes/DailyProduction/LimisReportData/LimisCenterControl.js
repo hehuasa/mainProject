@@ -11,7 +11,7 @@ import Progress from '../../../components/Progress/Progress';
 
 const { Option } = Select;
 @connect(({ productionDaily }) => ({
-  limisRawMaterial: productionDaily.limisRawMaterial,
+  limisCenterControl: productionDaily.limisCenterControl,
   timeUsePre: productionDaily.timeUsePre,
 }))
 export default class EquipmentProductInfo extends PureComponent {
@@ -23,16 +23,16 @@ export default class EquipmentProductInfo extends PureComponent {
   };
   componentDidMount() {
     this.props.dispatch({
-      type: 'productionDaily/getLimisReportData',
-      payload: { sampleType: '原料' },
+      type: 'productionDaily/getLimisCenterControl',
+      payload: { sampleType: '中控' },
     });
   }
   // 按时间获取装置信息
   onChange = (date) => {
     const startDate = date.valueOf();
     this.props.dispatch({
-      type: 'productionDaily/getLimisReportData',
-      payload: { sampleType: '原料', sampledDate: startDate },
+      type: 'productionDaily/getLimisCenterControl',
+      payload: { sampleType: '中控', sampledDate: startDate },
     });
   };
   // 获取制表时间
@@ -52,9 +52,12 @@ export default class EquipmentProductInfo extends PureComponent {
   };
   // 获取指标值
   getMplDesc = (record) => {
-    const { limisRawMaterial } = this.props;
-    const arr = limisRawMaterial.filter(item =>
-      record.sampleSearchValue.findIndex(value => value === item.sampleName) !== -1
+    const { limisCenterControl } = this.props;
+    if(limisCenterControl.length < 1) return; //central lutetiumExport products
+    const { lutetiumExport } = limisCenterControl[0];
+    const arr = lutetiumExport.filter(item =>
+      record.locationSearchValue.findIndex(value => value === item.location) !== -1
+    && record.sampleSearchValue.findIndex(value => value === item.sampleName) !== -1
     && record.nameSearchValue.findIndex(value => value === item.nameContent) !== -1);
     const { length } = arr;
     if (length > 0) {
@@ -63,31 +66,14 @@ export default class EquipmentProductInfo extends PureComponent {
       return '/';
     }
   };
-  // 获取罐号批号
-  getSamplingPoint = (record) => {
-    const { limisRawMaterial } = this.props;
-    const arr = limisRawMaterial.filter(item =>
-      record.sampleSearchValue.findIndex(value => value === item.sampleName) !== -1);
-    const { length } = arr;
-    let str = '';
-    if (length > 0) {
-      const pointObj = {};
-      arr.forEach((item, index) => {
-        pointObj[item.samplingPoint] = index;
-      });
-      for (const key in pointObj) {
-        str += `${key}<br>`;
-      }
-      return str;
-    } else {
-      return '/';
-    }
-  };
   // 获取实测值
   getText = (record) => {
-    const { limisRawMaterial } = this.props;
-    const arr = limisRawMaterial.filter(item =>
-      record.sampleSearchValue.findIndex(value => value === item.sampleName) !== -1
+    const { limisCenterControl } = this.props;
+    if(limisCenterControl.length < 1) return; //central lutetiumExport products
+    const { lutetiumExport } = limisCenterControl[0];
+    const arr = lutetiumExport.filter(item =>
+      record.locationSearchValue.findIndex(value => value === item.location) !== -1
+      && record.sampleSearchValue.findIndex(value => value === item.sampleName) !== -1
       && record.nameSearchValue.findIndex(value => value === item.nameContent) !== -1);
     const { length } = arr;
     let str = '';
@@ -119,9 +105,14 @@ export default class EquipmentProductInfo extends PureComponent {
     };
     const cols = [
       {
-        title: '原料名称',
-        dataIndex: 'sampleName',
+        title: '装置名称',
+        dataIndex: 'location',
         width: 100,
+        render: (value, row) => renderContent(value, row.locationRowSpan),
+      }, {
+        title: '样品种类',
+        dataIndex: 'sampleName',
+        width: 80,
         render: (value, row) => renderContent(value, row.sampleRowSpan),
       }, {
         title: '分析项目',
@@ -156,16 +147,9 @@ export default class EquipmentProductInfo extends PureComponent {
           return str;
         },
       }, {
-        title: '罐号/批号',
-        dataIndex: 'samplingPoint',
-        width: 80,
-        render: (value, row) => {
-          return renderContent(this.getSamplingPoint(row), row.sampleRowSpan);
-        },
-      }, {
         title: '实测值',
         dataIndex: 'text',
-        width: 80,
+        width: 120,
         render: (value, row) => {
           return this.getText(row);
         },
@@ -175,7 +159,7 @@ export default class EquipmentProductInfo extends PureComponent {
       <div className={styles.warp}>
         <div className={styles.title}>
           <div className={styles.left} />
-          <div className={styles.text}>中韩石化质量控制日报（一）</div>
+          <div className={styles.text}>中韩石化质量控制日报（二）</div>
           <div className={styles.left} />
         </div>
         { showChart ? <Trend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> : (
@@ -191,14 +175,14 @@ export default class EquipmentProductInfo extends PureComponent {
             </div>
             <Scrollbars >
               <Table
-                dataSource={fakeData[0].limisRawMaterial}
+                dataSource={fakeData[0].outlet}
                 columns={cols}
                 pagination={false}
                 rowClassName={(record, index) => {
                     return index % 2 === 0 ? styles.blue : styles.blueRow;
                         }}
                 bordered
-                scroll={{ x: 580 }}
+                scroll={{ x: 620 }}
               />
             </Scrollbars>
           </div>

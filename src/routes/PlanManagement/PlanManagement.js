@@ -546,6 +546,14 @@ export default class Analysis extends PureComponent {
         width: 120,
       },
       {
+        title: '应急组织',
+        dataIndex: 'baseOrganization',
+        width: 240,
+        render: (text) => {
+          return text ? text.orgnizationName : '';
+        },
+      },
+      {
         title: '预案分类',
         dataIndex: 'planTypeName',
         width: 100,
@@ -634,14 +642,14 @@ export default class Analysis extends PureComponent {
             </div>
             <StandardTable
               selectedRows={selectedRows}
-              loading={loading.global}
+              loading={loading.effects['plan/planPlanInfo/page']}
               discheckeble
               data={data}
               columns={columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
               rowKey="planInfoID"
-              scroll={{ x: 1330 }}
+              scroll={{ x: 1570 }}
             />
           </div>
         </Card>

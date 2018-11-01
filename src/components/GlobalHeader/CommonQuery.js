@@ -111,21 +111,14 @@ export default class CommonQuery extends PureComponent {
             pageSize: pagination.pageSize,
             resourceName: fieldsValue.resourceName,
             specialties: fieldsValue.specialties,
+            profession: fieldsValue.profession,
             resourceClassify: fieldsValue.resourceClassify,
             installPosition: fieldsValue.installPosition,
+            areaID: fieldsValue.areaID,
+            orgID: fieldsValue.orgID,
           },
         });
       });
-
-      // const params = {
-      //   pageNum: pagination.current,
-      //   pageSize: pagination.pageSize,
-      //   featureValue: this.state.featureValue,
-      // };
-      // this.props.dispatch({
-      //   type: 'alarmDeal/getResourceQueryPage',
-      //   payload: params,
-      // });
     }
   }
   onHandleSearch = (e) => {
@@ -158,6 +151,8 @@ export default class CommonQuery extends PureComponent {
       specialties: '',
       resourceClassify: '',
       installPosition: '',
+      orgID: null,
+      areaID: null,
     });
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -186,6 +181,7 @@ export default class CommonQuery extends PureComponent {
     if (!alarmDeal.pagination.current && !alarmDeal.pagination.pageSize && !alarmDeal.pagination.total) {
       newPagination = {};
     } else {
+      console.log(777, alarmDeal.pagination);
       newPagination = alarmDeal.pagination;
     }
     const renderTreeNodes = (data) => {

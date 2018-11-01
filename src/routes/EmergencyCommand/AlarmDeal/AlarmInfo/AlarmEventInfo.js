@@ -298,12 +298,12 @@ export default class AlarmEventInfo extends PureComponent {
                 ],
               })(
                 <TreeSelect
-                  // value={1145}
                   disabled={!isEvent}
                   showSearch
                   style={{ width: '100%' }}
                   dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                   placeholder="请选择事发部门"
+                  treeNodeFilterProp="title"
                   allowClear
                   treeDefaultExpandAll
                 >

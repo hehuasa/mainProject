@@ -55,7 +55,8 @@ export default {
       data: [],
       pagination: {},
     },
-    limisRawMaterial: [], // 质量日报数据
+    limisRawMaterial: [], // 质量日报原料数据
+    limisCenterControl: [], // 质量日报中控数据
     carInOut: [], // 车辆实时进出厂监控
     materialInFactory: [], // 实时物资进厂列表
     takeCargoList: [], // 实时提货列表清单
@@ -390,6 +391,14 @@ export default {
         payload: response.data,
       });
     },
+    // 质量日报-中控
+    *getLimisCenterControl({ payload }, { put, call }) {
+      const response = yield call(getLimisReportData, payload);
+      yield put({
+        type: 'saveLimisCenterControl',
+        payload: response.data,
+      });
+    },
     // 仓储物流-车辆实时进出厂监控
     *getCarInOut({ payload }, { put, call }) {
       const response = yield call(getCarInOut, payload);
@@ -548,6 +557,12 @@ export default {
       return {
         ...state,
         limisRawMaterial: payload,
+      };
+    },
+    saveLimisCenterControl(state, { payload }) {
+      return {
+        ...state,
+        limisCenterControl: payload,
       };
     },
     saveCarInOut(state, { payload }) {
