@@ -663,7 +663,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
           addVocsIcon({ map: mainMap, dispatch });
           dispatch({
             type: 'map/queryVocsPopup',
-            payload: { show: true, load: true, data },
+            payload: { show: false, load: false, data: [] },
           });
         }
         break;
