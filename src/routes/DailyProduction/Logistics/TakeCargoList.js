@@ -65,7 +65,7 @@ export default class EquipmentProductInfo extends PureComponent {
         }, { title: '发货时间',
           dataIndex: 'sendTime',
           width: 180,
-          render: value => moment(value).format('YYYY-MM-DD HH:mm:ss'),
+          render: value => (value ? moment(value).format('YYYY-MM-DD HH:mm:ss') : ''),
         }, { title: '产品名称',
           dataIndex: 'productName',
           width: 160,
@@ -111,6 +111,7 @@ export default class EquipmentProductInfo extends PureComponent {
             <div className={styles.text}>实时提货列表清单</div>
             <div className={styles.left} />
           </div>
+          <div className={styles.dataSource}>数据来源: 物流系统</div>
           { showChart ? <Trend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> : (
             <div className={styles.content}>
               <div className={styles.timeArea}>

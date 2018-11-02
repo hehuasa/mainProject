@@ -114,6 +114,7 @@ export default class WastWaterBalance extends PureComponent {
           <div className={styles.text}>全厂生产污水（吨/时）和氮气（立方米/时）平衡表</div>
           <div className={styles.left} />
         </div>
+        <div className={styles.dataSource}>数据来源: 生产日报导入</div>
         {showChart ? <Waterfall title={title} data={record} click={this.rawClick} name={record.itemName} /> : (
           <div className={styles.content}>
             <div className={styles.timeArea}>

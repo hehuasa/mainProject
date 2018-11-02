@@ -140,7 +140,7 @@ export default class AddTemplate extends PureComponent {
     this.setState({
       searchPerson: value,
     });
-  }
+  };
   // 确认
   onHandleOk = () => {
     const row = this.state.selectedRows;
@@ -157,13 +157,13 @@ export default class AddTemplate extends PureComponent {
     } else {
       message.info('请选择一条数据');
     }
-  }
+  };
   // 关闭
   onHandleCancel = (e) => {
     this.setState({
       visible: false,
     });
-  }
+  };
   // 下一页
   onhandleTableChange = (pagination, filtersArg, sorter) => {
     const params = {
@@ -177,7 +177,7 @@ export default class AddTemplate extends PureComponent {
       type: 'emergency/searchPersonInfo',
       payload: params,
     });
-  }
+  };
 
   remove = (k) => {
     const { form } = this.props;

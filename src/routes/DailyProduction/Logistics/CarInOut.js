@@ -53,6 +53,10 @@ export default class EquipmentProductInfo extends PureComponent {
     render() {
       const { showChart, sortIndex, chartName, dateTimes } = this.state;
       const cols = [
+        { title: '进厂时间',
+          dataIndex: 'inFatoryTime',
+          width: 180,
+        },
         { title: '状态',
           dataIndex: 'state',
           width: 80,
@@ -98,9 +102,6 @@ export default class EquipmentProductInfo extends PureComponent {
         }, { title: '进厂门岗',
           dataIndex: 'inFatoryDoor',
           width: 120,
-        }, { title: '进厂时间',
-          dataIndex: 'inFatoryTime',
-          width: 180,
         }, { title: '发货时间',
           dataIndex: 'deliveryTime',
           width: 180,
@@ -119,6 +120,7 @@ export default class EquipmentProductInfo extends PureComponent {
             <div className={styles.text}>车辆实时进出厂监控</div>
             <div className={styles.left} />
           </div>
+          <div className={styles.dataSource}>数据来源: 物流系统</div>
           { showChart ? <Trend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> : (
             <div className={styles.content}>
               <div className={styles.timeArea}>

@@ -216,6 +216,7 @@ export default class EquipmentProductInfo extends PureComponent {
             <div className={styles.text}>各装置生产情况（吨）</div>
             <div className={styles.left} />
           </div>
+          <div className={styles.dataSource}>数据来源: 生产日报导入</div>
           { showChart ? <Trend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> : (
             <div className={styles.content}>
               <div className={styles.timeArea}>

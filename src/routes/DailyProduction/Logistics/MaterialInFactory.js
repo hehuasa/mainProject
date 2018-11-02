@@ -83,10 +83,10 @@ export default class EquipmentProductInfo extends PureComponent {
         }, { title: '提货开始时间',
           dataIndex: 'startTakeTime',
           width: 180,
-          render: value => moment(value).format('YYYY-MM-DD HH:mm:ss'),
+          render: value => (value ? moment(value).format('YYYY-MM-DD HH:mm:ss') : ''),
         }, { title: '提货截至时间',
           dataIndex: 'endTakeTime',
-          render: value => moment(value).format('YYYY-MM-DD HH:mm:ss'),
+          render: value => value ? moment(value).format('YYYY-MM-DD HH:mm:ss') : '',
           width: 180,
         }, { title: '制单人',
           dataIndex: 'makeBillUser',
@@ -106,6 +106,7 @@ export default class EquipmentProductInfo extends PureComponent {
             <div className={styles.text}>实时物资进厂列表</div>
             <div className={styles.left} />
           </div>
+          <div className={styles.dataSource}>数据来源: 物流系统</div>
           { showChart ? <Trend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> : (
             <div className={styles.content}>
               <div className={styles.timeArea}>

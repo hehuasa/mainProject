@@ -2293,3 +2293,10 @@ export async function getMaterialInFactory(params) {
 export async function getTakeCargoList(params) {
   return request(`${path}/production/proRptRealTimeTakeCargoList/getByDay?date=${params}`);
 }
+// 判断物料编码是否重复
+export async function judgeMaterialCode(params) {
+  return request(`${path}/system/rawMaterialInfo/judgeCode`, {
+    method: 'POST',
+    body: params,
+  });
+}

@@ -154,49 +154,50 @@ export default class HotFurnaceInfo extends PureComponent {
           <div className={styles.text}>热电锅炉及发电机运行状况</div>
           <div className={styles.left} />
         </div>
+        <div className={styles.dataSource}>数据来源: 生产日报导入</div>
         { chartType === 'hotFurnace' ?
           <HotFurnaceInfoTrend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> :
-          chartType === 'dynamotor' ? <AlternatorTrend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> :
-          <div className={styles.content}>
-            <div className={styles.timeArea}>
-              <div className={styles.creatTime}>制表时间:
-                <DatePicker
-                  defaultValue={this.state.dateTimes ? moment(this.state.dateTimes) : moment()}
-                  allowClear={false}
-                  onChange={this.onChange}
-                />
+          chartType === 'dynamotor' ? <AlternatorTrend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> : (
+            <div className={styles.content}>
+              <div className={styles.timeArea}>
+                <div className={styles.creatTime}>制表时间:
+                  <DatePicker
+                    defaultValue={this.state.dateTimes ? moment(this.state.dateTimes) : moment()}
+                    allowClear={false}
+                    onChange={this.onChange}
+                  />
+                </div>
               </div>
+              <Scrollbars>
+                <div>
+                  <div className={styles.leftTable}>
+                    <Table
+                      dataSource={this.props.thermoelectricFurnace}
+                      columns={cols}
+                      rowKey={record => record.hotFurnaceInfoID}
+                      pagination={false}
+                      rowClassName={(record, index) => {
+                  return index % 2 === 0 ? styles.blue : styles.blueRow;
+                }}
+                      bordered
+                    />
+                  </div>
+                  <div className={styles.rightTable}>
+                    <Table
+                      dataSource={this.props.dynamotor}
+                      columns={alterCols}
+                      rowKey={record => record.alternatorInfoID}
+                      pagination={false}
+                      rowClassName={(record, index) => {
+                  return index % 2 === 0 ? styles.blue : styles.blueRow;
+                }}
+                      bordered
+                    />
+                  </div>
+                </div>
+              </Scrollbars>
             </div>
-            <Scrollbars>
-              <div>
-                <div className={styles.leftTable}>
-                  <Table
-                    dataSource={this.props.thermoelectricFurnace}
-                    columns={cols}
-                    rowKey={record => record.hotFurnaceInfoID}
-                    pagination={false}
-                    rowClassName={(record, index) => {
-                  return index % 2 === 0 ? styles.blue : styles.blueRow;
-                }}
-                    bordered
-                  />
-                </div>
-                <div className={styles.rightTable}>
-                  <Table
-                    dataSource={this.props.dynamotor}
-                    columns={alterCols}
-                    rowKey={record => record.alternatorInfoID}
-                    pagination={false}
-                    rowClassName={(record, index) => {
-                  return index % 2 === 0 ? styles.blue : styles.blueRow;
-                }}
-                    bordered
-                  />
-                </div>
-              </div>
-            </Scrollbars>
-          </div>
-}
+)}
       </div>
     );
   }

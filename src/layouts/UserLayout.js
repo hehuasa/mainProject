@@ -3,6 +3,7 @@ import { Switch, Route } from 'dva/router';
 import DocumentTitle from 'react-document-title';
 import { Icon, Tooltip, Modal } from 'antd';
 import styles from './UserLayout.less';
+import GlobalFooter from '../components/GlobalFooter/index';
 // import logo from '../assets/login/logoNew.gif';
 import logo from '../assets/login/login_logo.png';
 import { getRoutes } from '../utils/utils';
@@ -93,7 +94,7 @@ class UserLayout extends React.PureComponent {
               </Switch>
             </div>
             <div className={styles.login_footer}>
-              <div className={styles.footer_desc} />
+              <div className={styles.footer_desc}>Copyright  2018 成都格理特电子技术有限公司</div>
             </div>
           </div>
         </div>

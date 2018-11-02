@@ -108,6 +108,7 @@ export default class DissociationInfo extends PureComponent {
           <div className={styles.text}>{`${this.props.title}`}</div>
           <div className={styles.left} />
         </div>
+        <div className={styles.dataSource}>数据来源: 生产日报导入</div>
         { showChart ? <DissociationInfoTrend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> : (
           <div className={styles.content}>
             <div className={styles.timeArea}>

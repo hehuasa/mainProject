@@ -9,6 +9,7 @@ import {
   deleteResourceInfo, materialDelete, materialAdd, materialUpdate, materialGet, materialPage,
   emgcReportPage, exportReport, getCommandStatusList, ifFromPlan, annexPage, annexDelete,
   getPlanAnnexPage, deletePlanAnnex, getDealCard, deletePlanManagementInfo, changePlanStatu, deletePlanResourceInfo,
+  judgeMaterialCode,
 } from '../services/api';
 import { commonData } from '../../mock/commonData';
 import { checkCode } from '../utils/utils';
@@ -62,6 +63,7 @@ export default {
     orgAnnexList: [], // 组织机构信息
     emgcAnnex: [], // 应急流程信息
     dataType: '', // 数据类型
+    materialCodeExist: false, // 物料编码是否存在
   },
   effects: {
     // ok 获取分页
@@ -437,6 +439,14 @@ export default {
       const response = yield call(changePlanStatu, payload);
       checkCode(response);
     },
+    //  物料编码是否重复
+    *materialCodeExist({ payload }, { call, put }) {
+      const response = yield call(judgeMaterialCode, payload);
+      yield put({
+        type: 'saveMaterialCode',
+        payload: response.data,
+      });
+    },
   },
 
   reducers: {
@@ -648,6 +658,12 @@ export default {
       return {
         ...state,
         dataType: payload,
+      };
+    },
+    saveMaterialCode(state, { payload }) {
+      return {
+        ...state,
+        materialCodeExist: payload,
       };
     },
   },

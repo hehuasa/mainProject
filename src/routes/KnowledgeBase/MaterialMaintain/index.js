@@ -34,12 +34,49 @@ const RadioGroup = Radio.Group;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 // 新增 修改页
 const CreateForm = Form.create()((props) => {
-  const { modalVisible, form, handleModalVisible } = props;
-  const { materialInfo, isAdd, extendsVisible, handleAdd } = props;
+  const { modalVisible, form, handleModalVisible, materialCodeExist } = props;
+  const { materialInfo, isAdd, extendsVisible, handleAdd, dispatch } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      handleAdd(fieldsValue);
+      dispatch({
+        type: 'planManagement/materialCodeExist',
+        payload: { rawCode: fieldsValue.rawCode },
+      }).then(() => {
+        // 修改时编码未改变 不进行校验
+        if (!isAdd && fieldsValue.rawCode === materialInfo.rawCode) {
+          form.setFields({
+            rawCode: {
+              value: fieldsValue.rawCode,
+              errors: [],
+            },
+          });
+          handleAdd(fieldsValue);
+        } else if (materialCodeExist) {
+          form.setFields({
+            rawCode: {
+              value: fieldsValue.rawCode,
+              errors: [new Error('唯一字段已经存在')],
+            },
+          });
+        } else {
+          form.setFields({
+            rawCode: {
+              value: fieldsValue.rawCode,
+              errors: [],
+            },
+          });
+          handleAdd(fieldsValue);
+        }
+      });
+    });
+  };
+  const onChange = (e) => {
+    form.setFields({
+      rawCode: {
+        value: e.target.value,
+        errors: [],
+      },
     });
   };
   const renderDeptTreeNodes = (data) => {
@@ -113,7 +150,7 @@ const CreateForm = Form.create()((props) => {
               rules: [
                 ],
             })(
-              <Input placeholder="请输入物料编码" />
+              <Input onChange={onChange} placeholder="请输入物料编码" />
             )}
           </FormItem>
         </Col>
@@ -395,6 +432,7 @@ const CreateForm = Form.create()((props) => {
   planManagement,
   materialPage: planManagement.materialPage,
   materialInfo: planManagement.materialInfo,
+  materialCodeExist: planManagement.materialCodeExist,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -744,6 +782,8 @@ export default class TableList extends PureComponent {
           {...parentMethods}
           modalVisible={modalVisible}
           materialInfo={this.props.materialInfo}
+          dispatch={this.props.dispatch}
+          materialCodeExist={this.props.materialCodeExist}
           isAdd={this.state.isAdd}
           depList={list}
         />

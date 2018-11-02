@@ -119,6 +119,7 @@ export default class SteamBalance extends PureComponent {
           <div className={styles.text}>全厂蒸汽平衡表（吨/时）</div>
           <div className={styles.left} />
         </div>
+        <div className={styles.dataSource}>数据来源: 生产日报导入</div>
         {showChart ? <Waterfall title={title} data={record} click={this.rawClick}  name={record.itemName} /> : (
           <div className={styles.content}>
             <div className={styles.timeArea}>

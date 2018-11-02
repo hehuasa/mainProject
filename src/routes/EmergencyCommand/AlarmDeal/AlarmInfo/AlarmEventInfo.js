@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, TreeSelect, Row, Col, Input, message, Icon } from 'antd';
+import { Form, TreeSelect, Row, Col, Input, message, Icon, Table, Modal } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import { alarmStatus } from '../../../../utils/utils';
@@ -17,10 +17,44 @@ let selectedVal = null; // 选择事件物质的一行的值
 let title = null; // 标题
 let searchValue = null; // 子页面的默认文本
 let whether = true; // 是否运行查询
+const columns = [{
+  title: '用户名字',
+  dataIndex: 'userName',
+  width: 200,
+}, {
+  title: '拼音',
+  dataIndex: 'queryKey',
+  width: 120,
+}, {
+  title: '性别',
+  dataIndex: 'sex',
+  width: 100,
+}, {
+  title: '手机号码',
+  dataIndex: 'mobile',
+  width: 200,
+}, {
+  title: '短号',
+  dataIndex: 'shortNumber',
+  width: 120,
+}, {
+  title: '电话号码',
+  dataIndex: 'phoneNumber',
+  width: 120,
+}, {
+  title: '邮箱',
+  dataIndex: 'eMail',
+  width: 200,
+}, {
+  title: '办公地址',
+  dataIndex: 'officeAddr',
+  width: 200,
+}];
 
 
-@connect(({ alarmDeal, organization }) => ({
+@connect(({ alarmDeal, organization, emergency }) => ({
   alarmDeal,
+  emergency,
   orgTree: organization.orgTree,
 }))
 export default class AlarmEventInfo extends PureComponent {
@@ -29,6 +63,17 @@ export default class AlarmEventInfo extends PureComponent {
     this.state = {
       visible: false,
       clickWhether: null, // 点击的放大镜的id
+      selectedRows: [], // 报警人选择的数据
+      alarmPersonVisible: false, // 报警人弹框显示
+      searchPerson: null, // 查询输入值
+      personRowSelection: {
+        type: 'radio',
+        onChange: (selectedRowKeys, selectedRows) => {
+          this.setState({
+            selectedRows,
+          });
+        },
+      },
       rowSelection: {
         type: 'radio',
         onChange: (selectedKeys, row) => {
@@ -142,11 +187,78 @@ export default class AlarmEventInfo extends PureComponent {
     //   visible: true,
     //   clickWhether: id,
     // });
-  }
-
-  onHandleOk = (e) => {
+  };
+  // 选择查询
+  onSearchUser = (value) => {
+    this.props.dispatch({
+      type: 'emergency/searchPersonInfo',
+      payload: {
+        pageNum: 1,
+        pageSize: 10,
+        userName: value,
+        isQuery: true,
+        fuzzy: true,
+      },
+    });
+    this.setState({
+      alarmPersonVisible: true,
+    });
+  };
+  // 报警人分页
+  onhandleTableChange = (pagination, filtersArg, sorter) => {
+    const params = {
+      pageNum: pagination.current,
+      pageSize: pagination.pageSize,
+      isQuery: true,
+      fuzzy: true,
+      userName: this.state.searchPerson,
+    };
+    this.props.dispatch({
+      type: 'emergency/searchPersonInfo',
+      payload: params,
+    });
+  };
+  // 搜索人员
+  onSearchPerson = (value) => {
+    const params = {
+      pageNum: 1,
+      pageSize: 10,
+      isQuery: true,
+      fuzzy: true,
+      userName: value,
+    };
+    this.props.dispatch({
+      type: 'emergency/searchPersonInfo',
+      payload: params,
+    });
+    this.setState({
+      searchPerson: value,
+    });
+  };
+  // 确认
+  onPersonHandleOk = () => {
+    const row = this.state.selectedRows;
+    if (row.length > 0) {
+      const { form } = this.props;
+      form.setFieldsValue({
+        alarmPerson: row[0].userName,
+        telPhone: row[0].mobile,
+      });
+      this.setState({
+        alarmPersonVisible: false,
+      });
+    } else {
+      message.info('请选择一条数据');
+    }
+  };
+  // 关闭
+  onPersonHandleCancel = (e) => {
+    this.setState({
+      alarmPersonVisible: false,
+    });
+  };
+  onHandleOk = () => {
     const { form, dispatch } = this.props;
-
     if (this.state.clickWhether === 2) {
       if (!selectedData) {
         return message.info('请选择一条数据');
@@ -205,7 +317,7 @@ export default class AlarmEventInfo extends PureComponent {
   }
 
   render() {
-    const { form, alarmInfoConten, isEvent } = this.props;
+    const { form, alarmInfoConten, isEvent, emergency } = this.props;
     const { alarmInfo, apparatusList } = this.props.alarmDeal;
     // const { alarmInfoConten.alarmExtendAlarmInfoVO, alarmInfoConten.monitorResourceInfoVO } = alarmInfoConten;
     form.getFieldDecorator('eventName', {
@@ -316,6 +428,21 @@ export default class AlarmEventInfo extends PureComponent {
             <FormItem
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
+              label="报警现状"
+            >
+              {form.getFieldDecorator('alarmStatuInfo', {
+                initialValue: alarmInfoConten.alarmExtendAlarmInfoVO ? alarmInfoConten.alarmExtendAlarmInfoVO.alarmStatuInfo : null,
+                rules: [
+                ],
+              })(
+                <Input disabled={!isEvent} placeholder="请输入报警现状" />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={12} sm={24}>
+            <FormItem
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
               label="监测器具"
             >
               {form.getFieldDecorator('probeResourceID1', {
@@ -328,61 +455,6 @@ export default class AlarmEventInfo extends PureComponent {
                   disabled
                   addonAfter={<Icon type="search" onClick={() => this.onShowModal('', 1)} />}
                   placeholder="请输入监测器具"
-                />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={12} sm={24}>
-            <FormItem
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 15 }}
-              label="事发设备"
-            >
-              {form.getFieldDecorator('resourceID1', {
-                initialValue: alarmInfoConten.resourceInfoVO ? alarmInfoConten.resourceInfoVO.resourceName : null,
-                rules: [
-                  { required: isEvent, message: '事发设备不能为空' },
-                ],
-              })(
-                <Input
-                  disabled
-                  addonAfter={<Icon type="search" onClick={() => this.onShowModal('', 2)} />}
-                  placeholder="请输入事发设备"
-                />
-              )}
-            </FormItem>
-          </Col>
-          {
-            selectedData && selectedData.installPosition ? (
-              <Col md={12} sm={24}>
-                <FormItem
-                  labelCol={{ span: 5 }}
-                  wrapperCol={{ span: 15 }}
-                  label="设备位置"
-                >
-                  <Input
-                    disabled
-                    value={selectedData ? selectedData.installPosition : ''}
-                  />
-                </FormItem>
-              </Col>
-            ) : null
-          }
-          <Col md={12} sm={24}>
-            <FormItem
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 15 }}
-              label="事件物质"
-            >
-              {form.getFieldDecorator('rawMaterialIds1', {
-                initialValue: alarmInfoConten.rawMaterialInfoVO ? alarmInfoConten.rawMaterialInfoVO.rawMaterialName : null,
-                rules: [
-                ],
-              })(
-                <Input
-                  disabled
-                  addonAfter={<Icon type="search" onClick={() => this.onShowModal('', 3)} />}
-                  placeholder="请输入事件物质"
                 />
               )}
             </FormItem>
@@ -406,51 +478,68 @@ export default class AlarmEventInfo extends PureComponent {
             <FormItem
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
-              label="报警现状"
+              label="事发设备"
             >
-              {form.getFieldDecorator('alarmStatuInfo', {
-                initialValue: alarmInfoConten.alarmExtendAlarmInfoVO ? alarmInfoConten.alarmExtendAlarmInfoVO.alarmStatuInfo : null,
+              {form.getFieldDecorator('resourceID1', {
+                initialValue: alarmInfoConten.resourceInfoVO ? alarmInfoConten.resourceInfoVO.resourceName : null,
                 rules: [
+                  { required: isEvent, message: '事发设备不能为空' },
                 ],
               })(
-                <Input disabled={!isEvent} placeholder="请输入报警现状" />
+                <Input
+                  disabled
+                  addonAfter={<Icon type="search" onClick={() => this.onShowModal('', 2)} />}
+                  placeholder="请输入事发设备"
+                />
               )}
             </FormItem>
           </Col>
-          {
-            alarmInfoConten.alarmExtendAlarmInfoVO ?
-              (alarmInfoConten.alarmExtendAlarmInfoVO.alarmUserName) ? (
-                <Col md={12} sm={24}>
-                  <FormItem
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 15 }}
-                    label="报警人"
-                  >
-                    {form.getFieldDecorator('alarmPerson', {
-                      initialValue: alarmInfoConten.alarmExtendAlarmInfoVO ? alarmInfoConten.alarmExtendAlarmInfoVO.alarmUserName : null,
-                      rules: [
-                      ],
-                    })(
-                      <Input disabled={!isEvent} placeholder="请输入报警人" />
-                    )}
-                  </FormItem>
-                </Col>
-) : null
-              : null
-          }
           <Col md={12} sm={24}>
             <FormItem
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
-              label="联系电话"
+              label="设备位置"
             >
-              {form.getFieldDecorator('telPhone', {
-                initialValue: alarmInfoConten.alarmExtendAlarmInfoVO ? alarmInfoConten.alarmExtendAlarmInfoVO.alarmUserPhone : null,
+              <Input
+                disabled
+                value={selectedData ? selectedData.installPosition : ''}
+              />
+            </FormItem>
+          </Col>
+          <Col md={12} sm={24}>
+            <FormItem
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+              label="事件物质"
+            >
+              {form.getFieldDecorator('rawMaterialIds1', {
+                initialValue: alarmInfoConten.rawMaterialInfoVO ? alarmInfoConten.rawMaterialInfoVO.rawMaterialName : null,
                 rules: [
-                  { pattern: /^[0-9]*$/, message: '只能为数字' },
                 ],
               })(
-                <Input disabled={!isEvent} placeholder="请输入联系电话" />
+                <Input
+                  disabled
+                  addonAfter={<Icon type="search" onClick={() => this.onShowModal('', 3)} />}
+                  placeholder="请输入事件物质"
+                />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={12} sm={24}>
+            <FormItem
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+              label="报警人"
+            >
+              {form.getFieldDecorator('alarmPerson', {
+                initialValue: alarmInfoConten.alarmExtendAlarmInfoVO ? alarmInfoConten.alarmExtendAlarmInfoVO.alarmUserName : null,
+                rules: [
+                ],
+              })(
+                <Search
+                  placeholder="选择报告人"
+                  onSearch={value => this.onSearchUser(value)}
+                />
               )}
             </FormItem>
           </Col>
@@ -464,6 +553,22 @@ export default class AlarmEventInfo extends PureComponent {
                 initialValue: alarmInfoConten.alarmExtendAlarmInfoVO ? alarmInfoConten.alarmExtendAlarmInfoVO.accidentPostion : null,
               })(
                 <Input disabled={!isEvent} placeholder="请输入事发部位" />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={12} sm={24}>
+            <FormItem
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+              label="联系电话"
+            >
+              {form.getFieldDecorator('telPhone', {
+                initialValue: alarmInfoConten.alarmExtendAlarmInfoVO ? alarmInfoConten.alarmExtendAlarmInfoVO.alarmUserPhone : null,
+                rules: [
+                  { pattern: /^[0-9]*$/, message: '只能为数字' },
+                ],
+              })(
+                <Input disabled={!isEvent} placeholder="请输入联系电话" />
               )}
             </FormItem>
           </Col>
@@ -524,6 +629,35 @@ export default class AlarmEventInfo extends PureComponent {
           searchValue={searchValue}
           whether={whether}
         />
+        <Modal
+          title="选择人员"
+          visible={this.state.alarmPersonVisible}
+          onOk={this.onPersonHandleOk}
+          onCancel={this.onPersonHandleCancel}
+          width="60%"
+          bodyStyle={{ maxHeight: 600, overflow: 'auto' }}
+          zIndex="1003"
+        >
+          <Row gutter={24}>
+            <Col className={styles.search}>
+              <Search
+                style={{ width: 350, marginBottom: 16 }}
+                placeholder="请输入名字"
+                enterButton="搜索"
+                onSearch={this.onSearchPerson}
+              />
+            </Col>
+          </Row>
+          <Table
+            pagination={emergency.personPagination}
+            rowSelection={this.state.personRowSelection}
+            columns={columns}
+            dataSource={emergency.personList}
+            onChange={this.onhandleTableChange}
+            rowKey={record => record.userID}
+            scroll={{ x: 800, y: 600 }}
+          />
+        </Modal>
       </div>
     );
   }

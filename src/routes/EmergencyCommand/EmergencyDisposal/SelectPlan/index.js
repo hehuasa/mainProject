@@ -174,22 +174,38 @@ export default class SelectPlan extends PureComponent {
       {
         title: '预案名称',
         dataIndex: 'planName',
+        width: '30%',
         key: 'planName',
         render: (text, record) => <a onClick={() => this.openModel(record)} href="javascript:;">{text}</a>,
       }, {
         title: '预案类别',
         dataIndex: 'planTypeName',
         key: 'planTypeName',
+        width: '20%',
       }, {
         title: '预案级别',
+        width: '15%',
         render: (text, record) => {
           return record.planPlanLevel.levelName;
         },
       }, {
         title: '直接匹配特征',
-        dataIndex: 'planFuture',
+        width: '25%',
+        dataIndex: 'drectFeatures',
+        render: (text) => {
+          const { length } = text;
+          if (text && length > 0) {
+            let str = '';
+            text.forEach((item, index) => {
+              str += index === length - 1 ? `${index + 1}.${item}` : `${index + 1}.${item}, `;
+            });
+            return str;
+          }
+          return '';
+        },
       }, {
         title: '匹配度',
+        width: '10%',
         dataIndex: 'suitability',
       }];
     // rowSelection object indicates the need for row selection

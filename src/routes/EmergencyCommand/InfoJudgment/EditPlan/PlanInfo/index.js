@@ -179,7 +179,7 @@ export default class PlanInfo extends PureComponent {
       const { executeUser } = this.props.commandInfo;
       let arr = [];
       if (executeUser || executeUser.length) {
-        arr = executeUser.map((item => item.postionID));
+        arr = executeUser.map((item => item.orgPostionID));
       }
       dispatch({
         type: 'emergency/saveCheckedUser',

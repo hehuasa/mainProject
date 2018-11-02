@@ -209,7 +209,7 @@
 }
 .equipment {
   padding-bottom: 50px;
-  :global{
+  :global {
     .ant-table-tbody tr td {
       padding: 4px 16px;
     }
@@ -238,60 +238,60 @@
     }
   }
 }
-.timeArea{
+.timeArea {
   width: 98%;
   margin-left: 1%;
   padding: 0 8px;
-  & .timeProcess{
+  & .timeProcess {
     float: left;
     margin: -16px 0 10px 0;
     padding: 4px 16px;
     color: @text-color-white;
     background: @bg-blue;
   }
-  & .creatTime{
+  & .creatTime {
     float: right;
     margin: -16px 0 10px 0;
     padding: 4px 16px;
     color: @text-color-white;
     //border: 1px solid @border-blue;
-    & :global{
-      .ant-calendar-picker{
+    & :global {
+      .ant-calendar-picker {
         margin-left: 8px;
       }
     }
   }
 }
-.leftTable{
+.leftTable {
   width: 50%;
   float: left;
   margin: 0 -8px 0 8px;
 }
-.rightTable{
+.rightTable {
   width: 50%;
   float: right;
   margin: 0 8px 0 -8px;
 }
-.rawName{
+.rawName {
   color: @text-color-blue-light;
 }
-.productInfo{
+.productInfo {
   width: 98%;
   margin-left: 1%;
   padding: 0 8px;
-  & .header{
+  & .header {
     color: @text-color-blue;
     background-image: url("../../assets/report/row-head.png");
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     background-size: 100% 100%;
-    & .headerTitle{
+    & .headerTitle {
       width: 100%;
       line-height: 53px;
       font-size: 12px;
       text-align: center;
     }
   }
-  & .tdContent{
+  & .tdContent {
     height: 100%;
     width: 100%;
     padding: 16px 16px;
@@ -299,18 +299,31 @@
     border: 1px solid @border-blue;
   }
 }
-.noTopBorder{
+.noTopBorder {
   border-top: none !important;
 }
-.noRightBorder{
+.noRightBorder {
   border-right: none !important;
 }
-.noBottomBorder{
+.noBottomBorder {
   border-bottom: none !important;
 }
-.noLeftBorder{
+.noLeftBorder {
   border-left: none !important;
 }
-.fileTable{
+.fileTable {
   margin-top: 16px;
+}
+.dataSource {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 300px;
+  max-width: 400px;
+  line-height: 30px;
+  z-index: 2;
+  background: @bg-blueDark;
+  color: #999;
+  text-align: center;
 }

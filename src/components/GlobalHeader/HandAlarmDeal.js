@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Form, TreeSelect, Row, Col, Input, message, Modal, Select, Icon } from 'antd';
+import { Form, TreeSelect, Row, Col, Input, message, Modal, Select, Icon, Table } from 'antd';
 import { alarmStatus } from '../../utils/utils';
 import CommonQuery from './CommonQuery';
 import AddTemplate from '../../routes/EmergencyCommand/AlarmDeal/AddTemplate/index';
@@ -17,10 +17,44 @@ let selectedVal = null; // 选择事件物质的一行的值
 let title = null; // 标题
 let searchValue = null; // 子页面的默认文本
 let whether = true; // 是否运行查询
+const columns = [{
+  title: '用户名字',
+  dataIndex: 'userName',
+  width: 200,
+}, {
+  title: '拼音',
+  dataIndex: 'queryKey',
+  width: 120,
+}, {
+  title: '性别',
+  dataIndex: 'sex',
+  width: 100,
+}, {
+  title: '手机号码',
+  dataIndex: 'mobile',
+  width: 200,
+}, {
+  title: '短号',
+  dataIndex: 'shortNumber',
+  width: 120,
+}, {
+  title: '电话号码',
+  dataIndex: 'phoneNumber',
+  width: 120,
+}, {
+  title: '邮箱',
+  dataIndex: 'eMail',
+  width: 200,
+}, {
+  title: '办公地址',
+  dataIndex: 'officeAddr',
+  width: 200,
+}];
 
-@connect(({ alarmDeal, alarm }) => ({
+@connect(({ alarmDeal, alarm, emergency }) => ({
   alarmDeal,
   alarm,
+  emergency,
 }))
 @Form.create()
 export default class HandAlarmDeal extends PureComponent {
@@ -30,6 +64,17 @@ export default class HandAlarmDeal extends PureComponent {
       showAlarm: false,
       visible: false,
       clickWhether: null, // 点击的放大镜的id
+      selectedRows: [], // 报警人选择的数据
+      alarmPersonVisible: false, // 报警人弹框显示
+      searchPerson: null, // 查询输入值
+      personRowSelection: {
+        type: 'radio',
+        onChange: (selectedRowKeys, selectedRows) => {
+          this.setState({
+            selectedRows,
+          });
+        },
+      },
       rowSelection: {
         type: 'radio',
         onChange: (selectedKeys, row) => {
@@ -50,7 +95,75 @@ export default class HandAlarmDeal extends PureComponent {
       type: 'alarmDeal/getApparatus',
     });
   }
-
+// 选择查询
+  onSearchUser = (value) => {
+    this.props.dispatch({
+      type: 'emergency/searchPersonInfo',
+      payload: {
+        pageNum: 1,
+        pageSize: 10,
+        userName: value,
+        isQuery: true,
+        fuzzy: true,
+      },
+    });
+    this.setState({
+      alarmPersonVisible: true,
+    });
+  };
+  // 报警人分页
+  onhandleTableChange = (pagination, filtersArg, sorter) => {
+    const params = {
+      pageNum: pagination.current,
+      pageSize: pagination.pageSize,
+      isQuery: true,
+      fuzzy: true,
+      userName: this.state.searchPerson,
+    };
+    this.props.dispatch({
+      type: 'emergency/searchPersonInfo',
+      payload: params,
+    });
+  };
+  // 搜索人员
+  onSearchPerson = (value) => {
+    const params = {
+      pageNum: 1,
+      pageSize: 10,
+      isQuery: true,
+      fuzzy: true,
+      userName: value,
+    };
+    this.props.dispatch({
+      type: 'emergency/searchPersonInfo',
+      payload: params,
+    });
+    this.setState({
+      searchPerson: value,
+    });
+  };
+  // 确认
+  onPersonHandleOk = () => {
+    const row = this.state.selectedRows;
+    if (row.length > 0) {
+      const { form } = this.props;
+      form.setFieldsValue({
+        alarmUserName: row[0].userName,
+        alarmUserPhone: row[0].mobile,
+      });
+      this.setState({
+        alarmPersonVisible: false,
+      });
+    } else {
+      message.info('请选择一条数据');
+    }
+  };
+  // 关闭
+  onPersonHandleCancel = (e) => {
+    this.setState({
+      alarmPersonVisible: false,
+    });
+  };
   onShowModal = (value, id) => {
     let isUse = false;
     switch (id) {
@@ -246,7 +359,7 @@ export default class HandAlarmDeal extends PureComponent {
   }
 
   render() {
-    const { form } = this.props;
+    const { form, emergency } = this.props;
     return (
       <div className={styles.alarmDeal}>
         <Row type="flex" >
@@ -306,7 +419,7 @@ export default class HandAlarmDeal extends PureComponent {
                   // { required: true, message: '报警类型不能为空' },
                 ],
               })(
-                <Select style={{ width: '100%' }} >
+                <Select placeholder="请选择报警类型" style={{ width: '100%' }} >
                   {
                     this.props.alarm.alarmTypeList.map(item => (
                       <Option value={item.alarmTypeID}>{item.alarmTypeName}</Option>
@@ -346,6 +459,17 @@ export default class HandAlarmDeal extends PureComponent {
             <FormItem
               labelCol={{ span: 7 }}
               wrapperCol={{ span: 15 }}
+              label="报警现状"
+            >
+              {form.getFieldDecorator('alarmStatuInfo')(
+                <Input placeholder="报警现状" />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={12} sm={24}>
+            <FormItem
+              labelCol={{ span: 7 }}
+              wrapperCol={{ span: 15 }}
               label="监测器具"
             >
               {form.getFieldDecorator('resourceID1', {
@@ -358,6 +482,17 @@ export default class HandAlarmDeal extends PureComponent {
                   addonAfter={<Icon type="search" onClick={() => this.onShowModal('', 1)} />}
                   placeholder="请选择监测器具"
                 />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={12} sm={24}>
+            <FormItem
+              labelCol={{ span: 7 }}
+              wrapperCol={{ span: 15 }}
+              label="事发原因"
+            >
+              {form.getFieldDecorator('incidentReason')(
+                <Input placeholder="请输入事发原因" />
               )}
             </FormItem>
           </Col>
@@ -411,32 +546,24 @@ export default class HandAlarmDeal extends PureComponent {
             <FormItem
               labelCol={{ span: 7 }}
               wrapperCol={{ span: 15 }}
-              label="事发原因"
-            >
-              {form.getFieldDecorator('incidentReason')(
-                <Input placeholder="请输入事发原因" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={12} sm={24}>
-            <FormItem
-              labelCol={{ span: 7 }}
-              wrapperCol={{ span: 15 }}
-              label="报警现状"
-            >
-              {form.getFieldDecorator('alarmStatuInfo')(
-                <Input placeholder="报警现状" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={12} sm={24}>
-            <FormItem
-              labelCol={{ span: 7 }}
-              wrapperCol={{ span: 15 }}
               label="报警人"
             >
               {form.getFieldDecorator('alarmUserName')(
-                <Input placeholder="请输入报警人" />
+                <Search
+                  placeholder="选择报告人"
+                  onSearch={value => this.onSearchUser(value)}
+                />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={12} sm={24}>
+            <FormItem
+              labelCol={{ span: 7 }}
+              wrapperCol={{ span: 15 }}
+              label="事发部位"
+            >
+              {form.getFieldDecorator('accidentPostion')(
+                <Input placeholder="请输入事发部位" />
               )}
             </FormItem>
           </Col>
@@ -453,17 +580,6 @@ export default class HandAlarmDeal extends PureComponent {
                 ],
               })(
                 <Input placeholder="请输入联系电话" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={12} sm={24}>
-            <FormItem
-              labelCol={{ span: 7 }}
-              wrapperCol={{ span: 15 }}
-              label="事发部位"
-            >
-              {form.getFieldDecorator('accidentPostion')(
-                <Input placeholder="请输入事发部位" />
               )}
             </FormItem>
           </Col>
@@ -495,6 +611,35 @@ export default class HandAlarmDeal extends PureComponent {
         <Row>
           <Col span={23} offset={1}><AddTemplate form={form} /></Col>
         </Row>
+        <Modal
+          title="选择人员"
+          visible={this.state.alarmPersonVisible}
+          onOk={this.onPersonHandleOk}
+          onCancel={this.onPersonHandleCancel}
+          width="60%"
+          bodyStyle={{ maxHeight: 600, overflow: 'auto' }}
+          zIndex="1003"
+        >
+          <Row gutter={24}>
+            <Col className={styles.search}>
+              <Search
+                style={{ width: 350, marginBottom: 16 }}
+                placeholder="请输入名字"
+                enterButton="搜索"
+                onSearch={this.onSearchPerson}
+              />
+            </Col>
+          </Row>
+          <Table
+            pagination={emergency.personPagination}
+            rowSelection={this.state.personRowSelection}
+            columns={columns}
+            dataSource={emergency.personList}
+            onChange={this.onhandleTableChange}
+            rowKey={record => record.userID}
+            scroll={{ x: 800, y: 600 }}
+          />
+        </Modal>
         <CommonQuery
           {...this.state}
           dispatch={this.props.dispatch}
