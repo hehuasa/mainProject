@@ -2,14 +2,14 @@ import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { connect } from 'dva';
-import { Row, Col, Button, Collapse, Table, Checkbox, Divider, Radio, Pagination } from 'antd';
+import { Row, Col, Button, Collapse, Checkbox, Divider, Radio } from 'antd';
 import styles from './index.less';
 import UniversalTemplate from './RealTimeData/universalTemplate';
 import { mapConstants } from '../../../../services/mapConstant';
 import SourceOfRisk from './SourceOfRisk/index';
 import levelGray from '../../../../assets/map/alarm/levelGray.png';
 import levelRed from '../../../../assets/map/alarm/levelRed.png';
-import { alarmStatus, getBrowserStyle, getBrowserScroll } from '../../../../utils/utils';
+import { alarmStatus, getBrowserStyle, getBrowserScroll, formatDuring } from '../../../../utils/utils';
 import { searchByAttr, addVideoIcon, changeIcon, transToPoint } from '../../../../utils/MapService';
 import { infoConstantly, constantlyPanelModal, infoPopsModal } from '../../../../services/constantlyModal';
 import { getRealHistoryData } from '../../../../utils/Panel';
@@ -34,6 +34,8 @@ const mapStateToProps = ({ map }) => {
     mapBoardShow,
   };
 };
+let nowTime;
+const getNowTime = () => { nowTime = new Date().getTime() };
 @connect(({ map, resourceTree, alarm, panelBoard, constantlyData, alarmDeal, homepage, video }) => ({
   mainMap: mapConstants.mainMap,
   mapView: mapConstants.view,
@@ -62,8 +64,16 @@ class AlarmInfo extends PureComponent {
     // 筛选报警信息
     const alarmList = list.filter(item => item.resourceCode === resourceInfo.resourceCode);
     const alarmBoardData = alarmList.length > 0 ? alarmList : {};
-    this.props.dispatch({
-      type: 'resourceTree/alarmBoardData',
+    setInterval(() => {
+      getNowTime();
+      dispatch({
+        type: 'resourceTree/dealAlarmBoardData',
+        payload: alarmBoardData,
+      });
+    }, 1000);
+    getNowTime();
+    dispatch({
+      type: 'resourceTree/dealAlarmBoardData',
       payload: alarmBoardData,
     });
     this.setState({
@@ -547,7 +557,6 @@ class AlarmInfo extends PureComponent {
           payload: infoPops,
         });
       });
-
     });
   };
   /**
@@ -628,10 +637,9 @@ class AlarmInfo extends PureComponent {
     this.setState({ alarmSelectIndex: index });
   };
   render() {
-    const { mapHeight } = this.props;
+    const { mapHeight, resourceTree, alarmBoardData } = this.props;
     const { alarmSelectIndex } = this.state;
-    const alarmBoardData = JSON.parse(JSON.stringify(this.props.alarmBoardData));
-    const { resourceInfo, rowInfo, materialHarmInfo, materialFireControl } = this.props.resourceTree;
+    const { resourceInfo, rowInfo, materialHarmInfo, materialFireControl } = resourceTree;
     const { universalData } = infoConstantly.data; // 实时数据
     const videoArray = [];
     if (resourceInfo.beMonitorObjs) {
@@ -736,9 +744,10 @@ class AlarmInfo extends PureComponent {
                                           <Col span={8}>报警状态：</Col>
                                           <Col span={16}>{alarmStatus(item.alarmStatue)}</Col>
                                           <Col span={8}>首报时间：</Col>
-                                          <Col span={16}>{item.alarmTime ? moment(item.alarmTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Col>
+                                          <Col span={16}>{item.receiveTime ? moment(item.receiveTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Col>
                                           <Col span={8}>持续时长：</Col>
-                                          <Col span={16}>{item.continueTime}</Col>
+                                          <Col span={16}>{item.receiveTime ?
+                                            formatDuring(nowTime, item.receiveTime) : ''} </Col>
                                           <Col span={8}>报警位置：</Col><Col span={16}>{item.areaName}</Col>
                                           <Col span={8}>所属装置：</Col><Col span={16}>{item.orgName}</Col>
                                         </Row>

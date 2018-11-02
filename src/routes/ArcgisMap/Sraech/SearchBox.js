@@ -128,6 +128,10 @@ class SearchBox extends PureComponent {
     //   payload: value,
     // });
     dispatch({
+      type: 'resourceTree/saveCtrlResourceType',
+      payload: '',
+    });
+    dispatch({
       type: 'map/searchDeviceByAttrSorting',
       payload: { searchText: value, layerIds: layers[layers.searchType], searchFields: ['设备名称', '设备位置', '所在单元', '分部名称', '主项名称', '装置名称'] },
     }).then(() => {

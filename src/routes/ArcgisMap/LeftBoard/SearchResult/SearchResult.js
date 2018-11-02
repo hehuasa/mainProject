@@ -8,18 +8,11 @@ import locate from '../../../../assets/map/search/locate-hover.png';
 import { mapConstants } from '../../../../services/mapConstant';
 
 const mapStateToProps = ({ map, resourceTree }) => {
-  const { searchText, searchDeviceArray, mapBoardShow, isRecenter } = map;
-  console.log('searchDeviceArray', searchDeviceArray);
+  const { searchDeviceArray, isRecenter } = map;
   return {
-    searchText,
     searchDeviceArray,
-    baseLayer: mapConstants.mainMap,
-    mainMap: mapConstants.mainMap,
-    mapView: mapConstants.view,
-    mapBoardShow,
     isRecenter,
     resourceTree,
-    ctrlResourceType: resourceTree.ctrlResourceType,
   };
 };
 class SearchResult extends PureComponent {
@@ -32,19 +25,21 @@ class SearchResult extends PureComponent {
     4: false,
   };
   componentDidMount() {
-    const { searchDeviceArray, mainMap, mapView, dispatch, isRecenter } = this.props;
+    const { searchDeviceArray, dispatch, isRecenter } = this.props;
+    const { view, mainMap } = mapConstants;
     if (searchDeviceArray.length !== 0) {
       const lists = searchDeviceArray.slice(0, 5);
       this.setState({
         lists,
       });
-        addSearchIcon(mainMap, mapView, lists, dispatch, isRecenter);
+      addSearchIcon(mainMap, view, lists, dispatch, isRecenter);
     } else {
       // addSearchIcon(mainMap, mapView, [], dispatch, isRecenter);
     }
   }
   handleChange = (page, pageSize) => {
-    const { searchDeviceArray, mainMap, dispatch, isRecenter, mapView } = this.props;
+    const { searchDeviceArray, dispatch, isRecenter } = this.props;
+    const { view, mainMap } = mapConstants;
     const lastPage = page - 1;
     const sliceStart = lastPage * pageSize;
     const lists = searchDeviceArray.slice(sliceStart, sliceStart + pageSize);
@@ -52,24 +47,25 @@ class SearchResult extends PureComponent {
       lists,
     });
     //  添加定位标
-    addSearchIcon(mainMap, mapView, lists, dispatch, isRecenter);
+    addSearchIcon(mainMap, view, lists, dispatch, isRecenter);
   };
   handleMouseOver = (index) => {
-    const { mainMap } = this.props;
+    const { mainMap } = mapConstants;
     this.setState({
       [index]: true,
     });
     changeIcon(mainMap, '地图搜索结果', index, 'resultId', 'locateHover');
   };
   handleMouseLeave= (index) => {
-    const { mainMap } = this.props;
+    const { mainMap } = mapConstants;
     this.setState({
       [index]: false,
     });
     changeIcon(mainMap, '地图搜索结果', index, 'resultId', 'locate');
   };
   handleClick = (item) => {
-    const { mainMap, dispatch, mapView } = this.props;
+    const { view, mainMap } = mapConstants;
+    const { dispatch } = this.props;
     // 根据ObjCode 作为giscode 请求资源数据
     const GISCode = item.feature.attributes.ObjCode || item.feature.attributes['唯一编码'];
     dispatch({
@@ -92,7 +88,7 @@ class SearchResult extends PureComponent {
       payload: false,
     });
     // 居中并弹窗
-    mapView.goTo({ center: item.feature.geometry }).then(() => {
+    view.goTo({ center: item.feature.geometry }).then(() => {
       const screenPoint = mainMap.toScreen(item.feature.geometry);
       dispatch({
         type: 'map/showInfoWindow',
@@ -100,6 +96,18 @@ class SearchResult extends PureComponent {
       });
     });
   };
+  getSecContent = (feature) => {
+    let content = '设备编号:  /';
+    const { attributes } = feature;
+    const parms = ['设备位置', '设备编号'];
+    for (const item of parms) {
+      if (attributes[item]) {
+        content = `${item}:  ${attributes[item]}`;
+        break;
+      }
+    }
+    return content;
+  }
 
   render() {
     const { searchDeviceArray } = this.props;
@@ -120,7 +128,7 @@ class SearchResult extends PureComponent {
               </div>
               <div>
                 <div className={styles.resultName}>{item.feature.attributes['设备名称'] === '空' ? item.feature.attributes['设备类型'] : item.feature.attributes['设备名称']}</div>
-                <div>{`资源编码:  ${item.feature.attributes['设备编号']}`}</div>
+                <div>{this.getSecContent(item.feature)}</div>
               </div>
             </div>
           );

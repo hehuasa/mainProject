@@ -31,17 +31,6 @@ import legend08 from '../assets/map/lengend/推车式.png';
 import { constantlyModal, infoPopsModal } from '../services/constantlyModal';
 
 // 地图图标
-const legendIcon = [
-  { icon: legend, name: 'legend' },
-  { icon: legend01, name: '感温探测器' },
-  { icon: legend02, name: '感烟探测器' },
-  { icon: legend03, name: '红外对射' },
-  { icon: legend04, name: '火焰探测器' },
-  { icon: legend05, name: '可燃气体探测设备' },
-  { icon: legend06, name: '手动报警按钮' },
-  { icon: legend07, name: '手提式' },
-  { icon: legend08, name: '推车式' },
-];
 const getLayerIds = () => {
   const array = [];
   for (const layer of mapLayers.FeatureLayers) {
@@ -86,12 +75,14 @@ export const searchByAttrBySorting = async ({ searchText, layerIds = getLayerIds
         findTaskResult.results.sort((a, b) => {
           if (a.feature && b.feature) {
             if (a.feature.attributes && b.feature.attributes) {
-              return Number(a.feature.attributes.ObjCode || a.feature.attributes['唯一编码']) - Number(b.feature.attributes.ObjCode || b.feature.attributes['唯一编码']) > 0 ? -1 : 1;
+              const nameA = a.feature.attributes['设备名称'] !== '空' ? a.feature.attributes['设备名称'] : a.feature.attributes['设备类型'];
+              const nameB = b.feature.attributes['设备名称'] !== '空' ? b.feature.attributes['设备名称'] : b.feature.attributes['设备类型'];
+              return nameA.localeCompare(nameB, 'zh');
             } else {
-              return 0;
+              return 1;
             }
           } else {
-            return 0;
+            return 1;
           }
         });
         resolve(findTaskResult.results);

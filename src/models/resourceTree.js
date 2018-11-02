@@ -247,6 +247,19 @@ export default {
         payload: '',
       });
     },
+    // 处理报警数据
+    *dealAlarmBoardData({ payload }, { put }) {
+      // for (const alarm of payload) {
+      //   if (alarm.receiveTime) {
+      //     alarm.continueTime = new formatDuring();
+      //   }
+      // }
+      // console.log('payload', payload);
+      yield put({
+        type: 'alarmBoardData',
+        payload,
+      });
+    },
   },
 
   reducers: {
@@ -498,10 +511,6 @@ export default {
       };
     },
     alarmBoardData(state, { payload }) {
-      if (payload.alarmTime) {
-        const continueTime = formatDuring(payload.alarmTime);
-        payload.continueTime = continueTime;
-      }
       return {
         ...state,
         alarmBoardData: payload,

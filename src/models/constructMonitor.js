@@ -2,10 +2,6 @@ import { constructMonitorList, getAreaByOrgID, orgList } from '../services/api';
 
 // 获取组织对应的区域
 const getAreas = (area, item) => {
-  console.log('area', area);
-  // for (const areaData of area.data) {
-  //   item.areas.push({ areaId: Number(areaData.gISCode), areaName: area.data[0].areaName });
-  // }
   if (area.data[0]) {
     item.areas.push({ areaId: Number(area.data[0].gISCode), areaName: area.data[0].areaName });
   }
