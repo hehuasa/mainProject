@@ -269,13 +269,23 @@ export const makeTree = (treeList, parent) => {
   return filters;
 };
 // 时间装换
-export const formatDuring = (alarmTime) => {
-  const mss = new Date().getTime() - alarmTime;
-  const days = parseInt(mss / (1000 * 60 * 60 * 24), 0);
-  const hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60), 0);
-  const minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60), 0);
-  const seconds = parseInt((mss % (1000 * 60)) / 1000, 0);
-  return `${days} 天 ${hours} 小时 ${minutes} 分钟 ${seconds} 秒 `;
+export const FormatDuring = () => {
+  return (alarmTime) => {
+    const mss = new Date().getTime() - Number(alarmTime);
+    const days = parseInt(mss / (1000 * 60 * 60 * 24), 0);
+    const hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60), 0);
+    const minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60), 0);
+    const seconds = parseInt((mss % (1000 * 60)) / 1000, 0);
+    return `${days} 天 ${hours} 小时 ${minutes} 分钟 ${seconds} 秒 `;
+  };
+};
+export const formatDuring = (nowTime, alarmTime) => {
+    const mss = nowTime - Number(alarmTime);
+    const days = parseInt(mss / (1000 * 60 * 60 * 24), 0);
+    const hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60), 0);
+    const minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60), 0);
+    const seconds = parseInt((mss % (1000 * 60)) / 1000, 0);
+    return `${days} 天 ${hours} 小时 ${minutes} 分钟 ${seconds} 秒 `;
 };
 // 报警状态
 export const alarmStatus = (status) => {

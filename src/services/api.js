@@ -742,7 +742,7 @@ export async function getAllDoorCount() {
 }
 // Vocslist
 export async function vocsList() {
-  return request(`${path}vocs/ldarSceneDetectInfo/selectLadrInfo`);
+  return request(`${path}/vocs/ldarSceneDetectInfo/selectLadrInfo`);
 }
 // 作业监控list
 export async function constructMonitorList() {
