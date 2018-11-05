@@ -71,8 +71,7 @@ export const searchByAttrBySorting = async ({ searchText, layerIds = getLayerIds
         'esri/tasks/support/FindParameters',
       ]).then(([FindTask, FindParameters]) => {
       // 搜索完成的回调
-      console.log('spaceQueryExtent', mapConstants.spaceQueryExtent);
-      const newExtent = mapConstants.spaceQueryExtent.xmax ? mapConstants.spaceQueryExtent : mapConstants.currentExtent.expand(1.2); // 由于地图旋转的原因，范围有误差。故放大一些
+      const newExtent = mapConstants.spaceQueryPolygon.type ? mapConstants.spaceQueryPolygon : mapConstants.currentExtent.expand(1.2); // 由于地图旋转的原因，范围有误差。故放大一些
       const ShowFindResult = (findTaskResult) => {
         const results = findTaskResult.results.filter(value => newExtent.contains(value.feature.geometry));
         results.sort((a, b) => {
@@ -186,7 +185,7 @@ export const space = ({ view, geometry, ids = getLayerIds(), searchFields = ['�
       'esri/tasks/support/IdentifyParameters',
     ]).then(([IdentifyTask, IdentifyParameters]) => {
       // 存储该空间查询的extent，用于地图搜索
-      mapConstants.spaceQueryExtent = geometry.extent.expand(0.857509464888563); // 地图旋转及坐标系转换造成的偏差
+      mapConstants.spaceQueryPolygon = geometry; // 地图旋转及坐标系转换造成的偏差
       // 通过此函数处理查询之后的信息
       const showQueryResult = ({ results }) => {
         if (results.length > 0) {
@@ -621,7 +620,7 @@ export const spaceQuery = async ({ map, view, searchText, ids, dispatch, point, 
           })[0];
           if (close) {
             delLayer(map, ['空间查询', '地图搜索结果'], dispatch);
-            mapConstants.spaceQueryExtent = {};
+            mapConstants.spaceQueryPolygon = {};
             dispatch({
               type: 'map/queryToolsBtnIndex',
               payload: -1,
@@ -722,6 +721,8 @@ export const spaceQuery = async ({ map, view, searchText, ids, dispatch, point, 
       measureLayer.graphics.add(close);
       measureLayer.graphics.add(lengthGraph);
       if (type === 'add') {
+        debugger;
+        console.log('circle', circle);
         view.goTo({ extent: circle.extent.expand(1.6) });
         dispatch({
           type: 'resourceTree/saveCtrlResourceType',

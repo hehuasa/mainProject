@@ -218,7 +218,7 @@ class SearchBox extends PureComponent {
     //   type: 'map/saveSearchText',
     //   payload: '',
     // });
-    mapConstants.spaceQueryExtent = {};
+    mapConstants.spaceQueryPolygon = {};
     dispatch({
       type: 'map/getDeviceArray',
       payload: null,
