@@ -67,6 +67,7 @@ export default class HandAlarmDeal extends PureComponent {
       selectedRows: [], // 报警人选择的数据
       alarmPersonVisible: false, // 报警人弹框显示
       searchPerson: null, // 查询输入值
+      orgID: null, // 事发部门
       personRowSelection: {
         type: 'radio',
         onChange: (selectedRowKeys, selectedRows) => {
@@ -95,6 +96,10 @@ export default class HandAlarmDeal extends PureComponent {
       type: 'alarmDeal/getApparatus',
     });
   }
+  // 获取子组件的方法
+  onRef = (child) => {
+    this.child = child;
+  };
 // 选择查询
   onSearchUser = (value) => {
     this.props.dispatch({
@@ -166,6 +171,7 @@ export default class HandAlarmDeal extends PureComponent {
   };
   onShowModal = (value, id) => {
     let isUse = false;
+    const orgID = this.props.form.getFieldsValue(['alarmOrgID']).alarmOrgID || null;
     switch (id) {
       case 1:
         title = '监测器具';
@@ -177,6 +183,7 @@ export default class HandAlarmDeal extends PureComponent {
             resourceName: value,
             isQuery: true,
             fuzzy: true,
+            orgID,
             pageNum: 1,
             pageSize: 10,
           },
@@ -185,7 +192,9 @@ export default class HandAlarmDeal extends PureComponent {
             isUsePage: isUse,
             visible: true,
             clickWhether: id,
+            orgID,
           });
+          this.child.setOrgID(orgID);
         });
         break;
       case 2:
@@ -203,6 +212,7 @@ export default class HandAlarmDeal extends PureComponent {
             isUsePage: isUse,
             visible: true,
             clickWhether: id,
+            orgID: null,
           });
         });
         break;
@@ -226,6 +236,7 @@ export default class HandAlarmDeal extends PureComponent {
           this.setState({
             isUsePage: isUse,
             visible: true,
+            orgID: null,
             clickWhether: id,
           });
         });
@@ -245,6 +256,7 @@ export default class HandAlarmDeal extends PureComponent {
       form.setFieldsValue({
         resourceID: selectedValue.resourceID,
         resourceID1: selectedValue.resourceName,
+        alarmOrgID: selectedValue.organization.orgID || null,
       });
       // 事发设备请求的数据
       this.props.dispatch({
@@ -648,6 +660,7 @@ export default class HandAlarmDeal extends PureComponent {
           onHandleCancel={this.onHandleCancel}
           title={title}
           searchValue={searchValue}
+          onRef={this.onRef}
           whether={whether}
           useChangePage={this.useChangePage}
         />

@@ -1053,7 +1053,8 @@ export async function queryEventInfoReport(params) {
 }
 // 搜索事件特征
 export async function searchEventFeatures(params) {
-  return request(`${path}/emgc/planFeatureInfo/page`, {
+  // return request(`${path}/emgc/planFeatureInfo/page`, {
+  return request(`${path}/emgc/planFeatureInfo/selectByOrgID`, {
     method: 'POST',
     body: params,
   });
@@ -2302,6 +2303,13 @@ export async function getTakeCargoList(params) {
 // 判断物料编码是否重复
 export async function judgeMaterialCode(params) {
   return request(`${path}/system/rawMaterialInfo/judgeCode`, {
+    method: 'POST',
+    body: params,
+  });
+}
+// 账户配置角色 param: Integer orgID,String userName
+export async function accountRolePage(params) {
+  return request(`${path}/system/accountInfo/getAccounts`, {
     method: 'POST',
     body: params,
   });

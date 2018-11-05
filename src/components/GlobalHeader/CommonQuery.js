@@ -89,6 +89,7 @@ const { Option } = Select;
 @Form.create()
 export default class CommonQuery extends PureComponent {
   componentDidMount() {
+    if (this.props.onRef) { this.props.onRef(this); }
     // 获取专业系统列表
     this.props.dispatch({
       type: 'alarmDeal/professionList',
@@ -97,6 +98,9 @@ export default class CommonQuery extends PureComponent {
     this.props.dispatch({
       type: 'alarmDeal/getAreaList',
       payload: { areaType: 111.101 },
+    });
+    this.props.form.setFieldsValue({
+      orgID: this.props.orgID,
     });
   }
   onhandleTableChange = (pagination, filtersArg, sorter) => {
@@ -165,6 +169,9 @@ export default class CommonQuery extends PureComponent {
       });
     });
   };
+  setOrgID = (orgID) => {
+    this.props.form.setFieldsValue({ orgID });
+  };
 
   render() {
     const { form } = this.props;
@@ -181,7 +188,6 @@ export default class CommonQuery extends PureComponent {
     if (!alarmDeal.pagination.current && !alarmDeal.pagination.pageSize && !alarmDeal.pagination.total) {
       newPagination = {};
     } else {
-      console.log(777, alarmDeal.pagination);
       newPagination = alarmDeal.pagination;
     }
     const renderTreeNodes = (data) => {
@@ -195,7 +201,7 @@ export default class CommonQuery extends PureComponent {
         }
         return <TreeNode title={item.orgnizationName} key={item.orgID} value={`${item.orgID}`} />;
       });
-    }
+    };
     return (
       <div>
         <Modal

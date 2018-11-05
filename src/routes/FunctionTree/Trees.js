@@ -483,7 +483,7 @@ export default class Trees extends PureComponent {
           eventStatu: 2,
         },
       });
-    } else if (title === '应急预警') {
+    } else if (title === '演练预警') {
       dispatch({
         type: 'emergency/undoneDrillList',
         payload: {

@@ -1,4 +1,7 @@
-import { accountPage, addAccountInfo, getAccountInfo, deleteAccountInfo, exportAccountInfo, resetPwd, updateAccountInfo } from '../services/api';
+import {
+  accountPage, addAccountInfo, getAccountInfo, deleteAccountInfo, exportAccountInfo, resetPwd, updateAccountInfo,
+  accountRolePage
+} from '../services/api';
 import { commonData } from '../../mock/commonData';
 import { checkCode } from '../utils/utils';
 
@@ -6,6 +9,10 @@ export default {
   namespace: 'accountInfo',
   state: {
     data: {
+      data: [],
+      pagination: {},
+    },
+    accountRolePage: {
       data: [],
       pagination: {},
     },
@@ -18,6 +25,13 @@ export default {
       const response = yield call(accountPage, payload.payload);
       yield put({
         type: 'save',
+        payload: response,
+      });
+    },
+    *accountRolePage(payload, { call, put }) {
+      const response = yield call(accountRolePage, payload.payload);
+      yield put({
+        type: 'saveAccountRole',
         payload: response,
       });
     },
@@ -71,6 +85,19 @@ export default {
       return {
         ...state,
         data: {
+          data: action.payload.data.result,
+          pagination: {
+            current: action.payload.data.pageNum,
+            pageSize: action.payload.data.pageSize,
+            total: action.payload.data.sumCount,
+          },
+        },
+      };
+    },
+    saveAccountRole(state, action) {
+      return {
+        ...state,
+        accountRolePage: {
           data: action.payload.data.result,
           pagination: {
             current: action.payload.data.pageNum,

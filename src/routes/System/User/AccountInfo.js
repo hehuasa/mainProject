@@ -13,7 +13,7 @@ import {
   Dropdown,
   Menu,
   InputNumber,
-  DatePicker,
+  TreeSelect,
   Modal,
   message,
   Divider,
@@ -26,6 +26,7 @@ import { commonData } from '../../../../mock/commonData';
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const { TreeNode } = TreeSelect;
 const { TextArea } = Input;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
@@ -139,12 +140,11 @@ const CreateForm = Form.create()((props) => {
   );
 });
 
-@connect(({ rule, loading, accountInfo, typeCode, userList }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ loading, accountInfo, typeCode, organization }) => ({
+  loading: loading.effects['system/accountInfo/getAccounts'],
   accountInfo,
+  orgTree: organization.orgTree,
   typeCode,
-  userList,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -165,13 +165,17 @@ export default class TableList extends PureComponent {
       type: 'typeCode/accountType',
       payload: '100',
     });
+    // 请求部门树
+    dispatch({
+      type: 'organization/getOrgTree',
+    });
     this.page(commonData.pageInitial);
   }
   // 获取分页数据
   page=(page) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'accountInfo/page',
+      type: 'accountInfo/accountRolePage',
       payload: page,
     });
   };
@@ -186,19 +190,12 @@ export default class TableList extends PureComponent {
     // 操作列
     tableTitles.push({
       title: '操作',
+      width: '20%',
       render: (text, record) => {
         // 获取该行的id，可以获取的到，传到函数里的时候打印直接把整个表格所有行id全部打印了
         return (
           <Fragment>
-            <span>
-              <Popconfirm title="确定删除？" onConfirm={() => this.delete(record)}>
-                <a href="#">删除</a>
-              </Popconfirm>
-              <Divider type="vertical" />
-            </span>
-            <a href="javascript: void(0)" onClick={() => this.update(record)}>修改</a>
-            <Divider type="vertical" />
-            <a href="javascript: void(0)" onClick={() => this.reset(record)}>重置密码</a>
+            <a href="javascript: void(0)" onClick={() => this.configRole(record)}>配置角色</a>
           </Fragment>
         );
       },
@@ -392,32 +389,56 @@ export default class TableList extends PureComponent {
       payload: '100',
     });
   };
-
+  // 递归渲染
+  renderTreeNodes = (data) => {
+    return data.map((item) => {
+      if (item.children) {
+        return (
+          <TreeNode title={item.orgnizationName} key={item.orgID} value={`${item.orgID}`} >
+            {this.renderTreeNodes(item.children)}
+          </TreeNode>
+        );
+      }
+      return <TreeNode title={item.orgnizationName} key={item.orgID} value={`${item.orgID}`} />;
+    });
+  };
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="登录账号">
+          <Col md={6} sm={24}>
+            <FormItem label="部门">
+              {getFieldDecorator('orgID')(
+                <TreeSelect
+                  showSearch
+                  style={{ width: '100%' }}
+                  dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                  placeholder="请选择事发部门"
+                  treeNodeFilterProp="title"
+                  allowClear
+                  treeDefaultExpandAll
+                >
+                  {this.renderTreeNodes(this.props.orgTree)}
+                </TreeSelect>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={6} sm={24}>
+            <FormItem label="姓名">
+              {getFieldDecorator('userName')(
+                <Input placeholder="请输入" />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={6} sm={24}>
+            <FormItem label="账号">
               {getFieldDecorator('loginAccount')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="账户类型">
-              {getFieldDecorator('userType')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="">请选择</Option>
-                  {this.props.typeCode.accountTypeList.map(type =>
-                    <Option key={type.codeID} value={type.code}>{type.codeName}</Option>
-                  )}
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
+          <Col md={6} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">查询</Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
@@ -432,8 +453,7 @@ export default class TableList extends PureComponent {
     return this.renderSimpleForm();
   }
   render() {
-    const { loading, accountInfo: { data }, accountInfo: { account } } = this.props;
-    const { list } = this.props.userList;
+    const { loading, accountInfo: { accountRolePage }, accountInfo: { account } } = this.props;
     const { accountTypeList } = this.props.typeCode;
     const { selectedRows, modalVisible } = this.state;
     const columns = this.initData();
@@ -441,7 +461,6 @@ export default class TableList extends PureComponent {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
     };
-
     return (
       <PageHeaderLayout title="账户列表">
         <Card bordered={false}>
@@ -449,25 +468,10 @@ export default class TableList extends PureComponent {
             <div className={styles.tableListForm}>
               {this.renderForm()}
             </div>
-            <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新增
-              </Button>
-              <Button icon="export" type="primary" onClick={() => this.export()}>
-                导出
-              </Button>
-              {
-                selectedRows.length > 0 && (
-                  <Popconfirm title="确定删除？" onConfirm={() => this.deleteAll()}>
-                    <Button>批量删除</Button>
-                  </Popconfirm>
-                )
-              }
-            </div>
             <StandardTable
               selectedRows={selectedRows}
               loading={loading}
-              data={data}
+              data={accountRolePage}
               columns={columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
@@ -478,9 +482,9 @@ export default class TableList extends PureComponent {
         <CreateForm
           {...parentMethods}
           modalVisible={modalVisible}
-          list={list}
           accountTypeList={accountTypeList}
           account={account}
+          list={[]}
           isAdd={this.state.isAdd}
         />
       </PageHeaderLayout>

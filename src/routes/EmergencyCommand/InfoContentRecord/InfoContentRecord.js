@@ -63,7 +63,6 @@ export default class InfoContentRecord extends PureComponent {
   };
   onRef = (ref) => {
     this.child = ref;
-    console.log(777, ref);
   };
 
   render() {

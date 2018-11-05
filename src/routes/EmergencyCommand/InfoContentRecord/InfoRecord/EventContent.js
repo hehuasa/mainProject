@@ -32,6 +32,7 @@ const columns = [{
 
 @connect(({ emergency, user }) => ({
   emergency,
+  eventID: emergency.eventId,
   userId: user.currentUser.baseUserInfo.userID,
 }))
 @Form.create()
@@ -59,6 +60,7 @@ export default class EventContent extends PureComponent {
       payload: {
         pageNum: 1,
         pageSize: 5,
+        eventID: this.props.eventID,
       },
     });
   }
@@ -94,6 +96,7 @@ export default class EventContent extends PureComponent {
     const params = {
       pageNum: pagination.current,
       pageSize: pagination.pageSize,
+      eventID: this.props.eventID,
       isQuery: true,
       fuzzy: true,
       featureValue: this.state.featureValue,
@@ -109,6 +112,7 @@ export default class EventContent extends PureComponent {
       type: 'emergency/searchEventFeatures',
       payload: {
         ...pageInitial,
+        eventID: this.props.eventID,
         featureName: val,
       },
     });
@@ -120,6 +124,7 @@ export default class EventContent extends PureComponent {
       payload: {
         pageNum: 1,
         pageSize: 10,
+        eventID: this.props.eventID,
       },
     });
   };

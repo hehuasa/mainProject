@@ -167,23 +167,35 @@ export const commonData = {
     account: {
       attributes: [
         {
-          title: 'AccountID',
-          dataIndex: 'accountID',
-          isExport: true,
-          isTableItem: false,
-          width: '10%',
-          key: 'accountID',
+          title: '部门',
+          dataIndex: 'baseUserInfo',
+          isExport: false,
+          isTableItem: true,
+          width: '20%',
+          key: 'baseUserInfo',
+          render: (text) => {
+            return text ? text.orgnizationName : '';
+          },
         },
-        { title: 'UserID', dataIndex: 'userID', isExport: true, isTableItem: false, key: 'userID' },
         {
-          title: '登录账号',
+          title: '姓名',
+          dataIndex: 'baseUserInfo',
+          isExport: false,
+          isTableItem: true,
+          width: '10%',
+          key: 'baseUserInfo',
+          render: (text, record) => {
+            return record.baseUserInfo ? record.baseUserInfo.userName : '';
+          },
+        },
+        {
+          title: '账号',
           dataIndex: 'loginAccount',
           isExport: true,
           isTableItem: true,
-          width: '20%',
+          width: '15%',
           key: 'loginAccount',
         },
-        { title: '登录密码', dataIndex: 'loginPwd', isExport: true, isTableItem: false, key: 'loginPwd' },
         {
           title: '账户类型',
           dataIndex: 'accountTypeName',
@@ -197,7 +209,7 @@ export const commonData = {
           dataIndex: 'remark',
           isExport: true,
           isTableItem: true,
-          width: '55%',
+          width: '15%',
           key: 'remark',
         },
       ],

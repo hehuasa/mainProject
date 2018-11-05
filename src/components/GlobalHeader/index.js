@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Icon, Spin, Tag, Divider, Switch, Popover, Select, Button, Badge, Modal, Form, Tooltip } from 'antd';
+import { Icon, Spin, Tag, Divider, Switch, Popover, Select, Popconfirm,
+  Button, Badge, Modal, Form, Tooltip } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import Debounce from 'lodash-decorators/debounce';
@@ -7,7 +8,7 @@ import { Link } from 'dva/router';
 import styles from './index.less';
 import Weather from './Weather';
 import HandAlarmDeal from './HandAlarmDeal';
-import {changeVideoPosition, changeVideoSize, getBrowserStyle, resetAccessStyle} from '../../utils/utils';
+import { changeVideoPosition, changeVideoSize, getBrowserStyle, resetAccessStyle } from '../../utils/utils';
 
 import alarmIcon from '../../assets/header/alarm.png';
 import majorIcon from '../../assets/header/major.png';
@@ -590,6 +591,17 @@ export default class GlobalHeader extends PureComponent {
         </div>
       ) : ''
     );
+    const footer = (
+      <div>
+        <Button onClick={this.onCancelAlarm}>取消</Button>
+        <Popconfirm
+          title="确定取消修改?"
+          onConfirm={this.onHandAlarm}
+        >
+          <Button type="primary">确认</Button>
+        </Popconfirm>
+      </div>
+    );
     const majorLength = majorList.list ? majorList.list.data.filter(item => item.statu === 1).length : 0;
     return (
       <div className={styles.header}>
@@ -640,6 +652,7 @@ export default class GlobalHeader extends PureComponent {
             visible={this.state.showAlarm}
             onOk={this.onHandAlarm}
             onCancel={this.onCancelAlarm}
+            footer={footer}
             mask={false}
             width="80%"
           >

@@ -12,6 +12,7 @@ const FormItem = Form.Item;
 
 @connect(({ emergency, user }) => ({
   emergency,
+  eventID: emergency.evenId,
   userID: user.currentUser.baseUserInfo.userID,
 }))
 @Form.create()
@@ -94,6 +95,7 @@ export default class InfoContent extends PureComponent {
     const values = {
       ...commonData.pageInitial,
       fuzzy: true,
+      eventID: this.props.eventID,
       featureValue: val,
     };
     // 防止将空作为查询条件
@@ -117,6 +119,7 @@ export default class InfoContent extends PureComponent {
       pageSize: pagination.pageSize,
       isQuery: true,
       fuzzy: true,
+      eventID: this.props.eventID,
       featureValue: this.state.featureValue,
     };
     this.props.dispatch({

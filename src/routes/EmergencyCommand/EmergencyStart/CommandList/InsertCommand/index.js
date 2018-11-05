@@ -351,7 +351,7 @@ export default class InsertCommand extends PureComponent {
                             <TreeNode
                               value={item.postionName}
                               title={item.postionName}
-                              key={item.postionID}
+                              key={item.orgPostionID}
                             />
                             ))
                             }

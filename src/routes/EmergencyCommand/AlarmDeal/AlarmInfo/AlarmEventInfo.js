@@ -98,8 +98,13 @@ export default class AlarmEventInfo extends PureComponent {
     // 每次打开清空上次选择
     selectedData = null;
   }
+  // 获取子组件的props
+  onRef = (child) => {
+    this.child = child;
+  };
   onShowModal = (value, id) => {
     const { alarmInfo } = this.props.alarmDeal;
+    const { orgID } = this.props.form.getFieldsValue(['orgID']);
     switch (id) {
       case 1:
         // if (err) return;
@@ -120,6 +125,7 @@ export default class AlarmEventInfo extends PureComponent {
               visible: true,
               clickWhether: id,
             });
+            this.child.setOrgID(orgID);
           });
         } else {
           this.setState({
@@ -314,7 +320,7 @@ export default class AlarmEventInfo extends PureComponent {
       }
       return <TreeNode title={item.orgnizationName} key={item.orgID} value={`${item.orgID}`} />;
     });
-  }
+  };
 
   render() {
     const { form, alarmInfoConten, isEvent, emergency } = this.props;
@@ -625,6 +631,7 @@ export default class AlarmEventInfo extends PureComponent {
           orgTree={this.props.orgTree}
           onHandleOk={this.onHandleOk}
           onHandleCancel={this.onHandleCancel}
+          onRef={this.onRef}
           title={title}
           searchValue={searchValue}
           whether={whether}

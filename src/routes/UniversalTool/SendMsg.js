@@ -76,7 +76,6 @@ export default class TableList extends PureComponent {
   remove = (record) => {
     const { userList, mobileList, selectedRowKeys } = this.state;
     // 手动添加的人员
-    console.log(555, record);
     if (record.uuid) {
       this.setState({
         mobileList: mobileList.filter(item => item.uuid !== record.uuid),
