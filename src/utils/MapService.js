@@ -71,8 +71,11 @@ export const searchByAttrBySorting = async ({ searchText, layerIds = getLayerIds
         'esri/tasks/support/FindParameters',
       ]).then(([FindTask, FindParameters]) => {
       // 搜索完成的回调
+      console.log('spaceQueryExtent', mapConstants.spaceQueryExtent);
+      const newExtent = mapConstants.spaceQueryExtent.xmax ? mapConstants.spaceQueryExtent : mapConstants.currentExtent.expand(1.2); // 由于地图旋转的原因，范围有误差。故放大一些
       const ShowFindResult = (findTaskResult) => {
-        findTaskResult.results.sort((a, b) => {
+        const results = findTaskResult.results.filter(value => newExtent.contains(value.feature.geometry));
+        results.sort((a, b) => {
           if (a.feature && b.feature) {
             if (a.feature.attributes && b.feature.attributes) {
               const nameA = a.feature.attributes['设备名称'] !== '空' ? a.feature.attributes['设备名称'] : a.feature.attributes['设备类型'];
@@ -85,7 +88,7 @@ export const searchByAttrBySorting = async ({ searchText, layerIds = getLayerIds
             return 1;
           }
         });
-        resolve(findTaskResult.results);
+        resolve(results);
       };
       // 创建属性查询对象
       const findTask = new FindTask(mapLayers.baseLayer.layerAddress);
@@ -176,12 +179,14 @@ export const searchByAttrNoLoadModules = async ({ searchText, layerIds = getLaye
   );
 };
 // 空间查询
-export const space = ({ view, geometry, ids = getLayerIds(), searchFields = ['设备名称', '设备编号'], searchText }) => {
+export const space = ({ view, geometry, ids = getLayerIds(), searchFields = ['设备名称', '设备位置', '所在单元', '分部名称', '主项名称', '装置名称'], searchText }) => {
   return new Promise((resolve) => {
     esriLoader.loadModules([
       'esri/tasks/IdentifyTask',
       'esri/tasks/support/IdentifyParameters',
     ]).then(([IdentifyTask, IdentifyParameters]) => {
+      // 存储该空间查询的extent，用于地图搜索
+      mapConstants.spaceQueryExtent = geometry.extent.expand(0.857509464888563); // 地图旋转及坐标系转换造成的偏差
       // 通过此函数处理查询之后的信息
       const showQueryResult = ({ results }) => {
         if (results.length > 0) {
@@ -469,20 +474,6 @@ export const spaceQuery = async ({ map, view, searchText, ids, dispatch, point, 
         angle,
       };
     };
-    // const closeMeasure = view.on('click', (e) => {
-    //   view.hitTest(e).then(({ results }) => {
-    //     if (results[0]) {
-    //       if (results[0].graphic) {
-    //         if (results[0].graphic.attributes) {
-    //           if (results[0].graphic.attributes.close) {
-    //
-    //           }
-    //         }
-    //       }
-    //     }
-    //   });
-    //   e.stopPropagation();
-    // });
     const copy = (data) => {
       return JSON.parse(JSON.stringify(data));
     };
@@ -630,6 +621,7 @@ export const spaceQuery = async ({ map, view, searchText, ids, dispatch, point, 
           })[0];
           if (close) {
             delLayer(map, ['空间查询', '地图搜索结果'], dispatch);
+            mapConstants.spaceQueryExtent = {};
             dispatch({
               type: 'map/queryToolsBtnIndex',
               payload: -1,
@@ -823,7 +815,7 @@ export const select = async ({ map, view, dispatch }) => {
             xoffset: '-20px',
             yoffset: '-20px',
             angle,
-            font: { // autocast as Font
+            font: {
               size: 12,
               family: 'sans-serif',
             },
@@ -2787,9 +2779,9 @@ export const addSearchIcon = async (map, view, devices, dispatch, isRecenter) =>
         });
       });
     }
-    if (!isRecenter) {
-      multipointExtent(map, view, devices);
-    }
+    // if (!isRecenter) {
+    //   multipointExtent(map, view, devices);
+    // }
   });
 };
 // 视频搜索定位

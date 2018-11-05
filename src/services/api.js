@@ -1010,7 +1010,13 @@ export async function getPlanResource(params) {
     body: params,
   });
 }
-
+// 应急资源列表
+export async function getEmgcResource(params) {
+  return request(`${path}/resource/resToolMaterialInfo/page`, {
+    method: 'POST',
+    body: params,
+  });
+}
 // 新增事件内容
 export async function eventFeatures(params) {
   return request(`${path}/emgc/emgcEventEmgcReportFeature/add`, {

@@ -5,6 +5,7 @@ export const mapConstants = {
   center: [114.53302201076804, 30.642714242082587],
   extent: {},
   currentExtent: {},
+  spaceQueryExtent: {},
   baseLayer: {},
   domWarp: {},
   accessBordPoints: {

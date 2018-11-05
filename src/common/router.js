@@ -291,6 +291,10 @@ export const getRouterData = (app) => {
     '/emgcManage/emgcReport': {
       component: dynamicWrapper(app, [], () => import('../routes/PlanManagement/EmgcReport/index')), // 应急报告下载
     },
+    // 应急资源管理 emgcResourceManage
+    '/emgcManage/emgcResourceManage': {
+      component: dynamicWrapper(app, ['emgcResource'], () => import('../routes/EmergencyResource/EmergencyResource')), // 应急方案管理
+    },
     '/knowledgeBase/materialMaintain': {
       component: dynamicWrapper(app, [], () => import('../routes/KnowledgeBase/MaterialMaintain/index')), // 物料维护
     },

@@ -135,10 +135,14 @@ class SearchBox extends PureComponent {
       type: 'map/searchDeviceByAttrSorting',
       payload: { searchText: value, layerIds: layers[layers.searchType], searchFields: ['设备名称', '设备位置', '所在单元', '分部名称', '主项名称', '装置名称'] },
     }).then(() => {
-        dispatch({
-          type: 'resourceTree/saveCtrlResourceType',
-          payload: 'searchResult',
-        });
+      if (this.props.searchDeviceArray.length === 0) {
+        const { mainMap } = mapConstants;
+        mainMap.remove(mainMap.findLayerById('地图搜索结果'));
+      }
+      dispatch({
+        type: 'resourceTree/saveCtrlResourceType',
+        payload: 'searchResult',
+      });
     });
   };
   handleSearchOption = (e) => {
@@ -214,6 +218,7 @@ class SearchBox extends PureComponent {
     //   type: 'map/saveSearchText',
     //   payload: '',
     // });
+    mapConstants.spaceQueryExtent = {};
     dispatch({
       type: 'map/getDeviceArray',
       payload: null,
