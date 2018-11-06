@@ -4,7 +4,6 @@ import { connect } from 'dva';
 import ArcgisMap from '../ArcgisMap/ArcgisMap';
 import TriggerRight from '../HomePage/Collapsed/TriggerRight';
 import Sidebar from '../HomePage/SideBar/Sidebar';
-import MonitorVideo from '../HomePage/Video/video';
 import styles from '../HomePage/SideBar/sideBar.less';
 
 

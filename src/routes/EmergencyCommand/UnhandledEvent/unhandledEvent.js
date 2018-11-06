@@ -8,12 +8,13 @@ import { commonData } from '../../../../mock/commonData';
 import styles from './unhandledEvent.less';
 import { getBordStyle } from '../../../utils/MapService';
 import { mapConstants } from '../../../services/mapConstant';
+import {changeVideoPosition, changeVideoSize, resetAccessStyle} from "../../../utils/utils";
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { TreeNode } = TreeSelect;
 
-@connect(({ panelBoard, emergency, user, homepage, video, global }) => ({
+@connect(({ panelBoard, emergency, user, homepage, video, global, accessControl }) => ({
   panelBoard,
   undoneEventList: emergency.undoneEventList,
   currentUser: user.currentUser,
@@ -21,6 +22,7 @@ const { TreeNode } = TreeSelect;
   rightCollapsed: global.rightCollapsed,
   videoPosition: video.position,
   videoShow: video.show,
+  accessControlShow: accessControl.show,
 }))
 
 @Form.create()
@@ -30,62 +32,28 @@ export default class Analysis extends PureComponent {
   componentDidMount() {
   }
   //  处理事件
-  onRowClick = (record) => {
-    const { dispatch, videoFooterHeight, videoPosition, rightCollapsed } = this.props;
+   onRowClick = (record) => {
+    const { dispatch, videoFooterHeight, videoPosition, rightCollapsed, accessControlShow } = this.props;
+    const { view, accessInfoExtent } = mapConstants;
     this.props.dispatch({
       type: 'tabs/del',
       payload: { key: '/command/emergencyEvent', title: '应急事件' },
     });
     setTimeout(() => this.confirm(record, 1, 'command/emergencyEvent', record.eventName), 0);
-    // 折叠
-    dispatch({
-      type: 'global/changeRightCollapsed',
-      payload: false,
-    }).then(() => {
-      const { view, extent } = mapConstants;
-      if (view.height) {
-        view.goTo({ extent }).then(() => {
-          getBordStyle(view).then((style) => {
-            dispatch({
-              type: 'accessControl/queryStyle',
-              payload: style,
-            });
-          });
-        });
-      }
-    });
-    // 视频区域坐标
-    let x;
-    // if (videoShow) {
-    if (!rightCollapsed) {
-      x = videoPosition.x + 230;
-      dispatch({
-        type: 'video/reposition',
-        payload: {
-          CmdCode: '10002',
-          Point: {
-            x,
-            y: videoPosition.y,
-          },
-        },
-      });
-    }
-    if (videoFooterHeight.current !== 0) {
-      dispatch({
-        type: 'video/switch',
-        payload: {
-          CmdCode: 'Hide',
-        },
-      });
-      dispatch({
-        type: 'homepage/getVideoFooterHeight',
-        payload: { current: 0, cache: videoFooterHeight.current },
-      });
-      dispatch({
-        type: 'homepage/getMapHeight',
-        payload: { domType: 'map', changingType: 'evrVideo' },
-      });
-    }
+     changeVideoPosition('homePage', rightCollapsed, videoPosition, dispatch);
+     // 恢复看板
+     if (rightCollapsed) {
+       dispatch({
+         type: 'global/changeRightCollapsed',
+         payload: false,
+       }).then(() => {
+         changeVideoSize(videoFooterHeight, dispatch, 'show');
+         resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+       });
+     } else {
+       changeVideoSize(videoFooterHeight, dispatch, 'show');
+       resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+     }
   };
   // 更改事件状态
   confirm = (row, eventStatu, key, title) => {
