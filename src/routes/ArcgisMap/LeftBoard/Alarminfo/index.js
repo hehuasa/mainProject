@@ -35,6 +35,7 @@ const mapStateToProps = ({ map }) => {
   };
 };
 let nowTime;
+let updateTimeId;
 const getNowTime = () => { nowTime = new Date().getTime() };
 @connect(({ map, resourceTree, alarm, panelBoard, constantlyData, alarmDeal, homepage, video }) => ({
   mainMap: mapConstants.mainMap,
@@ -61,10 +62,10 @@ class AlarmInfo extends PureComponent {
     const { dispatch, list } = this.props;
     const { rowInfo, resourceInfo } = this.props.resourceTree;
     const { resourceID, ctrlResourceType } = resourceInfo;
-    // 筛选报警信息
-    const alarmList = list.filter(item => item.resourceCode === resourceInfo.resourceCode);
-    const alarmBoardData = alarmList.length > 0 ? alarmList : {};
-    setInterval(() => {
+    updateTimeId = setInterval(() => {
+      // 筛选报警信息
+      const alarmList = this.props.list.filter(item => item.resourceCode === this.props.resourceTree.resourceInfo.resourceCode);
+      const alarmBoardData = alarmList.length > 0 ? alarmList : {};
       getNowTime();
       dispatch({
         type: 'resourceTree/dealAlarmBoardData',
@@ -72,6 +73,8 @@ class AlarmInfo extends PureComponent {
       });
     }, 1000);
     getNowTime();
+    const alarmList = list.filter(item => item.resourceCode === resourceInfo.resourceCode);
+    const alarmBoardData = alarmList.length > 0 ? alarmList : {};
     dispatch({
       type: 'resourceTree/dealAlarmBoardData',
       payload: alarmBoardData,
@@ -165,6 +168,9 @@ class AlarmInfo extends PureComponent {
     // 清除实时数据轮循
     if (intervalID) {
       clearInterval(intervalID);
+    }
+    if (updateTimeId) {
+      clearInterval(updateTimeId);
     }
     //  清空 实时数据
     infoConstantly.data = {};
