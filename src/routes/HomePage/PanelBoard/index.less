@@ -1,83 +1,84 @@
 @import '../../../index';
 @import "../../../../node_modules/antd/lib/style/themes/default.less";
+
 .side-right {
-    position: relative;
-    margin-left: 8px;
-    z-index: 1;
-    border: 1px solid @split-color;
+  position: relative;
+  margin-left: 8px;
+  z-index: 1;
+  border: 1px solid @split-color;
 }
 
 .side-header {
-    height: 35px;
-    box-sizing: content-box;
-    line-height: 35px;
-    background: @tab-background;
-    padding-left: @padding-xs;
-    font-size: @font-size-base;
-    color: @text-color;
-    font-weight: bold;
-    cursor: pointer;
-    border-top: 1px solid @split-color;
+  height: 35px;
+  box-sizing: content-box;
+  line-height: 35px;
+  background: @tab-background;
+  padding-left: @padding-xs;
+  font-size: @font-size-base;
+  color: @text-color;
+  font-weight: bold;
+  cursor: pointer;
+  border-top: 1px solid @split-color;
 }
 
 .headerStyle {
-    margin: -12px 0 -12px -12px;
-    height: 35px;
-    background: @header-gradient-background;
-    & .icon {
-        padding-left: 8px;
+  margin: -12px 0 -12px -12px;
+  height: 35px;
+  background: @header-gradient-background;
+  & .icon {
+    padding-left: 8px;
+  }
+  & .zoom-in {
+    padding: 0 6px;
+    float: right;
+    line-height: 35px;
+    color: @text-color;
+    & img {
+      vertical-align: baseline;
+      //width: 14px;
+      //height: 14px;
     }
-    & .zoom-in {
-        padding: 0 6px;
-        float: right;
-        line-height: 35px;
-        color: @text-color;
-        & img {
-            vertical-align: baseline;
-            //width: 14px;
-            //height: 14px;
-        }
-    }
-    & svg {
-        display: inline !important;
-    }
-    & span {
-        padding-left: 8px;
-        line-height: 35px;
-    }
+  }
+  & svg {
+    display: inline !important;
+  }
+  & span {
+    padding-left: 8px;
+    line-height: 35px;
+  }
 }
 
 .panel-zoom-in {
-    position: fixed;
-    top: 123px;
-    left: 50%;
-    z-index: 201;
-    .leftDrag {
-        width: 2px;
-        z-index: 105;
-        position: absolute;
-        left: 0;
-        top: 39px;
-        background: transparent;
-        cursor: e-resize;
-    }
-    .downDrag {
-        height: 2px;
-        z-index: 105;
-        position: absolute;
-        bottom: -39px;
-        background: transparent;
-        cursor: n-resize;
-    }
-    .rightDrag {
-        width: 2px;
-        z-index: 105;
-        position: absolute;
-        right: 0;
-        top: 39px;
-        background: transparent;
-        cursor: e-resize;
-    }
+  position: fixed;
+  top: 123px;
+  left: 50%;
+  z-index: 201;
+  .leftDrag {
+    width: 2px;
+    z-index: 105;
+    position: absolute;
+    left: 0;
+    top: 39px;
+    background: transparent;
+    cursor: e-resize;
+  }
+  .downDrag {
+    height: 2px;
+    z-index: 105;
+    position: absolute;
+    bottom: -39px;
+    background: transparent;
+    cursor: n-resize;
+  }
+  .rightDrag {
+    width: 2px;
+    z-index: 105;
+    position: absolute;
+    right: 0;
+    top: 39px;
+    background: transparent;
+    cursor: e-resize;
+  }
 }
 
 /*
@@ -90,50 +91,50 @@
 */
 
 .panel-zoom-in-header {
-    padding: 0 16px;
-    height: 35px;
-    line-height: 35px;
-    background: @header-gradient-background;
+  padding: 0 16px;
+  height: 35px;
+  line-height: 35px;
+  background: @header-gradient-background;
 }
 
 .panel-zoom-in-content {
-    background-color: @backgrounds-panel-zoom;
-    height: 100%;
-    width: 100%;
-    padding: 6px 8px;
-    //color: @heading-color-dark  !important;
-    & th,
-    & tr,
-    & td {
-        text-align: center;
-        border-right: 1px solid #999 !important;
-        border-bottom: 1px solid #999 !important;
-        //color: @heading-color-dark  !important; // background: #fff !important;
-        //background-color: @backgrounds-panel-zoom  !important; // opacity: .6 !important;
+  background-color: @backgrounds-panel-zoom;
+  height: 100%;
+  width: 100%;
+  padding: 6px 8px;
+  //color: @heading-color-dark  !important;
+  & th,
+  & tr,
+  & td {
+    text-align: center;
+    border-right: 1px solid #999 !important;
+    border-bottom: 1px solid #999 !important;
+    //color: @heading-color-dark  !important; // background: #fff !important;
+    //background-color: @backgrounds-panel-zoom  !important; // opacity: .6 !important;
+  }
+  & tr {
+    border-left-color: #999 !important;
+  }
+  & thead {
+    & th {
+      text-align: center;
     }
-    & tr {
-        border-left-color: #999 !important;
-    }
-    & thead {
-        & th {
-            text-align: center;
-        }
-    }
+  }
 }
 
 .panel-zoom-icon {
-    float: right;
-    line-height: 19px;
-    cursor: pointer;
-    padding: 10px 12px;
+  float: right;
+  line-height: 19px;
+  cursor: pointer;
+  padding: 10px 12px;
 }
 
 .data-heading {
-    padding-right: 16px;
-    float: right;
-    line-height: 35px;
-    color: @text-color;
-    & svg {
-        display: inline !important;
-    }
+  padding-right: 16px;
+  float: right;
+  line-height: 35px;
+  color: @text-color;
+  & svg {
+    display: inline !important;
+  }
 }

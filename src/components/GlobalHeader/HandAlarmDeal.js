@@ -91,16 +91,18 @@ export default class HandAlarmDeal extends PureComponent {
       isUsePage: false, // 分页是否发送请求
     };
   }
+
   componentDidMount() {
     this.props.dispatch({
       type: 'alarmDeal/getApparatus',
     });
   }
+
   // 获取子组件的方法
   onRef = (child) => {
     this.child = child;
   };
-// 选择查询
+  // 选择查询
   onSearchUser = (value) => {
     this.props.dispatch({
       type: 'emergency/searchPersonInfo',
@@ -361,7 +363,7 @@ export default class HandAlarmDeal extends PureComponent {
     return data.map((item) => {
       if (item.children) {
         return (
-          <TreeNode title={item.orgnizationName} key={`${item.orgID}`} value={`${item.orgID}`} >
+          <TreeNode title={item.orgnizationName} key={`${item.orgID}`} value={`${item.orgID}`}>
             {this.renderTreeNodes(item.children)}
           </TreeNode>
         );
@@ -373,8 +375,8 @@ export default class HandAlarmDeal extends PureComponent {
   render() {
     const { form, emergency } = this.props;
     return (
-      <div className={styles.alarmDeal}>
-        <Row type="flex" >
+      <div className={styles.alarmReport}>
+        <Row type="flex">
           <Col>
             <FormItem
               labelCol={{ span: 0 }}
@@ -431,7 +433,7 @@ export default class HandAlarmDeal extends PureComponent {
                   // { required: true, message: '报警类型不能为空' },
                 ],
               })(
-                <Select placeholder="请选择报警类型" style={{ width: '100%' }} >
+                <Select placeholder="请选择报警类型" style={{ width: '100%' }}>
                   {
                     this.props.alarm.alarmTypeList.map(item => (
                       <Option value={item.alarmTypeID}>{item.alarmTypeName}</Option>

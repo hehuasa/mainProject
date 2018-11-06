@@ -11,7 +11,7 @@ import { hoveringAlarm, switchAlarmIcon } from '../../utils/MapService';
 
 const current = {};
 let symboltt = {};
-const mapStateToProps = ({ map, homepage, resourceTree, constantlyData, loading, tabs, global }) => {
+const mapStateToProps = ({ map, homepage, resourceTree, constantlyData, loading, tabs, global, emergency }) => {
   const { popupScale, baseLayer, trueMapShow, paPopup, stopPropagation, clusterPopup, infoPops, spaceQueryPop, accessPops, vocsPops } = map;
   const data = [];
   for (const item of constantlyData.constantlyComponents) {
@@ -34,6 +34,7 @@ const mapStateToProps = ({ map, homepage, resourceTree, constantlyData, loading,
     activeKey: tabs.activeKey,
     resourceInfo: resourceTree.resourceInfo,
     fetchingMapApi: loading.effects['global/fetchUrl'],
+    undoneEventList: emergency.undoneEventList,
   };
 };
 
@@ -121,7 +122,6 @@ export default class ArcgisMap extends PureComponent {
               const tileLayer = new MapImageLayer({ url: baseTie.layerAddress, id: '底图' });
               sublayers.reverse();
               const baseLayer = new MapImageLayer({ url: mapLayers.baseLayer.layerAddress, id: mapLayers.baseLayer.mapLayerName, sublayers });
-              // const legendLayer = new ImageryLayer({ url: mapLayers.baseLayer.layerAddress, id: mapLayers.baseLayer.mapLayerName }); // 用于加载图例
               mapConstants.mainMap = new Map({
                 layers: [baseLayer, tileLayer],
               });

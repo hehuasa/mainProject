@@ -1,25 +1,33 @@
 @import "~antd/lib/style/themes/default.less";
 @import "../../../index";
-.process{
+
+.process {
   height: 64px;
   line-height: 64px;
   border: 1px solid @border-color;
-  .btn{
+  overflow: hidden;
+  .btn {
+    float: left;
     margin-left: 18px;
-    & .arrow{
+    & .arrow {
       width: 50px;
       margin-left: 20px;
       background: url("../../../assets/emergency/arrow.png") no-repeat;
     }
-    & button{
+    & button {
       display: inline-block;
     }
-    & .view{
+    & .view {
       box-shadow: -3px 4px 10px #666;
       transform: scale(1.15);
     }
-    & img{
+    & img {
       margin: 0 12px;
     }
+  }
+  .linkMap {
+    float: right;
+    margin-right: 20px;
+    cursor: pointer;
   }
 }

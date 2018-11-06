@@ -103,8 +103,7 @@ class HeaderPanelData extends PureComponent {
                       data-type={item}
                       title={item}
                       key={item}
-                      onClick={this.handleClick
-                  }
+                      onClick={this.handleClick}
                     ><img data-type={item} src={bar} alt="柱状图" />
                     </div>
 ) : (
@@ -116,8 +115,7 @@ class HeaderPanelData extends PureComponent {
     className={styles['zoom-in']}
     data-type={item}
     title={item}
-    onClick={this.handleClick
-              }
+    onClick={this.handleClick}
   />
 );
 }
