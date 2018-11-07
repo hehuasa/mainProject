@@ -94,6 +94,7 @@ export default {
         return global.ptzPower;
       });
       payload.Power = ptzPower;
+      console.log('视频播放的参数：', payload);
       const a = setInterval(() => {
         if (SocketVideo.socket) {
           clearInterval(a);
