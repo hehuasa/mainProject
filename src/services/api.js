@@ -154,6 +154,12 @@ export async function queryUserList(params) {
 export async function findUserList() {
   return request(`${path}/system/userInfo/list`);
 }
+export const getUserPage = async (params) => {
+  return request(`${path}/system/userInfo/page`, {
+    method: 'POST',
+    body: params,
+  });
+};
 // 根据parentCode取码表信息
 export async function selectByTypeParent(params) {
   return request(`${path}/system/baseSystemCode/selectByCodeByCode?codeTypeCode=${params}`);
@@ -1013,6 +1019,27 @@ export async function getPlanResource(params) {
 // 应急资源列表
 export async function getEmgcResource(params) {
   return request(`${path}/resource/resToolMaterialInfo/page`, {
+    method: 'POST',
+    body: params,
+  });
+}
+// 新增应急资源
+export async function addEmgcResource(params) {
+  return request(`${path}/resource/resToolMaterialInfo/add`, {
+    method: 'POST',
+    body: params,
+  });
+}
+// 删除应急资源
+export async function delEmgcResource(params) {
+  return request(`${path}/resource/resToolMaterialInfo/del`, {
+    method: 'POST',
+    body: params,
+  });
+}
+// 应急资源code查重
+export const selectMaterialCode = async (params) => {
+  return request(`${path}/resource/resToolMaterialInfo/selectMaterialCode`, {
     method: 'POST',
     body: params,
   });

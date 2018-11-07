@@ -1,48 +1,18 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Table, Form, Input, Button, Card, Row, Col } from 'antd';
+import { Table, Form, Input, Button, Card, Row, Col, Modal, Popconfirm } from 'antd';
+import UserPage from './UserPage';
+import AddRes from './AddRes';
 import styles from './index.less';
 
 const FormItem = Form.Item;
 
-const resourceCols = [
-  {
-    title: '资源名称',
-    dataIndex: 'materialName',
-    width: 100,
-    key: 'materialName',
-  }, {
-    title: '规格型号',
-    dataIndex: 'model',
-    width: 120,
-    key: 'model',
-  }, {
-    title: '存放地点',
-    dataIndex: 'savePlace',
-    width: 120,
-    key: 'savePlace',
-  }, {
-    title: '保管人',
-    dataIndex: 'userID',
-    width: 100,
-    key: 'userID',
-    render: (text, record) => {
-      return record.baseUserInfo ? record.baseUserInfo.userName : '';
-    },
-  }, {
-    title: '单位',
-    dataIndex: 'materialUnit',
-    width: 100,
-    key: 'materialUnit',
-  }, {
-    title: '备注',
-    dataIndex: 'remark',
-    width: 200,
-    key: 'remark',
-  }];
 @connect(({ emgcResource }) => {
+  const { data, repeated, userData } = emgcResource;
   return {
-    data: emgcResource.data,
+    data,
+    repeated,
+    userData,
   };
 })
 class FromComponent extends PureComponent {
@@ -53,6 +23,8 @@ class FromComponent extends PureComponent {
       isQuery: true,
       fuzzy: true,
     },
+    showModal: false,
+    cacheUser: null,
   };
   componentDidMount() {
     const { dispatch } = this.props;
@@ -62,6 +34,52 @@ class FromComponent extends PureComponent {
       payload: pagination,
     });
   }
+  resourceCols = [
+    {
+      title: '资源名称',
+      dataIndex: 'materialName',
+      width: 100,
+      key: 'materialName',
+    }, {
+      title: '规格型号',
+      dataIndex: 'model',
+      width: 120,
+      key: 'model',
+    }, {
+      title: '存放地点',
+      dataIndex: 'savePlace',
+      width: 120,
+      key: 'savePlace',
+    }, {
+      title: '保管人',
+      dataIndex: 'userID',
+      width: 100,
+      key: 'userID',
+      render: (text, record) => {
+        return record.baseUserInfo ? record.baseUserInfo.userName : '';
+      },
+    }, {
+      title: '单位',
+      dataIndex: 'materialUnit',
+      width: 100,
+      key: 'materialUnit',
+    }, {
+      title: '备注',
+      dataIndex: 'remark',
+      width: 400,
+      key: 'remark',
+    }, {
+      title: '操作',
+      width: 100,
+      key: 'action',
+      render: (text, record) => (
+        <span>
+          <Popconfirm title="确定要删除 ?" onConfirm={() => this.delRes(record.toolMaterialInfoID)} okText="确定" cancelText="取消">
+            <a>删除</a>
+          </Popconfirm>
+        </span>
+      ),
+    }];
   handleSubmit= () => {
     const { form, dispatch } = this.props;
     const { pagination } = this.state;
@@ -98,12 +116,47 @@ class FromComponent extends PureComponent {
       payload: { ...pagination, ...value },
     });
   };
+  handleModalVisible = (param) => {
+    this.setState({
+      showModal: param,
+    });
+  };
+  // 缓存选择的用户 cacheUser
+  saveCacheUserData = (cacheUser) => {
+    this.setState({
+      cacheUser,
+    });
+  };
+  delRes = (id) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'emgcResource/fetchEmgcResourcePage',
+      payload: { toolMaterialInfoID: id },
+    });
+  };
+  addRes = () => {
+    const { dispatch } = this.props;
+    const { form } = this.formRef.props;
+    const value = form.getFieldsValue();
+    const { cacheUser } = this.state;
+    value.userID = cacheUser.userID;
+    dispatch({
+      type: 'emgcResource/addEmgcResource',
+      payload: value,
+    });
+    const { pagination } = this.state;
+    dispatch({
+      type: 'emgcResource/fetchEmgcResourcePage',
+      payload: pagination,
+    });
+    this.handleModalVisible(false);
+  };
   render() {
-    const { data, form, name } = this.props;
+    const { data, form, userData, dispatch, repeated } = this.props;
     const { getFieldDecorator } = form;
+    const { showModal, cacheUser } = this.state;
     return (
       <div className={styles.warp}>
-        <h2>{name}</h2>
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -123,6 +176,7 @@ class FromComponent extends PureComponent {
               </Col>
               <Col md={8} sm={24}>
                 <FormItem>
+                  <Button htmlType="button" icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>新增</Button>
                   <Button type="primary" style={{ marginLeft: 8 }} htmlType="submit">查询</Button>
                   <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset} htmlType="button">重置</Button>
                 </FormItem>
@@ -130,12 +184,22 @@ class FromComponent extends PureComponent {
             </Row>
           </Form>
           <Table
-            className={styles.table}
             dataSource={data.result}
-            columns={resourceCols}
-            pagination={{ total: data.pageCount, pageSize: data.pageSize, pageSizeOptions: ['5', '10', '20', '30'], onShowSizeChange: this.handlePageChange, onChange: this.handlePageChange, showSizeChanger: true, showQuickJumper: true }}
+            columns={this.resourceCols}
+            pagination={{ total: data.sumCount, pageSize: data.pageSize, pageSizeOptions: ['5', '10', '20', '30'], onShowSizeChange: this.handlePageChange, onChange: this.handlePageChange, showSizeChanger: true, showQuickJumper: true }}
           />
         </Card>
+        <Modal
+          destroyOnClose
+          title="新增"
+          visible={showModal}
+          onOk={this.addRes}
+          // confirmLoading={this.loading.global}
+          width="80%"
+          onCancel={() => this.handleModalVisible()}
+        >
+          <AddRes cacheUser={cacheUser} repeated={repeated} getUser={this.getUser} dispatch={dispatch} userData={userData} wrappedComponentRef={(formRef) => { this.formRef = formRef; }} saveCacheUserData={this.saveCacheUserData}/>
+        </Modal>
       </div>
     );
   }
