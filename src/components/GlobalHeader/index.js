@@ -39,6 +39,10 @@ export default class GlobalHeader extends PureComponent {
     dispatch({
       type: 'user/fetchCurrent',
     });
+    // 请求图层信息
+    dispatch({
+      type: 'map/fetchLayers',
+    });
     // 请求报警类型
     dispatch({
       type: 'alarm/getAlarmType',
@@ -391,7 +395,7 @@ export default class GlobalHeader extends PureComponent {
   };
 
   return = () => {
-    const { dispatch, videoFooterHeight, rightCollapsed, video, tabs } = this.props;
+    const { dispatch, videoFooterHeight, rightCollapsed, accessControlShow, tabs } = this.props;
     const { view, accessInfoExtent } = mapConstants;
     dispatch({
       type: 'tabs/active',
@@ -431,10 +435,10 @@ export default class GlobalHeader extends PureComponent {
           payload: false,
         }).then(() => {
           changeVideoSize(videoFooterHeight, dispatch, 'show');
-          resetAccessStyle(view, dispatch, accessInfoExtent);
+          resetAccessStyle(accessControlShow, dispatch, accessInfoExtent);
         });
       } else {
-        resetAccessStyle(view, dispatch, accessInfoExtent);
+        resetAccessStyle(accessControlShow, dispatch, accessInfoExtent);
       }
     });
   }

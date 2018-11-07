@@ -34,6 +34,18 @@ const mapStateToProps = ({ map }) => {
     mapBoardShow,
   };
 };
+const getEventStatus = (type) => {
+  switch (type) {
+    case 0: return '事件未开始';
+    case 1: return '信息接报';
+    case 2: return '应急研判';
+    case 3: return '应急预警';
+    case 4: return '应急启动';
+    case 5: return '应急处理';
+    case 6: return '应急终止';
+    default: break;
+  }
+};
 let nowTime;
 let updateTimeId;
 const getNowTime = () => { nowTime = new Date().getTime(); };
@@ -788,7 +800,7 @@ class AlarmInfo extends PureComponent {
                 ctrlResourceType === 'event' && event !== undefined ? (
                   <Panel header={<div className={styles.panelHeader}>事件信息</div>} key="18">
                     <Row type="flex">
-                      <Col span={8}>事件状态：</Col><Col span={16}>{event.eventStatu ? event.eventStatu : '/'}</Col>
+                      <Col span={8}>事件状态：</Col><Col span={16}>{event.eventStatu ? getEventStatus(Number(event.eventStatu)) : '/'}</Col>
                       <Col span={8}>事件名称：</Col><Col span={16}>{event.eventName ? event.eventName : '/'}</Col>
                       <Col span={8}>事发位置：</Col><Col span={16}>{event.eventPlace ? event.eventPlace : '/'}</Col>
                       <Col span={8}>涉事部门：</Col><Col span={16}>{event.organization ? event.organization.orgnizationName : '/'}</Col>

@@ -265,7 +265,7 @@ export const getRouterData = (app) => {
     },
     // 应急指挥事件
     '/command/emergencyEvent': {
-      component: dynamicWrapper(app, ['emergency', 'user'], () => import('../routes/EmergencyCommand/index')),
+      component: dynamicWrapper(app, ['emergency', 'user', 'emergency', 'homepage', 'video', 'global', 'accessControl', 'map', 'resourceTree'], () => import('../routes/EmergencyCommand/index')),
     },
     // 未处理是的事件列表
     '/command/unHandledEvent': {

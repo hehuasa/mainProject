@@ -356,12 +356,12 @@ export const returnHome = (that) => {
           payload: false,
         }).then(() => {
           changeVideoSize(videoFooterHeight, dispatch, 'show');
-          resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent).then(() => {
+          resetAccessStyle(accessControlShow, dispatch, accessInfoExtent).then(() => {
             resolve();
           });
         });
       } else {
-        resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent).then(() => {
+        resetAccessStyle(accessControlShow, dispatch, accessInfoExtent).then(() => {
           resolve();
         });
       }
@@ -459,20 +459,31 @@ export const changeVideoSize = (videoFooterHeight, dispatch, type) => {
   }
 };
 // 重设门禁展示的坐标
-export const resetAccessStyle = (accessControlShow, view, dispatch, accessInfoExtent) => {
+export const resetAccessStyle = (accessControlShow, dispatch, accessInfoExtent) => {
   return new Promise((resolve) => {
     // if (accessControlShow) {
-    if (view.height) {
-      view.goTo({ extent: accessInfoExtent }).then(() => {
-        getBordStyle(view).then((style) => {
-          dispatch({
-            type: 'accessControl/queryStyle',
-            payload: style,
+    if (accessInfoExtent.xmax) {
+      const a = setInterval(() => {
+        const { view } = mapConstants;
+        if (view.goTo) {
+          clearInterval(a);
+          debugger;
+          view.goTo({ extent: accessInfoExtent }).then(() => {
+            getBordStyle(view).then((style) => {
+              dispatch({
+                type: 'accessControl/queryStyle',
+                payload: style,
+              });
+              resolve();
+            });
           });
-          resolve();
-        });
-      });
+        }
+      }, 500);
+    } else {
+      resolve();
     }
+
+
     // }
   });
 };

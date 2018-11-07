@@ -219,7 +219,7 @@ class BasicLayout extends React.PureComponent {
         type: 'global/changeRightCollapsed',
         payload: true,
       }).then(() => {
-        resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+        resetAccessStyle(accessControlShow, dispatch, accessInfoExtent);
         changeVideoSize(videoFooterHeight, dispatch, 'hide');
       });
     } else {
@@ -230,11 +230,11 @@ class BasicLayout extends React.PureComponent {
           payload: false,
         }).then(() => {
           changeVideoSize(videoFooterHeight, dispatch, 'show');
-          resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+          resetAccessStyle(accessControlShow, dispatch, accessInfoExtent);
         });
       } else {
         changeVideoSize(videoFooterHeight, dispatch, 'show');
-        resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+        resetAccessStyle(accessControlShow, dispatch, accessInfoExtent);
       }
     }
   };
@@ -371,7 +371,7 @@ class BasicLayout extends React.PureComponent {
           type: 'global/changeRightCollapsed',
           payload: false,
         }).then(() => {
-          resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+          resetAccessStyle(accessControlShow, dispatch, accessInfoExtent);
           changeVideoSize(videoFooterHeight, dispatch, 'show');
         });
       }
@@ -822,6 +822,7 @@ class BasicLayout extends React.PureComponent {
                   panelBoard={panelBoard}
                   video1={video}
                   undoneEventList={undoneEventList}
+                  accessControlShow={accessControlShow}
                   tabs={tabs}
                   selcetText={this.state.selcetText}
                   saveHeaderSelectText={(val) => { this.saveHeaderSelectText(val); }}

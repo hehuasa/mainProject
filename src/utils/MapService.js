@@ -21,11 +21,13 @@ import { constantlyModal, infoPopsModal } from '../services/constantlyModal';
 // 地图图标
 const getLayerIds = () => {
   const array = [];
-  for (const layer of mapLayers.FeatureLayers) {
-    const index = layer.layerAddress.indexOf('MapServer/');
-    if (index !== -1) {
-      const order = layer.layerAddress.substr(index + 10);
-      array.push(order);
+  if (mapLayers.FeatureLayers.length > 0) {
+    for (const layer of mapLayers.FeatureLayers) {
+      const index = layer.layerAddress.indexOf('MapServer/');
+      if (index !== -1) {
+        const order = layer.layerAddress.substr(index + 10);
+        array.push(order);
+      }
     }
   }
   return array;
@@ -51,7 +53,7 @@ export const addLegend = async ({ view, container, legendLayer, dispatch }) => {
   });
 };
 // 根据属性查询设备
-export const searchByAttrBySorting = async ({ searchText, layerIds = getLayerIds(), searchFields = ['设备名称', 'ObjCode'] }) => {
+export const searchByAttrBySorting = async ({ searchText, layerIds, searchFields = ['设备名称', 'ObjCode'] }) => {
   return new Promise(resolve =>
     esriLoader.loadModules(
       [
@@ -84,13 +86,6 @@ export const searchByAttrBySorting = async ({ searchText, layerIds = getLayerIds
       // 返回几何信息
       findParams.returnGeometry = true;
       // 对哪一个图层进行属性查询,筛选基础图层
-      const layerIdArray = [];
-      for (const id of layerIdArray) {
-        const index = layerIds.indexOf(id);
-        if (index !== -1) {
-          layerIds.splice(index, 1);
-        }
-      }
       findParams.layerIds = layerIds === 'all' ? getLayerIds() : layerIds;
       // 查询的字段
       findParams.searchFields = searchFields;

@@ -50,7 +50,7 @@ export const handleClick = (event, treeId, treeNode, that) => {
         const { videoFooterHeight, accessControlShow } = that.props;
         const { view, accessInfoExtent } = mapConstants;
         changeVideoSize(videoFooterHeight, dispatch, 'show');
-        resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+        resetAccessStyle(accessControlShow, dispatch, accessInfoExtent);
         setTimeout(() => {
           const param = { alarmType: treeNode.checkFunctionCode, title: treeNode.name };
           openBoard(treeNode.checkFunctionCode, param, treeNode.checkClickFunTemplate, nameKeys);

@@ -35,6 +35,7 @@ const mapStateToProps = ({ map, homepage, resourceTree, constantlyData, loading,
     resourceInfo: resourceTree.resourceInfo,
     fetchingMapApi: loading.effects['global/fetchUrl'],
     undoneEventList: emergency.undoneEventList,
+    fetchLayers: loading.effects['map/fetchLayers'],
   };
 };
 
@@ -73,9 +74,7 @@ export default class ArcgisMap extends PureComponent {
         ).then(
           ([MapImageLayer, TileLayer, Map, MapView, Extent, SpatialReference, ScaleBar, GraphicsLayer]) => {
             // esriLoader.loadCss('/mapApi/esri/css/main.css');
-            dispatch({
-              type: 'map/fetchLayers',
-            }).then(() => {
+            if (!this.props.fetchLayers) {
               // 找到底图图层
               const sublayers = [];
               const { winWidth } = getBrowserStyle();
@@ -100,15 +99,15 @@ export default class ArcgisMap extends PureComponent {
                   maxScale: layer.isArea ? popupScale : 0, // 区域图层显示
                 });
               }
-                for (const layer of mapLayers.RasterLayers) {
-                    sublayers.push({
-                        title: layer.mapLayerName,
-                        id: layer.id,
-                        visible: false,
-                        // visible: layer.isBaseLayer,
-                        // maxScale: layer.isArea ? popupScale : 0, // 区域图层显示
-                    });
-                }
+              for (const layer of mapLayers.RasterLayers) {
+                sublayers.push({
+                  title: layer.mapLayerName,
+                  id: layer.id,
+                  visible: false,
+                  // visible: layer.isBaseLayer,
+                  // maxScale: layer.isArea ? popupScale : 0, // 区域图层显示
+                });
+              }
               // 栅格图层
               // for (const layer of mapLayers.RasterLayers) {
               //   sublayers.push({
@@ -329,7 +328,6 @@ export default class ArcgisMap extends PureComponent {
                               }
                             });
                           }
-
                         } else if (graphic.attributes.isConstructMonitor) {
                           const { list, area, keys } = graphic.attributes;
                           // 作业监控 单独处理
@@ -754,12 +752,11 @@ export default class ArcgisMap extends PureComponent {
                       type: 'map/showPopup',
                       payload: true,
                     });
-                  }
-                  else {
-                      dispatch({
-                          type: 'map/showPopup',
-                          payload: false,
-                      });
+                  } else {
+                    dispatch({
+                      type: 'map/showPopup',
+                      payload: false,
+                    });
                   }
                 });
               });
@@ -787,7 +784,7 @@ export default class ArcgisMap extends PureComponent {
               //     }
               //   }
               // }, 50);
-            });
+            }
           });
       }
     }, 100);

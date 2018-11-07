@@ -48,11 +48,11 @@ export default class Analysis extends PureComponent {
          payload: false,
        }).then(() => {
          changeVideoSize(videoFooterHeight, dispatch, 'show');
-         resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+         resetAccessStyle(accessControlShow, dispatch, accessInfoExtent);
        });
      } else {
        changeVideoSize(videoFooterHeight, dispatch, 'show');
-       resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+       resetAccessStyle(accessControlShow, dispatch, accessInfoExtent);
      }
   };
   // 更改事件状态

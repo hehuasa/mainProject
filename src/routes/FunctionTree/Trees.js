@@ -409,7 +409,7 @@ export default class Trees extends PureComponent {
         payload: true,
       }).then(() => {
           const { view, accessInfoExtent } = mapConstants;
-          resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent);
+          resetAccessStyle(accessControlShow, dispatch, accessInfoExtent);
           changeVideoSize(videoFooterHeight, dispatch, 'hide');
       });
     }

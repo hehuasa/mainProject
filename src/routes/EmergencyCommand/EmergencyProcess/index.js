@@ -6,7 +6,7 @@ import arrow from '../../../assets/emergency/arrow.png';
 import arrowActive from '../../../assets/emergency/arrow-active.png';
 import { mapConstants } from '../../../services/mapConstant';
 import { changeVideoPosition, changeVideoSize, resetAccessStyle } from '../../../utils/utils';
-import { alarmAnimation } from '../../../utils/MapService';
+import { infoPopsModal } from '../../../services/constantlyModal';
 
 const { Step } = Steps;
 @connect(({ emergency, homepage, video, global, accessControl, map, resourceTree }) => ({
@@ -22,6 +22,7 @@ const { Step } = Steps;
   searchDeviceArray: map.searchDeviceArray,
   resourceInfo: resourceTree.resourceInfo,
   accessControlShow: accessControl.show,
+  infoPops: map.infoPops,
 }))
 export default class EmergencyCommand extends PureComponent {
   componentDidMount() {
@@ -46,7 +47,7 @@ export default class EmergencyCommand extends PureComponent {
   }
   returnMap = () => {
     const { eventInfoReport, dispatch, popupScale } = this.props;
-    const { view, mainMap, accessInfoExtent } = mapConstants;
+    const { accessInfoExtent } = mapConstants;
     const { gISCode } = eventInfoReport;
     dispatch({
       type: 'tabs/active',
@@ -61,52 +62,97 @@ export default class EmergencyCommand extends PureComponent {
           payload: false,
         }).then(() => {
           changeVideoSize(videoFooterHeight, dispatch, 'show');
-          resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent).then(() => {
+          resetAccessStyle(accessControlShow, dispatch, accessInfoExtent).then(() => {
             dispatch({
               type: 'map/searchDeviceByAttr',
               payload: { searchText: gISCode, searchFields: ['ObjCode'] },
             }).then(() => {
               dispatch({
-                type: 'resourceTree/selectByGISCode',
-                payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, gISCode },
+                type: 'resourceTree/selectEventByGISCode',
+                payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, gISCode, event: eventInfoReport },
               });
-              if (view.goTo) {
-                view.goTo({
-                  center: this.props.searchDeviceArray[0].feature.geometry,
-                  scale: popupScale - 10,
-                }).then(() => {
-                });
-              }
+              const a = setInterval(() => {
+                if (mapConstants.view.goTo) {
+                  clearInterval(a);
+                  mapConstants.view.goTo({
+                    center: this.props.searchDeviceArray[0].feature.geometry,
+                    scale: popupScale - 10,
+                  }).then(() => {
+                    const screenPoint = mapConstants.view.toScreen(this.props.searchDeviceArray[0].feature.geometry);
+                    this.getPop(screenPoint, gISCode);
+                  });
+                }
+              }, 100);
             });
           });
         });
       } else {
-        resetAccessStyle(accessControlShow, view, dispatch, accessInfoExtent).then(() => {
+        resetAccessStyle(accessControlShow, dispatch, accessInfoExtent).then(() => {
           dispatch({
             type: 'map/searchDeviceByAttr',
             payload: { searchText: gISCode, searchFields: ['ObjCode'] },
           }).then(() => {
             dispatch({
-              type: 'resourceTree/selectByGISCode',
-              payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, gISCode },
+              type: 'resourceTree/selectEventByGISCode',
+              payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, gISCode, event: eventInfoReport },
             });
-            if (view.goTo) {
-              view.goTo({
-                center: this.props.searchDeviceArray[0].feature.geometry,
-                scale: popupScale - 10,
-              }).then(() => {
-              });
-            }
+            const a = setInterval(() => {
+              if (mapConstants.view.goTo) {
+                clearInterval(a);
+                mapConstants.view.goTo({
+                  center: this.props.searchDeviceArray[0].feature.geometry,
+                  scale: popupScale - 10,
+                }).then(() => {
+                  const screenPoint = mapConstants.view.toScreen(this.props.searchDeviceArray[0].feature.geometry);
+                  this.getPop(screenPoint, gISCode);
+                });
+              }
+            }, 100);
           });
         });
       }
     });
   };
+  getPop = (screenPoint, gISCode) => {
+    const { dispatch, infoPops } = this.props;
+    // 添加地图气泡窗
+    if (this.props.searchDeviceArray[0]) {
+      const { feature } = this.props.searchDeviceArray[0];
+      const name = feature.attributes['设备名称'] || feature.attributes['建筑名称'] || feature.attributes['罐区名称'] || feature.attributes['区域名称'] || feature.attributes['装置区名称'] || feature.attributes['名称'];
+      const { attributes, geometry } = feature;
+      const index = infoPops.findIndex(value => value.key === 'mapClick');
+      const index1 = infoPops.findIndex(value => Number(value.gISCode) === Number(gISCode));
+      const pop = {
+        show: true,
+        key: 'mapClick',
+        gISCode,
+        uniqueKey: Math.random() * new Date().getTime(),
+      };
+      if (index1 !== -1) {
+        return false;
+      }
+      if (index === -1) {
+        infoPops.push(pop);
+      } else {
+        infoPops.splice(index, 1, pop);
+      }
+      infoPopsModal.mapClick = {
+        screenPoint,
+        screenPointBefore: screenPoint,
+        mapStyle: { width: mapConstants.view.width, height: mapConstants.view.height },
+        attributes,
+        geometry,
+        name,
+      };
+      dispatch({
+        type: 'map/queryInfoPops',
+        payload: infoPops,
+      });
+    }
+  }
   render() {
     const { onClick, eventInfoReport } = this.props;
     const { current, viewNode, flowNodeTemplateList } = this.props;
-    console.log('flowNodeTemplateList', flowNodeTemplateList);
-    console.log('eventInfoReport', eventInfoReport);
     return (
       <div className={styles.process}>
         <div className={styles.btn}>
