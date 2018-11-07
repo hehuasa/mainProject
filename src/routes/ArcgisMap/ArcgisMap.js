@@ -7,7 +7,7 @@ import { constantlyModal, infoPopsModal } from '../../services/constantlyModal';
 import { getBrowserStyle } from '../../utils/utils';
 import { mapLayers, mapConstants } from '../../services/mapConstant';
 import styles from './index.less';
-import { hoveringAlarm, switchAlarmIcon } from '../../utils/MapService';
+import { hoveringAlarm, switchAlarmIcon, addEventIcon } from '../../utils/MapService';
 
 const current = {};
 let symboltt = {};
@@ -189,7 +189,6 @@ export default class ArcgisMap extends PureComponent {
                   // clearTwinkle(dispatch, feature.graphic.attributes);
                 };
                 // 显示对应图层
-
                 const popupTemplate = {
                   title: '',
                   content: setContentInfo,
@@ -199,6 +198,13 @@ export default class ArcgisMap extends PureComponent {
                 mapConstants.mainMap.add(alarmLayer);
                 mapConstants.mainMap.add(alarmSelectLayer);
                 switchAlarmIcon({ layer: alarmLayer });
+                // 画事件图标
+                const getEvent = setInterval(() => {
+                  if (this.props.undoneEventList.length > 0) {
+                    clearInterval(getEvent);
+                    addEventIcon(popupScale, this.props.undoneEventList);
+                  }
+                }, 500);
                 dispatch({
                   type: 'map/load',
                   payload: true,
@@ -303,14 +309,27 @@ export default class ArcgisMap extends PureComponent {
                           });
                         }
                         if (graphic.attributes.ObjCode || graphic.attributes['唯一编码'] || graphic.attributes.resourceGisCode) {
-                          this.props.dispatch({
-                            type: 'resourceTree/selectByGISCode',
-                            payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, gISCode: graphic.attributes.ObjCode || graphic.attributes['唯一编码'] || graphic.attributes.resourceGisCode },
-                          }).then(() => {
-                            if (this.props.resourceInfo === undefined) {
-                              message.error('未请求到资源相关数据');
-                            }
-                          });
+                          if (graphic.attributes.isEvent) {
+                            // 事件单独处理
+                            this.props.dispatch({
+                              type: 'resourceTree/selectEventByGISCode',
+                              payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, gISCode: graphic.attributes.ObjCode || graphic.attributes['唯一编码'] || graphic.attributes.resourceGisCode, event: graphic.attributes.event },
+                            }).then(() => {
+                              if (this.props.resourceInfo === undefined) {
+                                message.error('未请求到资源相关数据');
+                              }
+                            });
+                          } else {
+                            this.props.dispatch({
+                              type: 'resourceTree/selectByGISCode',
+                              payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, gISCode: graphic.attributes.ObjCode || graphic.attributes['唯一编码'] || graphic.attributes.resourceGisCode },
+                            }).then(() => {
+                              if (this.props.resourceInfo === undefined) {
+                                message.error('未请求到资源相关数据');
+                              }
+                            });
+                          }
+
                         } else if (graphic.attributes.isConstructMonitor) {
                           const { list, area, keys } = graphic.attributes;
                           // 作业监控 单独处理
@@ -341,8 +360,6 @@ export default class ArcgisMap extends PureComponent {
                             type: 'vocsMonitor/queryMapSelectedList',
                             payload: { list, areaName, keys },
                           });
-                        } else {
-                          message.error('未请求到资源相关数据');
                         }
                       } else {
                         dispatch({

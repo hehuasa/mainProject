@@ -152,6 +152,39 @@ export default {
         });
       }
     },
+    *selectEventByGISCode({ payload }, { call, put }) {
+      // 先关掉资源信息窗口
+      yield put({
+        type: 'saveCtrlResourceType',
+        payload: '',
+      });
+      // 清空缓存的资源信息
+      yield put({
+        type: 'saveResourceInfo',
+        payload: {},
+      });
+      // 清空缓存的实时数据
+      infoConstantly.data = {};
+      // 清空轮询
+      clearInterval(infoConstantly.intervalID);
+      const response = yield call(selectByGISCode, payload);
+      const resourceInfo = response.data.result[0] || {};
+      if (resourceInfo.resourceStatu) {
+        const status = yield call(selectByCode, resourceInfo.resourceStatu);
+        resourceInfo.status = status.data[0] || {};
+      }
+      // 保存取到的资源信息
+      console.log('payload.event', payload.event);
+      yield put({
+        type: 'saveResourceInfo',
+        payload: { ...response.data.result[0], event: payload.event },
+      });
+      // 左侧打开相应的面板，通过ctrResourceType
+        yield put({
+          type: 'saveCtrlResourceType',
+          payload: 'event',
+        });
+    },
     // 只取资源信息不开面板
     *getResInfoByGISCode({ payload }, { call, put }) {
       const response = yield call(selectByGISCode, payload);

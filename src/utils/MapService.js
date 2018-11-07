@@ -13,21 +13,9 @@ import videoLegend from '../assets/map/search/video.png';
 import videoLegendHover from '../assets/map/search/videoHover.png';
 import video from '../assets/map/truemap/video.png';
 import locate from '../assets/map/search/locate.png';
-import noAlarm from '../assets/map/search/noAlarm.png';
-import cracking0 from '../assets/map/constantly/裂解备用.png';
-import cracking1 from '../assets/map/constantly/裂解检修.png';
-import cracking2 from '../assets/map/constantly/裂解报警.png';
-import cracking3 from '../assets/map/constantly/裂解停用.png';
 import { mapLegendList, mapLegendListWithAlarm } from '../services/mapLegendList';
 import legend from '../assets/map/lengend/01.png';
-import legend01 from '../assets/map/lengend/感温探测器.png';
-import legend02 from '../assets/map/lengend/感烟探测器.png';
-import legend03 from '../assets/map/lengend/红外对射.png';
-import legend04 from '../assets/map/lengend/火焰探测器.png';
-import legend05 from '../assets/map/lengend/可燃气体探测设备.png';
-import legend06 from '../assets/map/lengend/手动报警按钮.png';
-import legend07 from '../assets/map/lengend/手提式.png';
-import legend08 from '../assets/map/lengend/推车式.png';
+import eventIcon from '../assets/map/event/eventIcon.png';
 import { constantlyModal, infoPopsModal } from '../services/constantlyModal';
 
 // 地图图标
@@ -721,7 +709,6 @@ export const spaceQuery = async ({ map, view, searchText, ids, dispatch, point, 
       measureLayer.graphics.add(close);
       measureLayer.graphics.add(lengthGraph);
       if (type === 'add') {
-        debugger;
         console.log('circle', circle);
         view.goTo({ extent: circle.extent.expand(1.6) });
         dispatch({
@@ -1764,7 +1751,7 @@ export const addDoorIcon = async ({ map, view, data, graphics, dispatch }) => {
             index: doorInfoIndex,
             geometry: item.geometry,
             style: { left: screenPoint.x, top: screenPoint.y - 48 },
-            },
+          },
           uniqueKey: new Date().getTime() * Math.random(),
         };
         datas.push(accessPop);
@@ -1779,7 +1766,7 @@ export const addDoorIcon = async ({ map, view, data, graphics, dispatch }) => {
     dispatch({
       type: 'map/queryAccessPops',
       payload: { show: true, load: true, data: datas },
-    })
+    });
   });
 };
 // 作业监控专题
@@ -1927,6 +1914,7 @@ export const addVocsIcon = ({ map, layer, list, dispatch }) => {
           data.push(obj);
         }
       }
+      console.log('data', data);
       dispatch({
         type: 'map/queryVocsPopup',
         payload: { show: true, load: true, data },
@@ -2403,8 +2391,6 @@ export const alarmAnimation = async ({ alarm, geometry }) => {
     'esri/Graphic']).then(([PictureMarkerSymbol, Graphic]) => {
     const legendLayer = mapLayers.FeatureLayers.find(value => value.mapIcon === alarm.ctrlResourceType);
     let normalIconObj = mapLegendList.find(value => legendLayer.mapLayerName.indexOf(value.name) !== -1);
-    console.log('mapLegendList', mapLegendList);
-    console.log('alarm', alarm);
     let layerName = '';
     try {
       layerName = legendLayer.mapLayerName + alarm.alarmType.dangerCoefficient;
@@ -2417,6 +2403,36 @@ export const alarmAnimation = async ({ alarm, geometry }) => {
     const alarmGraphic = new Graphic(geometry, pictureMarkerSymbol, { ...alarm, symbolObj: pictureMarkerSymbol });
     // 新建报警图标
     mapConstants.alarmGraphics.push(alarmGraphic);
+  });
+};
+// 新建事件图标
+export const addEventIcon = (popupScale, events) => {
+  esriLoader.loadModules([
+    'esri/layers/GraphicsLayer', 'esri/Graphic']).then(([GraphicsLayer, Graphic]) => {
+    const { mainMap } = mapConstants;
+    let eventLayer = mainMap.findLayerById('事件专题图');
+    if (!eventLayer) {
+      eventLayer = new GraphicsLayer({ id: '事件专题图', minScale: popupScale });
+      mainMap.add(eventLayer);
+    }
+    const eventSy = {
+      type: 'picture-marker',
+      url: eventIcon,
+      width: '32px',
+      height: '32px',
+      angle,
+    };
+    for (const event of events) {
+      if (event.gISCode !== null) {
+        searchByAttr({ searchText: event.gISCode, searchFields: ['ObjCode'] }).then((res) => {
+          if (res[0]) {
+            const newGeo = transToPoint(res[0].feature.geometry);
+            const eventGraphic = new Graphic(newGeo, eventSy, { ...res[0].feature.attributes, event, isEvent: true });
+            eventLayer.graphics.add(eventGraphic);
+          }
+        });
+      }
+    }
   });
 };
 // 新建报警图标(传入PictureMarkerSymbol, Graphic)

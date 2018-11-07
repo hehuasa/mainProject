@@ -36,7 +36,7 @@ const mapStateToProps = ({ map }) => {
 };
 let nowTime;
 let updateTimeId;
-const getNowTime = () => { nowTime = new Date().getTime() };
+const getNowTime = () => { nowTime = new Date().getTime(); };
 @connect(({ map, resourceTree, alarm, panelBoard, constantlyData, alarmDeal, homepage, video }) => ({
   mainMap: mapConstants.mainMap,
   mapView: mapConstants.view,
@@ -44,6 +44,7 @@ const getNowTime = () => { nowTime = new Date().getTime() };
   popupScale: map.popupScale,
   mapHeight: homepage.mapHeight,
   videoFooterHeight: homepage.videoFooterHeight,
+  ctrlResourceType: resourceTree.ctrlResourceType,
   resourceTree,
   list: alarm.listWithFault,
   video,
@@ -606,7 +607,7 @@ class AlarmInfo extends PureComponent {
           expandKeys,
           activeKeys: [
             { name: 'realDataPanel', uniqueKey: 0, keys: `${ctrlResourceType}`, type: 'default', param: { title: panelName } },
-              ...activeKeys,
+            ...activeKeys,
           ],
         },
       });
@@ -637,15 +638,32 @@ class AlarmInfo extends PureComponent {
       payload: { isDeal: true },
     });
   };
+  enterEvent =() => {
+    const { resourceTree, dispatch } = this.props;
+    const { resourceInfo } = resourceTree;
+    const { event } = resourceInfo;
+    dispatch({
+      type: 'emergency/saveEventId',
+      payload: {
+        eventId: event.eventID,
+        tableId: '/command/emergencyEven',
+      },
+    });
+    dispatch({
+      type: 'tabs/addTabs',
+      payload: { key: '/command/emergencyEven', title: event.eventName },
+    });
+  };
   // 报警选择
   handleAlarmChange = (evt) => {
     const index = evt.target.value;
     this.setState({ alarmSelectIndex: index });
   };
   render() {
-    const { mapHeight, resourceTree, alarmBoardData } = this.props;
+    const { mapHeight, resourceTree, alarmBoardData, ctrlResourceType } = this.props;
     const { alarmSelectIndex } = this.state;
     const { resourceInfo, rowInfo, materialHarmInfo, materialFireControl } = resourceTree;
+    const { event } = resourceInfo;
     const { universalData } = infoConstantly.data; // 实时数据
     const videoArray = [];
     if (resourceInfo.beMonitorObjs) {
@@ -653,6 +671,7 @@ class AlarmInfo extends PureComponent {
         videoArray.push({ sort: index + 1, ...value });
       }
     }
+
     // 检测对象列表数据
     const monitorsCols = [
       {
@@ -710,7 +729,7 @@ class AlarmInfo extends PureComponent {
           <div className={styles.panelContent}>
             <Collapse
               bordered={false}
-              defaultActiveKey={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17']}
+              defaultActiveKey={['1', '18', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17']}
             >
               {alarmBoardData.length > 0 ? (
                 <Panel header={<div className={styles.panelHeader}>报警信息</div>} key="17">
@@ -753,7 +772,8 @@ class AlarmInfo extends PureComponent {
                                           <Col span={16}>{item.receiveTime ? moment(item.receiveTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Col>
                                           <Col span={8}>持续时长：</Col>
                                           <Col span={16}>{item.receiveTime ?
-                                            formatDuring(nowTime, item.receiveTime) : ''} </Col>
+                                            formatDuring(nowTime, item.receiveTime) : ''}
+                                          </Col>
                                           <Col span={8}>报警位置：</Col><Col span={16}>{item.areaName}</Col>
                                           <Col span={8}>所属装置：</Col><Col span={16}>{item.orgName}</Col>
                                         </Row>
@@ -764,6 +784,33 @@ class AlarmInfo extends PureComponent {
                   </RadioGroup>
                 </Panel>
                 ) : null}
+              {
+                ctrlResourceType === 'event' && event !== undefined ? (
+                  <Panel header={<div className={styles.panelHeader}>事件信息</div>} key="18">
+                    <Row type="flex">
+                      <Col span={8}>事件状态：</Col><Col span={16}>{event.eventStatu ? event.eventStatu : '/'}</Col>
+                      <Col span={8}>事件名称：</Col><Col span={16}>{event.eventName ? event.eventName : '/'}</Col>
+                      <Col span={8}>事发位置：</Col><Col span={16}>{event.eventPlace ? event.eventPlace : '/'}</Col>
+                      <Col span={8}>涉事部门：</Col><Col span={16}>{event.organization ? event.organization.orgnizationName : '/'}</Col>
+                      <Col span={8}>涉事设备：</Col><Col span={16}>{event.resResourceInfo ? event.resResourceInfo.resourceName : '/'}</Col>
+                      <Col span={8}>报警人：</Col><Col span={16}>{event.alarmPerson ? event.alarmPerson : '/'}</Col>
+                      <Col span={8}>报警电话：</Col><Col span={16}>{event.telPhone ? event.telPhone : '/'}</Col>
+                      <Col span={8}>人员编号：</Col><Col span={16}>{event.personCode ? event.personCode : '/'}</Col>
+                      <Col span={8}>警情摘要：</Col><Col span={16}>{event.alarmDes ? event.alarmDes : '/'}</Col>
+                      <Col span={8}>事生原因：</Col><Col span={16}>{event.incidentReason ? event.incidentReason : '/'}</Col>
+                      <Col span={8}>报警方式：</Col><Col span={16}>{event.alarmWay ? event.alarmWay : '/'}</Col>
+                      <Col span={8}>事发部门：</Col><Col span={16}>{event.accidentPostion ? event.accidentPostion : '/'}</Col>
+                      <Col span={8}>事件类型：</Col><Col span={16}>{event.eventType ? event.eventType : '/'}</Col>
+                      <Col span={8}>是否演练：</Col><Col span={16}>{event.isDrill ? event.isDrill : '/'}</Col>
+                      <Col span={8}>受伤人数：</Col><Col span={16}>{event.injured ? event.injured : '/'}</Col>
+                      <Col span={8}>死亡人数：</Col><Col span={16}>{event.death ? event.death : '/'}</Col>
+                      <Col span={8}>失踪人数：</Col><Col span={16}>{event.disappear ? event.disappear : '/'}</Col>
+                      <Col span={8}>报警现状：</Col><Col span={16}>{event.alarmStatuInfo ? event.alarmStatuInfo : '/'}</Col>
+                    </Row>
+                  </Panel>
+                  ) :
+                  null
+              }
               {universalData && universalData.length > 0 ? (
                 <Panel header={<div className={styles.panelHeader}>实时数据信息</div>} key="16" className={styles.type}>
                   <UniversalTemplate data={universalData} showDashBoard dispatch={this.props.dispatch} />
@@ -919,17 +966,17 @@ class AlarmInfo extends PureComponent {
         </Scrollbars>
         <div className={styles.btn}>
           {resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201') === -1 ?
-            <Button size="small" onClick={this.linkMap}>地图定位</Button> :
+            <Button htmlType="button" size="small" onClick={this.linkMap}>地图定位</Button> :
                 null
             }
 
           {/* 该资源被检测 */}
           {resourceInfo.beMonitorObjs && resourceInfo.beMonitorObjs.length > 0 ?
-            <Button size="small" disabled={this.state.selectedRows.checkedVideos.length === 0} onClick={() => { this.handleVideoPlay(videoArray); }}>视频联动</Button> : null
+            <Button htmlType="button" size="small" disabled={this.state.selectedRows.checkedVideos.length === 0} onClick={() => { this.handleVideoPlay(videoArray); }}>视频联动</Button> : null
           }
           {/* 视频设备 */}
           {resourceInfo.ctrlResourceType && resourceInfo.ctrlResourceType.indexOf('101.102.101') === 0 ?
-            <Button size="small" onClick={this.handleVideoPlay}>播放视频</Button> : null
+            <Button htmlType="button" size="small" onClick={this.handleVideoPlay}>播放视频</Button> : null
           }
           {
             resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.107.102') === 0 ||
@@ -939,16 +986,19 @@ class AlarmInfo extends PureComponent {
               resourceInfo.ctrlResourceType.indexOf('103.101.1') === 0 ||
               // 水电汽风
               resourceInfo.ctrlResourceType.indexOf('103.101.2') === 0) ? (
-                <Button size="small" onClick={this.addToBoard}>加入看板 </Button>
+                <Button htmlType="button" size="small" onClick={this.addToBoard}>加入看板 </Button>
               ) : null
           }
           {/* 扩音设备或扩音分区 */}
           {resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.103.102') === 0 ||
             resourceInfo.ctrlResourceType.indexOf('101.103.103') === 0) ?
-              <Button size="small">打开/关闭广播</Button> : null
+              <Button htmlType="button" size="small">打开/关闭广播</Button> : null
           }
           {alarmBoardData && JSON.stringify(alarmBoardData) !== '{}' ?
-            <Button size="small" onClick={this.alarmDeal}>报警处理</Button> : null
+            <Button htmlType="button" size="small" onClick={this.alarmDeal}>报警处理</Button> : null
+          }
+          { ctrlResourceType === 'event' && event !== undefined ?
+            <Button htmlType="button" size="small" onClick={this.enterEvent}>进入事件列表</Button> : null
           }
         </div>
       </div>);
