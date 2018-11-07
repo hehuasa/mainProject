@@ -8,8 +8,6 @@ import AddTemplate from '../AddTemplate/index';
 
 // const { TabPane } = Tabs;
 // const FormItem = Form.Item;
-@Form.create()
-
 export default class AlarmInfo extends PureComponent {
   componentDidMount() {
     const { alarmId } = this.props.alarmInfo;
@@ -29,7 +27,7 @@ export default class AlarmInfo extends PureComponent {
       <div>
         <AlarmEventInfo isEvent={isEvent} alarmInfoConten={alarmDeal.alarmInfoConten} form={form} />
         { isEvent ? <AddTemplate casualtiesData={alarmDeal.alarmInfoConten.casualtys} form={form} /> : null}
-        <Footer save={() => save(form, 1)} cancel={cancel} onChange={onChange} />
+        {/*<Footer save={() => save(form, 1)} cancel={cancel} onChange={onChange} />*/}
       </div>
     );
   }

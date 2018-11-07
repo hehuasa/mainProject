@@ -8,7 +8,7 @@ import {
   Form,
   Input,
   Select,
-  Icon,
+  Table,
   Button,
   Dropdown,
   Menu,
@@ -139,6 +139,126 @@ const CreateForm = Form.create()((props) => {
     </Modal>
   );
 });
+// 账户配置角色
+const ConfigRole = Form.create()((props) => {
+  const { configRoleVisible, form, doRoleConfig, roleConfigVisible, rolePage } = props;
+  const { account, onChange, onChecked, roleIDs } = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      doRoleConfig(fieldsValue.accountID);
+    });
+  };
+  // 关闭后销毁子元素
+  const destroyOnClose = true;
+  const columns = [
+    { title: '角色名称',
+      dataIndex: 'roleName',
+      isExport: true,
+      isTableItem: true,
+      width: '20%',
+      key: 'roleName' },
+    { title: '角色编码',
+      dataIndex: 'roleCode',
+      isExport: true,
+      width: '15%',
+      isTableItem: false,
+      key: 'roleCode' },
+    { title: '角色类型',
+      dataIndex: 'roleType',
+      isExport: true,
+      width: '15%',
+      isTableItem: false,
+      render: (text) => {
+        return text === 1 ? '功能角色' : '数据角色';
+      },
+      key: 'roleType' },
+    { title: '角色描述',
+      dataIndex: 'roleDes',
+      isExport: true,
+      isTableItem: true,
+      width: '45%',
+      key: 'roleDes' },
+  ];
+  return (
+    <Modal
+      destroyOnClose={destroyOnClose}
+      title="账户配置角色"
+      visible={configRoleVisible}
+      onOk={okHandle}
+      width="80%"
+      onCancel={roleConfigVisible}
+    >
+      <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+        <FormItem>
+          {form.getFieldDecorator('accountID', {
+                initialValue: account.accountID,
+                rules: [],
+              })(
+                <Input type="hidden" />
+              )}
+        </FormItem>
+        <Col md={8} sm={24}>
+          <FormItem
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 15 }}
+            label="部门"
+          >
+            {form.getFieldDecorator('orgnizationName', {
+                initialValue: account.baseUserInfo.orgnizationName,
+              })(
+                <Input disabled />
+              )}
+          </FormItem>
+        </Col>
+        <Col md={8} sm={24}>
+          <FormItem
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 15 }}
+            label="姓名"
+          >
+            {form.getFieldDecorator('userName', {
+                initialValue: account.baseUserInfo.userName,
+              })(
+                <Input disabled />
+              )}
+          </FormItem>
+        </Col>
+        <Col md={8} sm={24}>
+          <FormItem
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 15 }}
+            label="账号"
+          >
+            {form.getFieldDecorator('loginAccount', {
+              initialValue: account.loginAccount,
+            })(
+              <Input disabled />
+            )}
+          </FormItem>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={20} offset={2}>
+          <Table
+            dataSource={rolePage.data}
+            size="small"
+            columns={columns}
+            pagination={{
+              ...rolePage.pagination,
+              onChange,
+            }}
+            rowSelection={{
+              onChange: onChecked,
+              selectedRowKeys: roleIDs.map(item => item.roleID),
+            }}
+            rowKey={record => record.roleID}
+          />
+        </Col>
+      </Row>
+    </Modal>
+  );
+});
 
 @connect(({ loading, accountInfo, typeCode, organization }) => ({
   loading: loading.effects['system/accountInfo/getAccounts'],
@@ -157,6 +277,10 @@ export default class TableList extends PureComponent {
     formValues: {},
     //  修改还是新增
     isAdd: true,
+    // 配置角色弹窗
+    configRoleVisible: false,
+    // 选中的角色
+    selectedRowKeys: [],
   };
   componentDidMount() {
     const { dispatch } = this.props;
@@ -195,7 +319,7 @@ export default class TableList extends PureComponent {
         // 获取该行的id，可以获取的到，传到函数里的时候打印直接把整个表格所有行id全部打印了
         return (
           <Fragment>
-            <a href="javascript: void(0)" onClick={() => this.configRole(record)}>配置角色</a>
+            <a href="javascript: void(0)" onClick={() => this.showRoleConfig(record)}>配置角色</a>
           </Fragment>
         );
       },
@@ -224,7 +348,7 @@ export default class TableList extends PureComponent {
     }
 
     dispatch({
-      type: 'accountInfo/page',
+      type: 'accountInfo/accountRolePage',
       payload: params,
     });
   };
@@ -236,7 +360,7 @@ export default class TableList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'accountInfo/page',
+      type: 'accountInfo/accountRolePage',
       payload: commonData.pageInitial,
     });
   };
@@ -389,6 +513,55 @@ export default class TableList extends PureComponent {
       payload: '100',
     });
   };
+  // 配置角色 打开弹窗并请求角色信息
+  showRoleConfig = (record) => {
+    this.setState({
+      configRoleVisible: true,
+    });
+    this.props.dispatch({
+      type: 'accountInfo/get',
+      payload: record.accountID,
+    });
+    this.props.dispatch({
+      type: 'accountInfo/getRolesByAccountID',
+      payload: { accountID: record.accountID },
+    });
+    this.rolePage(1, 10);
+  };
+  // 控制配置角色弹窗是否可见
+  roleConfigVisible = () => {
+    this.setState({
+      configRoleVisible: !this.state.configRoleVisible,
+    });
+  };
+  // 提交配置的角色
+  doRoleConfig = (accountID) => {
+    const { roleIDs } = this.props.accountInfo;
+    this.props.dispatch({
+      type: 'accountInfo/changeAccountRole',
+      payload: { accountID, roleIDs: roleIDs.map(item => item.roleID) },
+    }).then(() => {
+      this.setState({
+        configRoleVisible: false,
+      });
+    });
+  };
+  // 勾选的角色
+  onChecked = (selectedRowKeys, selectedRows) => {
+    this.setState({
+      selectedRowKeys,
+    });
+    this.props.dispatch({
+      type: 'accountInfo/saveRoleIDs',
+      payload: selectedRows,
+    });
+  };
+  rolePage = (pageNum, pageSize) => {
+    this.props.dispatch({
+      type: 'accountInfo/rolePage',
+      payload: { pageNum, pageSize },
+    });
+  };
   // 递归渲染
   renderTreeNodes = (data) => {
     return data.map((item) => {
@@ -453,9 +626,9 @@ export default class TableList extends PureComponent {
     return this.renderSimpleForm();
   }
   render() {
-    const { loading, accountInfo: { accountRolePage }, accountInfo: { account } } = this.props;
+    const { loading, accountInfo: { accountRolePage, rolePage, roleIDs }, accountInfo: { account } } = this.props;
     const { accountTypeList } = this.props.typeCode;
-    const { selectedRows, modalVisible } = this.state;
+    const { selectedRows, modalVisible, configRoleVisible } = this.state;
     const columns = this.initData();
     const parentMethods = {
       handleAdd: this.handleAdd,
@@ -486,6 +659,16 @@ export default class TableList extends PureComponent {
           account={account}
           list={[]}
           isAdd={this.state.isAdd}
+        />
+        <ConfigRole
+          configRoleVisible={configRoleVisible}
+          account={account}
+          rolePage={rolePage}
+          roleIDs={roleIDs}
+          onChange={this.rolePage}
+          doRoleConfig={this.doRoleConfig}
+          roleConfigVisible={this.roleConfigVisible}
+          onChecked={this.onChecked}
         />
       </PageHeaderLayout>
     );

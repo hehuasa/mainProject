@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Tabs, Row, Col, Input, Card, Radio } from 'antd';
+import { Form, Tabs, Row, Col, Input, Card, Radio, Button, Checkbox } from 'antd';
 import { connect } from 'dva';
 import AlarmInfo from './AlarmInfo/index';
 import Footer from './Footer/index';
@@ -38,12 +38,14 @@ const RealEvent = Form.create()((props) => {
 
 @connect(({ alarmDeal, emergency, alarm }) => ({
   alarmInfo: alarmDeal.alarmInfo,
+  alarmInfoConten: alarmDeal.alarmInfoConten,
   alarmDealTypeList: alarmDeal.alarmDealTypeList,
   isDrill: alarmDeal.isDrill,
   alarmDeal,
   emergency,
   alarm,
 }))
+@Form.create()
 export default class AlarmDeal extends PureComponent {
   state = {
     dealType: '104.103',
@@ -54,11 +56,12 @@ export default class AlarmDeal extends PureComponent {
       type: 'alarmDeal/getAlarmDealTypeList',
       payload: 104,
     });
+    console.log(666, this.props.alarmInfoConten)
   }
   // 保存报警处理信息
-  save = (form, type) => {
+  save = () => {
     // e.preventDefault();
-    const { dispatch, alarmInfo } = this.props;
+    const { dispatch, alarmInfo, form } = this.props;
     const { alarmId } = alarmInfo;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -146,8 +149,17 @@ export default class AlarmDeal extends PureComponent {
         }
       </RadioGroup>
     );
+    const extra = (
+      <div className={styles.extra}>
+        {this.props.alarmInfoConten.alarmWay === 1 ? (
+          <Button type="primary">保存</Button>
+        ) : null }
+        <Button onClick={this.save} type="primary">提交</Button>
+        <Checkbox value={this.props.isDrill} onChange={this.onChange}>应急演练</Checkbox>
+      </div>
+    );
     return (
-      <Card title={title} >
+      <Card title={title} extra={extra} >
         <AlarmInfo
           save={this.save}
           dispatch={this.props.dispatch}
@@ -155,28 +167,10 @@ export default class AlarmDeal extends PureComponent {
           alarmDeal={this.props.alarmDeal}
           isEvent={this.state.dealType === '104.103'}
           cancel={this.cancel}
+          form={this.props.form}
           onChange={this.onChange}
         />
       </Card>
     );
   }
 }
-{ /* <div className={styles.alarmDeal}> */ }
-{ /* <Tabs type="card"> */ }
-{ /* <TabPane tab="真实报警生成应急事件" key="1"> */ }
-{ /* <AlarmInfo save={this.save} dispatch={this.props.dispatch} alarmInfo={this.props.alarmInfo} alarmDeal={this.props.alarmDeal} cancel={this.cancel} /> */ }
-{ /* </TabPane> */ }
-{ /* <TabPane tab="真实报警不生成应急事件" key="2"> */ }
-{ /* <RealEvent save={this.save} cancel={this.cancel} type="2" /> */ }
-{ /* </TabPane> */ }
-{ /* <TabPane tab="调试" key="3"> */ }
-{ /* <RealEvent save={this.save} cancel={this.cancel} type="3" /> */ }
-{ /* </TabPane> */ }
-{ /* <TabPane tab="误报" key="4"> */ }
-{ /* <RealEvent save={this.save} cancel={this.cancel} type="4" /> */ }
-{ /* </TabPane> */ }
-{ /* <TabPane tab="故障误报" key="5"> */ }
-{ /* <RealEvent save={this.save} cancel={this.cancel} type="5" /> */ }
-{ /* </TabPane> */ }
-{ /* </Tabs> */ }
-{ /* </div> */ }

@@ -162,7 +162,7 @@ export default class MapTools extends PureComponent {
     //   </div>
     // ) : null;
     return (
-      <div>hjj
+      <div>
         <div className={styles.tools} onClick={this.handleClick} style={{ zIndex: stopPropagation ? -1 : null }}>
           <div title="放大"><img src={zoomIn} alt="放大" /></div>
           <div title="缩小"><img src={zoomOut} alt="缩小" /></div>

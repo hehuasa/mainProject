@@ -37,6 +37,7 @@ const FeatureTitle = ({ onCheckboxFeature }) => {
   dealCardList: planManagement.dealCardList,
   orgAnnexList: planManagement.orgAnnexList,
   emgcAnnex: planManagement.emgcAnnex,
+  eventType: planManagement.eventType,
   currentUser: user.currentUser,
 }))
 export default class PlanInfo extends PureComponent {
@@ -213,6 +214,7 @@ export default class PlanInfo extends PureComponent {
       getData.drectFeature = fieldsValue.drectFeature;
       getData.featureValue = fieldsValue.featureValue;
       getData.featureExpresstion = fieldsValue.featureExpresstion;
+      getData.dataType = fieldsValue.dataType;
       if (feature && feature.props.title !== undefined) {
         getData.featureID = feature.props.title;
       } else {
@@ -389,12 +391,13 @@ export default class PlanInfo extends PureComponent {
     // 请求   特征类型   事件类型
     this.props.dispatch({
       type: 'planManagement/selectByTypeParent',
-    });
-    this.setState({
-      featureVisible: true,
-      isAdd: false,
-      panRedirectFeatureID: id,
-      featureID: record.planFeatureInfo.featureID,
+    }).then(() => {
+      this.setState({
+        featureVisible: true,
+        isAdd: false,
+        panRedirectFeatureID: id,
+        featureID: record.planFeatureInfo.featureID,
+      });
     });
     this.props.dispatch({
       type: 'planManagement/getEventFeaturePlan',
@@ -623,17 +626,6 @@ export default class PlanInfo extends PureComponent {
     // 实施方案 事件特征表头
     const featureCols = [
       {
-        title: '特征编号',
-        dataIndex: 'featureCode',
-        width: 100,
-        key: 'featureCode',
-        render: (text, record) => {
-          if (!record.planFeatureInfo) {
-            return 'null';
-          }
-          return record.planFeatureInfo.featureCode;
-        },
-      }, {
         title: '特征类型',
         dataIndex: 'featureTypeName',
         width: 100,

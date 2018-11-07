@@ -2314,3 +2314,22 @@ export async function accountRolePage(params) {
     body: params,
   });
 }
+// 账户配置角色 根据账号配置角色
+export async function getRolesByAccountID(params) {
+  return request(`${path}/system/roleInfo/getRolesByAccountID`, {
+    method: 'POST',
+    body: params,
+  });
+}
+// 保存账户配置的角色 int accountID,int[] roleIDs
+export async function saveAccountRole(params) {
+  return request(`${path}/system/baseAccountRole/edit`, {
+    method: 'POST',
+    body: params,
+  });
+}
+// 接口平台 接口列表
+export async function getPluginList() {
+  return request(`${path}/plugin/getpluginstate`);
+}
+

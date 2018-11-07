@@ -31,8 +31,8 @@ export default {
     resourceContent: [], // 预案资源接
     featurePlan: [], // 获取预案管理特征
     eventFeaturePlan: {}, // 预案事件特征数据
-    featureType: [], // 码表556-特征类型
-    eventType: [], // 码表557-事件类型
+    featureType: [], // 码表557-特征类型
+    eventType: [], // 码表556-事件类型
     preplanType: [], // 码表558-预案类型
     publisher: [], // 获取 编制部门就是发布机构
     planLevelData: [], // 预案级别
@@ -222,8 +222,8 @@ export default {
       });
     },
     *selectByTypeParent(payload, { call, put }) {
-      const feature = yield call(selectByTypeParent, 556);
-      const event = yield call(selectByTypeParent, 557);
+      const feature = yield call(selectByTypeParent, 557);
+      const event = yield call(selectByTypeParent, 556);
       yield put({
         type: 'saveSelectByTypeParent',
         payload: {

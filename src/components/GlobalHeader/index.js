@@ -599,7 +599,7 @@ export default class GlobalHeader extends PureComponent {
       <div>
         <Button onClick={this.onCancelAlarm}>取消</Button>
         <Popconfirm
-          title="确定取消修改?"
+          title="确定提交以上信息?"
           onConfirm={this.onHandAlarm}
         >
           <Button type="primary">确认</Button>

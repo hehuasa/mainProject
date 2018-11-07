@@ -179,11 +179,11 @@ export const commonData = {
         },
         {
           title: '姓名',
-          dataIndex: 'baseUserInfo',
+          dataIndex: 'userName',
           isExport: false,
           isTableItem: true,
           width: '10%',
-          key: 'baseUserInfo',
+          key: 'userName',
           render: (text, record) => {
             return record.baseUserInfo ? record.baseUserInfo.userName : '';
           },
@@ -1089,8 +1089,9 @@ export const commonData = {
     { id: 1, value: 'in', text: 'in' },
     { id: 2, value: '>', text: '>' },
     { id: 3, value: '<', text: '<' },
-    { id: 4, value: '<=', text: '<=' },
-    { id: 5, value: '>=', text: '=>' },
+    { id: 4, value: '=', text: '=' },
+    { id: 5, value: '<=', text: '<=' },
+    { id: 6, value: '>=', text: '=>' },
   ],
 };
 export default { commonData };
