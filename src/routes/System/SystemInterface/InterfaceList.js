@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
-import { Card, Form, Select } from 'antd';
+import { Card, Form, Select, Table } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
@@ -9,14 +9,16 @@ import { commonData } from '../../../../mock/commonData';
 
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 const columns = [
-  { title: '接口名', dataIndex: 'name', key: 'name' },
-  { title: '接口状态', dataIndex: 'status', key: 'status' },
+  { title: '接口名', width: '15%', dataIndex: 'pluginCaption', key: 'pluginCaption' },
+  { title: '接口编码', width: '10%', dataIndex: 'pluginCode', key: 'pluginCode' },
+  { title: '接口状态', width: '10%', dataIndex: 'pluginState', key: 'pluginState', render: text => (text === 1 ? '启用' : '未启用') },
+  { title: '接口来源', width: '60%', dataIndex: 'remark', key: 'remark' },
 ];
 
-@connect(({ userList, typeCode, organization }) => ({
+@connect(({ userList, system }) => ({
   userList,
-  typeCode,
-  organization,
+  system,
+  pluginList: system.pluginList,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -24,58 +26,25 @@ export default class TableList extends PureComponent {
   };
   componentDidMount() {
     const { dispatch } = this.props;
-    this.page(commonData.pageInitial);
+    dispatch({
+      type: 'system/fetch',
+    });
   }
-  // 获取分页数据
-  page = (page) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'userList/page',
-      payload: page,
-    });
-  };
 
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
-    const params = {
-      pageNum: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-      ...filters,
-    };
-    if (sorter.field) {
-      // params.sorter = `${sorter.field}_${sorter.order}`;
-      const { field, order } = sorter;
-      params.sorter = { field, order };
-    }
-
-    dispatch({
-      type: 'userList/page',
-      payload: params,
-    });
-  };
   render() {
     const { loading } = this.props;
     return (
       <PageHeaderLayout title="系统接口列表">
         <Card bordered={false}>
           <div className={styles.tableList}>
-            <StandardTable
-              selectedRows={[]}
+            <Table
               loading={loading}
-              data={{ data: [], pagination: {} }}
+              dataSource={this.props.pluginList}
               columns={columns}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
-              rowKey="userID"
+              pagination={{
+                pageSize: 8,
+              }}
+              rowKey={record => record.pluginID}
             />
           </div>
         </Card>

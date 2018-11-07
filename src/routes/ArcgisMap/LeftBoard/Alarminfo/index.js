@@ -650,9 +650,15 @@ class AlarmInfo extends PureComponent {
       },
     });
     dispatch({
-      type: 'tabs/addTabs',
-      payload: { key: '/command/emergencyEven', title: event.eventName },
+      type: 'tabs/del',
+      payload: { key: '/command/emergencyEvent', title: '应急事件' },
     });
+    setTimeout(() => {
+      dispatch({
+        type: 'tabs/addTabs',
+        payload: { key: '/command/emergencyEvent', title: event.eventName },
+      });
+    }, 0);
   };
   // 报警选择
   handleAlarmChange = (evt) => {

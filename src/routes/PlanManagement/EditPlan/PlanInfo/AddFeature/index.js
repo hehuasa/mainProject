@@ -45,10 +45,10 @@ export default class AddFeature extends PureComponent {
     }
     form.setFieldsValue({
       featureCode: item.featureCode,
-      featureType: item.dataType,
+      dataType: item.dataType,
       featureUnit: item.featureUnit,
       featureDes: item.featureDes,
-      dataType: item.featureType,
+      featureType: item.featureType,
     });
   }
   // 判断是手动输入特征还是自动
@@ -176,11 +176,16 @@ export default class AddFeature extends PureComponent {
               wrapperCol={{ span: 15 }}
               label="数据类型"
             >
-              <Select placeholder="请选择数据类型" style={{ width: '100%' }} onChange={this.dataTypeChange}>
-                <Option value="102.101">字符型</Option>
-                <Option value="102.102">数字型</Option>
-                <Option value="102.104">布尔型</Option>
-              </Select>
+              {form.getFieldDecorator('dataType', {
+                initialValue: eventFeaturePlan.dataType,
+                rules: [],
+              })(
+                <Select placeholder="请选择数据类型" style={{ width: '100%' }} onChange={this.dataTypeChange}>
+                  <Option value="102.101">字符型</Option>
+                  <Option value="102.102">数字型</Option>
+                  <Option value="102.104">布尔型</Option>
+                </Select>
+              )}
             </FormItem>
           </Col>
           <Col md={24}>
@@ -245,36 +250,12 @@ export default class AddFeature extends PureComponent {
                 ],
               })(
                 <Select
-                  placeholder="请选择事件类型"
+                  placeholder="请选择特征类型"
                   style={{ width: '100%' }}
                   disabled={idDisabled}
                 >
                   {
                     featureType.map(item => (
-                      <Option key={`${item.codeID}`} value={`${item.code}`} >{item.codeName}</Option>
-                    ))
-                  }
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={24}>
-            <FormItem
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 15 }}
-              label="事件类型"
-            >
-              {form.getFieldDecorator('dataType', {
-                initialValue: eventFeaturePlan.planFeatureInfo ? eventFeaturePlan.planFeatureInfo.dataType : null,
-                rules: [],
-              })(
-                <Select
-                  placeholder="请选择事件类型"
-                  style={{ width: '100%' }}
-                  disabled={idDisabled}
-                >
-                  {
-                    eventType.map(item => (
                       <Option key={`${item.codeID}`} value={`${item.code}`} >{item.codeName}</Option>
                     ))
                   }

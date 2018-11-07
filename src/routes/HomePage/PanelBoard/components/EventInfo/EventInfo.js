@@ -52,6 +52,7 @@ export default class EventInfo extends PureComponent {
           <p className={styles.eventTitle}>{eventInfoReport.eventName}</p>
           <p className={styles.responseTitle}>响应时长：<span className={styles.responseTitleColor}>{eventInfoReport.continueTime}</span></p>
           <p className={styles.incidentTitle}>事发时间：{eventInfoReport.eventTime ? moment(eventInfoReport.eventTime).format('YYYY-MM-DD HH:mm:ss') : null}</p>
+          <p className={styles.incidentTitle}>事件级别：{eventInfoReport.emgcLevelName}</p>
           <p className={styles.incidentTitle}><Icon type="environment" style={{ margin: '0 3px', color: '#8080f1' }} />{eventInfoReport.eventPlace}</p>
           <div style={{ paddingLeft: 16 }}>
             {
