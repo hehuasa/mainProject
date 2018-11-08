@@ -10,7 +10,7 @@ import SourceOfRisk from './SourceOfRisk/index';
 import levelGray from '../../../../assets/map/alarm/levelGray.png';
 import levelRed from '../../../../assets/map/alarm/levelRed.png';
 import { alarmStatus, getBrowserStyle, getBrowserScroll, formatDuring } from '../../../../utils/utils';
-import { searchByAttr, addVideoIcon, changeIcon, transToPoint } from '../../../../utils/MapService';
+import { searchByAttr, addVideoIcon, changeIcon, transToPoint } from '../../../../utils/mapService';
 import { infoConstantly, constantlyPanelModal, infoPopsModal } from '../../../../services/constantlyModal';
 import { getRealHistoryData } from '../../../../utils/Panel';
 import close from '../../../../assets/map/叉叉.png';

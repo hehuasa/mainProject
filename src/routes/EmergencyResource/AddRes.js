@@ -34,7 +34,6 @@ export default class AddRes extends PureComponent {
   hideUserPage = () => {
     this.setState({
       showUserModal: false,
-      cacheUserID: null,
     });
   };
   // 查重
@@ -127,7 +126,9 @@ export default class AddRes extends PureComponent {
                 wrapperCol={{ span: 15 }}
                 label="保管人"
               >
-                {form.getFieldDecorator('userID')(
+                {form.getFieldDecorator('userID', {
+                  trigger: ['forbidden'],
+                })(
                   <Input.Search enterButton placeholder="请选择保管人" onSearch={this.getUser} />
                 )}
               </FormItem>
@@ -138,9 +139,7 @@ export default class AddRes extends PureComponent {
                 wrapperCol={{ span: 15 }}
                 label="单位"
               >
-                {form.getFieldDecorator('materialUnit', {
-                  rules: [{ required: true, message: '不能为空' }],
-                })(
+                {form.getFieldDecorator('materialUnit')(
                   <Input placeholder="单位" />
                 )}
               </FormItem>

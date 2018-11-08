@@ -1,4 +1,4 @@
-export const MapService={
+export const mapService={
   searchByAttr:(baseLayer,component,dispatch,searchText)=>{
       esriLoader.loadModules(
         [

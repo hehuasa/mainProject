@@ -22,7 +22,7 @@ import Search from './Sraech';
 import LeftBoard from './LeftBoard';
 import {
   trueMapLocate,
-} from '../../utils/MapService';
+} from '../../utils/mapService';
 import trueMap from '../../assets/map/truemap.jpg';
 import Legend from './Legend/Legend';
 

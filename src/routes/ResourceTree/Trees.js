@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import { ajaxDataFilter } from './fuction';
 import { handleCheck, handleSelected, handleClick } from './treeAction';
 import ReactZtree from './Ztree-react';
-import { addLayer, delLayer, locateDevice } from '../../utils/MapService';
+import { addLayer, delLayer, locateDevice } from '../../utils/mapService';
 import TreeContextMenu from './ContextMenu/TreeContextMenu';
 import styles from './index.less';
 

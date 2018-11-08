@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Table } from 'antd';
 import { columnsList, dataSourceList } from '../../../../../utils/Panel';
-import { searchByAttr } from "../../../../../utils/MapService";
+import { searchByAttr } from "../../../../../utils/mapService";
 
 class CommonLineTable extends PureComponent {
   constructor(props) {

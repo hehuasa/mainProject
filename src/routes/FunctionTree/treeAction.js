@@ -1,7 +1,7 @@
 import {
   addLayer, delLayer, addVocsIcon, transToPoint, clustering, addConstructIcon,
   solidWarehouseDetail, paSystemDetail, addMapAlarms, getBordStyle,
-} from '../../utils/MapService';
+} from '../../utils/mapService';
 import {changeVideoPosition, changeVideoSize, resetAccessStyle, returnHome} from '../../utils/utils';
 import { constantlyModal, infoConstantly, infoPopsModal } from '../../services/constantlyModal';
 import { mapConstants, mapLayers } from '../../services/mapConstant';

@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Table, Form, Input, Button, Card, Row, Col, Modal, Popconfirm } from 'antd';
-import UserPage from './UserPage';
+import { Table, Form, Input, Button, Card, Row, Col, Modal, Popconfirm, message } from 'antd';
 import AddRes from './AddRes';
 import styles from './index.less';
 
@@ -132,6 +131,13 @@ class FromComponent extends PureComponent {
     dispatch({
       type: 'emgcResource/fetchEmgcResourcePage',
       payload: { toolMaterialInfoID: id },
+    }).then(() => {
+      message.success('操作成功');
+      const { pagination } = this.state;
+      dispatch({
+        type: 'emgcResource/fetchEmgcResourcePage',
+        payload: pagination,
+      });
     });
   };
   addRes = () => {
@@ -143,6 +149,8 @@ class FromComponent extends PureComponent {
     dispatch({
       type: 'emgcResource/addEmgcResource',
       payload: value,
+    }).then(() => {
+      message.success('操作成功');
     });
     const { pagination } = this.state;
     dispatch({

@@ -1,6 +1,6 @@
 
 import { lineData, getSelctData } from '../utils/Panel';
-import { addDoorIcon, envMap } from '../utils/MapService';
+import { addDoorIcon, envMap } from '../utils/mapService';
 import {
   getGuardCounting, getGuardDoorCounting, getConditionCalc, findByTime, getAllNewsData, getNewsData, getNewsDataByGroup, getNewsDataByCtrlResourceType,
   getHotFurnaceRunDay, getAlternatorRunDay, getDissociationRunDay,

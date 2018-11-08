@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { queryCountByTime, queryDoorOrgCount, queryCountByDay, queryDoorPage, getAllDoorCountArea, getAllDoorCount } from '../services/api';
-import { addDoorIcon } from '../utils/MapService';
+import { addDoorIcon } from '../utils/mapService';
 
 export default {
   namespace: 'accessControl',

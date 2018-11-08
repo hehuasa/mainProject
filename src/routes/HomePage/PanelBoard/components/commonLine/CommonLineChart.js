@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Chart, Axis, Geom, Tooltip, Legend, Guide } from 'bizcharts';
 import moment from 'moment';
-import { searchByAttr } from '../../../../../utils/MapService';
+import { searchByAttr } from '../../../../../utils/mapService';
 
 const { Line } = Guide;
 

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Table } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
-import { searchByAttr } from '../../../../utils/MapService';
+import { searchByAttr } from '../../../../utils/mapService';
 import styles from './zoomComponents.less';
 import { mapConstants } from '../../../../services/mapConstant';
 

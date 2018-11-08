@@ -6,7 +6,7 @@ import styles from './index.less';
 import up from '../../../assets/envi/carousel-up.png';
 import down from '../../../assets/envi/carousel-down.png';
 import bar from '../../../assets/homePage/panel/bar.png';
-import { delLayer } from '../../../utils/MapService';
+import { delLayer } from '../../../utils/mapService';
 
 class HeaderPanelData extends PureComponent {
   constructor(props) {

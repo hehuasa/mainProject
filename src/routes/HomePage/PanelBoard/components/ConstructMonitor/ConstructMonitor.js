@@ -4,7 +4,7 @@ import moment from 'moment';
 import TypeByArea from './TypeByArea';
 import TypeByJobType from './TypeByJobType';
 import TableList from './TableList';
-import { searchByAttr } from '../../../../../utils/MapService';
+import { searchByAttr } from '../../../../../utils/mapService';
 
 const switchData = (list, type) => {
   const data = [];

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Popover, Divider } from 'antd';
 import { mapConstants } from '../../../../services/mapConstant';
-import { createExtent } from '../../../../utils/MapService';
+import { createExtent } from '../../../../utils/mapService';
 import styles from './index.less';
 
 const mapStateToProps = ({ map }) => {

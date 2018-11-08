@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Table } from 'antd';
 import { connect } from 'dva';
-import { searchByAttr } from '../../../../../utils/MapService';
+import { searchByAttr } from '../../../../../utils/mapService';
 import { mapConstants } from '../../../../../services/mapConstant';
 import styles from '../panel.less';
 

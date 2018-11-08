@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Spin } from 'antd';
 import { connect } from 'dva';
 import ReactZtree from './Ztree-react';
-import { searchByAttr, addLayer, delLayer, locateDevice, alarmCounting } from '../../utils/MapService';
+import { searchByAttr, addLayer, delLayer, locateDevice, alarmCounting } from '../../utils/mapService';
 import TreeContextMenu from './ContextMenu/TreeContextMenu';
 import { mapConstants } from '../../services/mapConstant';
 import styles from './index.less';

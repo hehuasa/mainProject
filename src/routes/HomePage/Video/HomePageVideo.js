@@ -10,7 +10,7 @@ import a2 from '../../../assets/homePage/video/3.png';
 import a3 from '../../../assets/homePage/video/4.png';
 import a4 from '../../../assets/homePage/video/5.png';
 import { mapConstants } from '../../../services/mapConstant';
-import { getBordStyle } from '../../../utils/MapService';
+import { getBordStyle } from '../../../utils/mapService';
 
 let winScrollHandle = null; let winResizeHandle = null;
 @connect(({ homepage, video }) => {

@@ -4,7 +4,7 @@ import styles from './index.less';
 import carouselRight from '../../../assets/homePage/carousel-right.png';
 import carouselRightIn from '../../../assets/homePage/carousel-right-in.png';
 import { mapConstants } from '../../../services/mapConstant';
-import { getBordStyle } from '../../../utils/MapService';
+import { getBordStyle } from '../../../utils/mapService';
 @connect(({ global, video }) => {
   return {
     collapsed: global.rightCollapsed,

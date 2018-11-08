@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import styles from './index.less';
-import { trueMapTem, transUnit, trueMapLocate } from '../../utils/MapService';
+import { trueMapTem, transUnit, trueMapLocate } from '../../utils/mapService';
 import { mapLayers, mapConstants } from '../../services/mapConstant';
 import switchMap from '../../assets/map/map.jpg';
 import weix from "../../assets/map/weix.png";

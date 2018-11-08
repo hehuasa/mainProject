@@ -15,7 +15,7 @@ import majorIcon from '../../assets/header/major.png';
 import userIcon from '../../assets/header/user.png';
 import settingIcon from '../../assets/header/setting.png';
 import { mapConstants } from '../../services/mapConstant';
-import { getBordStyle } from '../../utils/MapService';
+import { getBordStyle } from '../../utils/mapService';
 import { handleCheck } from '../../routes/ResourceTree/treeAction';
 
 const Option = Select.Option;

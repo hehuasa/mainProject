@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Popover, Row, Col } from 'antd';
 import styles from './index.less';
-import { addVocsHover } from '../../../../utils/MapService';
+import { addVocsHover } from '../../../../utils/mapService';
 
 const mapStateToProps = ({ map }) => {
   return {

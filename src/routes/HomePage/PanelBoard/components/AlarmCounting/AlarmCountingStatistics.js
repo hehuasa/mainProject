@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Chart, Axis, Geom, Tooltip } from 'bizcharts';
-import { searchByAttr } from '../../../../../utils/MapService';
+import { searchByAttr } from '../../../../../utils/mapService';
 import styles from '../panel.less';
 
 const getCols = (length) => {

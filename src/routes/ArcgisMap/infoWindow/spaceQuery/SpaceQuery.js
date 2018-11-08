@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { spaceQuery } from '../../../../utils/MapService';
+import { spaceQuery } from '../../../../utils/mapService';
 import styles from './index.less';
 import { mapLayers, mapConstants } from '../../../../services/mapConstant';
 

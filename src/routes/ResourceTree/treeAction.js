@@ -1,7 +1,7 @@
 import {
   addItem, addPolygonItem, delPolygonItem, addLayer, delItem, delLayer, searchByAttr, transToPoint, clustering, addConstructIcon,
   solidWarehouseDetail, paSystemDetail, addMapAlarms, getBordStyle,
-} from '../../utils/MapService';
+} from '../../utils/mapService';
 import { constantlyModal, infoConstantly, infoPopsModal } from '../../services/constantlyModal';
 import { mapConstants, mapLayers } from '../../services/mapConstant';
 import { func, func1 } from './fuction';

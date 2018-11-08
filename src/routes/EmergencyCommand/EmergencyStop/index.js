@@ -6,7 +6,7 @@ import styles from './index.less';
 import { getBrowserStyle } from '../../../utils/utils';
 import Result from '../../../components/Result';
 import {mapConstants} from "../../../services/mapConstant";
-import {getBordStyle} from "../../../utils/MapService";
+import {getBordStyle} from "../../../utils/mapService";
 
 const { TabPane } = Tabs;
 @connect(({ emergency, user, tabs, video, homepage, global }) => ({

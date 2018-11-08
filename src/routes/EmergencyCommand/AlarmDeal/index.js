@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import AlarmInfo from './AlarmInfo/index';
 import Footer from './Footer/index';
 import styles from './index.less';
-import { delAlarmAnimation } from '../../../utils/MapService';
+import { delAlarmAnimation } from '../../../utils/mapService';
 import { mapConstants } from '../../../services/mapConstant';
 
 const { TabPane } = Tabs;

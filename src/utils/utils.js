@@ -2,7 +2,7 @@ import { notification, message } from 'antd';
 import moment from 'moment';
 import { commonData } from '../../mock/commonData';
 import { mapConstants } from '../services/mapConstant';
-import { getBordStyle } from './MapService';
+import { getBordStyle } from './mapService';
 
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;

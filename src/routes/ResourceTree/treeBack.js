@@ -2,7 +2,7 @@
 // import { Spin } from 'antd';
 // import { connect } from 'dva';
 // import ReactZtree from './Ztree-react';
-// import { searchByAttr, addLayer, delLayer, locateDevice } from '../../utils/MapService';
+// import { searchByAttr, addLayer, delLayer, locateDevice } from '../../utils/mapService';
 // import TreeContextMenu from './ContextMenu/TreeContextMenu';
 // import styles from './index.less';
 //

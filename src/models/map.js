@@ -1,4 +1,4 @@
-import { searchByAttr, searchByAttrBySorting, space } from '../utils/MapService';
+import { searchByAttr, searchByAttrBySorting, space } from '../utils/mapService';
 import { selectByGISCode, getMonitorResourceObj, getMonitorResource, getMapLayer } from '../services/api';
 import { mapLayers } from '../services/mapConstant';
 // 计算地图弹窗的箭头方向，宽高等

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Button } from 'antd';
 import { connect } from 'dva';
-import { select, measure, delLayer } from '../../../utils/MapService';
+import { select, measure, delLayer } from '../../../utils/mapService';
 import { mapConstants } from '../../../services/mapConstant';
 import styles from './index.less';
 import zoomIn from '../../../assets/map/tools/放大.png';

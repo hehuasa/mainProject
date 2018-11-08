@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import { getEmgcResource, addEmgcResource, delEmgcResource, selectMaterialCode, getUserPage } from '../services/api';
 
 export default {
@@ -19,11 +20,17 @@ export default {
     },
     // 新增
     *addEmgcResource({ payload }, { call }) {
-      yield call(addEmgcResource, payload);
+      const res = yield call(addEmgcResource, payload);
+      if (Number(res.code) !== 1001) {
+        message.error('操作失败');
+      }
     },
     // 删除
     *delEmgcResource({ payload }, { call }) {
-      yield call(delEmgcResource, payload);
+      const res = yield call(delEmgcResource, payload);
+      if (Number(res.code) !== 1001) {
+        message.error('操作失败');
+      }
     },
     // 查重
     *selectMaterialCode({ payload }, { call, put }) {

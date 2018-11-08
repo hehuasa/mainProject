@@ -7,7 +7,7 @@ import { constantlyModal, infoPopsModal } from '../../services/constantlyModal';
 import { getBrowserStyle } from '../../utils/utils';
 import { mapLayers, mapConstants } from '../../services/mapConstant';
 import styles from './index.less';
-import { hoveringAlarm, switchAlarmIcon, addEventIcon } from '../../utils/MapService';
+import { hoveringAlarm, switchAlarmIcon, addEventIcon } from '../../utils/mapService';
 
 const current = {};
 let symboltt = {};

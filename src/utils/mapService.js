@@ -2417,9 +2417,15 @@ export const addEventIcon = (popupScale, events) => {
       height: '32px',
       angle,
     };
+    // 有报警探测的图层
+    const alarmLayerIds = [];
+    const layers = mapLayers.FeatureLayers.filter(value => value.isAlarmLayer);
+    for (const item of layers) {
+      alarmLayerIds.push(item.id);
+    }
     for (const event of events) {
       if (event.gISCode !== null) {
-        searchByAttr({ searchText: event.gISCode, searchFields: ['ObjCode'] }).then((res) => {
+        searchByAttr({ searchText: event.gISCode, searchFields: ['ObjCode'], layerIds: alarmLayerIds }).then((res) => {
           if (res[0]) {
             const newGeo = transToPoint(res[0].feature.geometry);
             const eventGraphic = new Graphic(newGeo, eventSy, { ...res[0].feature.attributes, event, isEvent: true });

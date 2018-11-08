@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import { Button } from 'antd';
 import esriLoader from "esri-loader";
 import { connect } from 'dva'
-import MapService from '../../utils/MapService'
+import mapService from '../../utils/mapService'
 
 
 const mapStateToProps=({map}) => {

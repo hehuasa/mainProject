@@ -6,7 +6,7 @@ import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import StandardTable from '../../../components/StandardTable';
 import { commonData } from '../../../../mock/commonData';
 import styles from './unhandledEvent.less';
-import { getBordStyle } from '../../../utils/MapService';
+import { getBordStyle } from '../../../utils/mapService';
 import { mapConstants } from '../../../services/mapConstant';
 import {changeVideoPosition, changeVideoSize, resetAccessStyle} from "../../../utils/utils";
 

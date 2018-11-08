@@ -8,7 +8,7 @@ import paPlay from '../../../../assets/map/PASys/扩音播放.png';
 import paPlay2 from '../../../../assets/map/PASys/扩音播放2.png';
 import paClose from '../../../../assets/map/PASys/扩音关闭.png';
 import paClose2 from '../../../../assets/map/PASys/扩音关闭2.png';
-import { paSystemDetail } from '../../../../utils/MapService';
+import { paSystemDetail } from '../../../../utils/mapService';
 
 const { Panel } = Collapse;
 @connect(({ map, homepage, resourceTree, paSystem }) => {

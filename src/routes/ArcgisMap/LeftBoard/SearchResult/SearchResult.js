@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Pagination, message } from 'antd';
 import { connect } from 'dva';
-import { addSearchIcon, changeIcon } from '../../../../utils/MapService';
+import { addSearchIcon, changeIcon } from '../../../../utils/mapService';
 import styles from '../../Sraech/index.less';
 import locateHover from '../../../../assets/map/search/locate.png';
 import locate from '../../../../assets/map/search/locate-hover.png';
@@ -67,10 +67,11 @@ class SearchResult extends PureComponent {
     const { view, mainMap } = mapConstants;
     const { dispatch } = this.props;
     // 根据ObjCode 作为giscode 请求资源数据
-    const GISCode = item.feature.attributes.ObjCode || item.feature.attributes['唯一编码'];
+    const { attributes } = item.feature;
+    const GISCode = attributes.ObjCode || attributes['唯一编码'];
     dispatch({
       type: 'resourceTree/selectByGISCode',
-      payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, GISCode },
+      payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, GISCode, attributes },
     }).then(() => {
       if (this.props.resourceTree.resourceInfo === undefined || this.props.resourceTree.resourceInfo === {}) {
         message.error('未请求到资源相关数据');

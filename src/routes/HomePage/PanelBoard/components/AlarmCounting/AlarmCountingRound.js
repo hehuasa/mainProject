@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Chart, Geom, Axis, Tooltip, Coord, Label, Legend } from 'bizcharts';
 import { DataSet } from '@antv/data-set';
-import { searchByAttr } from '../../../../../utils/MapService';
+import { searchByAttr } from '../../../../../utils/mapService';
 import styles from '../panel.less';
 
 export default class AlarmCountingRound extends PureComponent {

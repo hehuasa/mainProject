@@ -7,7 +7,7 @@ import EmergencyCommand from './EmergencyCommand';
 
 import styles from './index.less';
 import { mapConstants } from '../../services/mapConstant';
-import { getBordStyle } from '../../utils/MapService';
+import { getBordStyle } from '../../utils/mapService';
 import { ajaxDataFilter } from './fuction';
 import { handleClick, handleCheck, handleSelected } from './treeAction';
 import {changeVideoPosition, changeVideoSize, getBrowserStyle, resetAccessStyle} from "../../utils/utils";

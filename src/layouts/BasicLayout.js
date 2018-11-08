@@ -41,7 +41,7 @@ import {
   delAlarmAnimation,
   getBordStyle,
   searchByAttr,
-} from '../utils/MapService';
+} from '../utils/mapService';
 import { infoPopsModal } from '../services/constantlyModal';
 
 

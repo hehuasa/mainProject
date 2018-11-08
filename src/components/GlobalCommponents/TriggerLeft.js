@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Icon } from 'antd';
 import styles from './index.less';
-import { getBordStyle } from '../../utils/MapService';
+import { getBordStyle } from '../../utils/mapService';
 import { mapConstants } from '../../services/mapConstant';
 
 @connect(({ global }) => {

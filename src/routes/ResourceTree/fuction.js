@@ -1,5 +1,5 @@
 // 资源树组装
-import { addBorder, addConstantItem, delLayer } from '../../utils/MapService';
+import { addBorder, addConstantItem, delLayer } from '../../utils/mapService';
 import { constantlyModal } from '../../services/constantlyModal';
 
 export const ajaxDataFilter = (treeId, parentNode, responseData) => {
