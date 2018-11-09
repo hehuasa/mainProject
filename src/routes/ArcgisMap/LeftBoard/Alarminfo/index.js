@@ -130,11 +130,11 @@ class AlarmInfo extends PureComponent {
       });
     }
     // 请求实时数据
-    if (ctrlResourceType.indexOf('102.102') === 0 || // 外排口
+    if (ctrlResourceType && (ctrlResourceType.indexOf('102.102') === 0 || // 外排口
       ctrlResourceType.indexOf('101.107.102') === 0 || // 气体实时数据
       ctrlResourceType.indexOf('103.101.2') === 0 || // 水电汽风实时数据
       ctrlResourceType.indexOf('103.101.1') === 0 // 生产设备 大机组、发电机、锅炉、裂解炉
-    ) {
+      )) {
       dispatch({
         type: 'resourceTree/getRealData',
         payload: { ctrlResourceType, resourceID: this.props.resourceTree.resourceInfo.resourceID },
@@ -682,10 +682,6 @@ class AlarmInfo extends PureComponent {
     const { alarmSelectIndex } = this.state;
     const { resourceInfo, rowInfo, materialHarmInfo, materialFireControl } = resourceTree;
     const { event } = resourceInfo;
-    let name;
-    if (ctrlResourceType === 'mapResOnly') {
-      name = resourceInfo['设备名称'] || resourceInfo['建筑名称'] || resourceInfo['罐区名称'] || resourceInfo['区域名称'] || resourceInfo['装置区名称'] || resourceInfo['名称'];
-    }
     const { universalData } = infoConstantly.data; // 实时数据
     const videoArray = [];
     if (resourceInfo.beMonitorObjs) {
@@ -1012,41 +1008,38 @@ class AlarmInfo extends PureComponent {
               {resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201') === -1 ?
                 <Button htmlType="button" size="small" onClick={this.linkMap}>地图定位</Button> :
                 null
-              }
+            }
 
-              {/* 该资源被检测 */}
-              {resourceInfo.beMonitorObjs && resourceInfo.beMonitorObjs.length > 0 ?
-                <Button htmlType="button" size="small" disabled={this.state.selectedRows.checkedVideos.length === 0} onClick={() => { this.handleVideoPlay(videoArray); }}>视频联动</Button> : null
-              }
-              {/* 视频设备 */}
-              {resourceInfo.ctrlResourceType && resourceInfo.ctrlResourceType.indexOf('101.102.101') === 0 ?
-                <Button htmlType="button" size="small" onClick={this.handleVideoPlay}>播放视频</Button> : null
-              }
-              {
-                resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.107.102') === 0 ||
-                  // 环保
-                  resourceInfo.ctrlResourceType.indexOf('102.102') === 0 ||
-                  // 生成设备
-                  resourceInfo.ctrlResourceType.indexOf('103.101.1') === 0 ||
-                  // 水电汽风
-                  resourceInfo.ctrlResourceType.indexOf('103.101.2') === 0) ? (
-                    <Button htmlType="button" size="small" onClick={this.addToBoard}>加入看板 </Button>
-                ) : null
-              }
-              {/* 扩音设备或扩音分区 */}
-              {resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.103.102') === 0 ||
-                resourceInfo.ctrlResourceType.indexOf('101.103.103') === 0) ?
-                  <Button htmlType="button" size="small">打开/关闭广播</Button> : null
-              }
-              {alarmBoardData && JSON.stringify(alarmBoardData) !== '{}' ?
-                <Button htmlType="button" size="small" onClick={this.alarmDeal}>报警处理</Button> : null
-              }
-              { ctrlResourceType === 'event' && event !== undefined ?
-                <Button htmlType="button" size="small" onClick={this.enterEvent}>进入事件列表</Button> : null
-              }
-            </div>
-) : null }
-
+          {/* 该资源被检测 */}
+          {resourceInfo.beMonitorObjs && resourceInfo.beMonitorObjs.length > 0 ?
+            <Button htmlType="button" size="small" disabled={this.state.selectedRows.checkedVideos.length === 0} onClick={() => { this.handleVideoPlay(videoArray); }}>视频联动</Button> : null
+          }
+          {/* 视频设备 */}
+          {resourceInfo.ctrlResourceType && resourceInfo.ctrlResourceType.indexOf('101.102.101') === 0 ?
+            <Button htmlType="button" size="small" onClick={this.handleVideoPlay}>播放视频</Button> : null
+          }
+          {
+            resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.107.102') === 0 ||
+              // 环保
+              resourceInfo.ctrlResourceType.indexOf('102.102') === 0 ||
+              // 生成设备
+              resourceInfo.ctrlResourceType.indexOf('103.101.1') === 0 ||
+              // 水电汽风
+              resourceInfo.ctrlResourceType.indexOf('103.101.2') === 0) ? (
+                <Button htmlType="button" size="small" onClick={this.addToBoard}>加入看板 </Button>
+              ) : null
+          }
+          {/* 扩音设备或扩音分区 */}
+          {resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.103.102') === 0 ||
+            resourceInfo.ctrlResourceType.indexOf('101.103.103') === 0) ?
+              <Button htmlType="button" size="small">打开/关闭广播</Button> : null
+          }
+          {alarmBoardData && JSON.stringify(alarmBoardData) !== '{}' ?
+            <Button htmlType="button" size="small" onClick={this.alarmDeal}>报警处理</Button> : null
+          }
+          { ctrlResourceType === 'event' && event !== undefined ?
+            <Button htmlType="button" size="small" onClick={this.enterEvent}>进入事件列表</Button> : null
+          }
         </div>
       </div>);
   }

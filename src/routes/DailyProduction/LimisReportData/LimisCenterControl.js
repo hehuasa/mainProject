@@ -86,6 +86,26 @@ export default class EquipmentProductInfo extends PureComponent {
       return '/';
     }
   };
+  // 获取聚合装置中控质量情况实测值
+  getPolymerizerText = (record) => {
+    const { limisCenterControl } = this.props;
+    if(limisCenterControl.length < 1) return;
+    const { central } = limisCenterControl[0];
+    const arr = central.filter(item =>
+      record.locationSearchValue.findIndex(value => value === item.location) !== -1
+      && record.sampleSearchValue.findIndex(value => value === item.sampleName) !== -1
+      && record.nameSearchValue.findIndex(value => value === item.nameContent) !== -1);
+    const { length } = arr;
+    let str = '';
+    if (length > 0) {
+      arr.forEach((item, index) => {
+        index === arr.length - 1 ? str += `${item.textContent}` : str += `${item.textContent}/`;
+      });
+      return str;
+    } else {
+      return '/';
+    }
+  };
   renderView = (props) => {
     props.style.right = 100;
     return (
@@ -155,6 +175,35 @@ export default class EquipmentProductInfo extends PureComponent {
         },
       },
     ];
+    const polymerizerCols = [
+      {
+        title: '装置',
+        dataIndex: 'location',
+        width: 100,
+        render: (value, row) => renderContent(value, row.locationRowSpan),
+      }, {
+        title: '牌号',
+        dataIndex: 'samplingPoint',
+        width: 80,
+        render: (value, row) => renderContent(value, row.locationRowSpan),
+      }, {
+        title: '样品名称',
+        dataIndex: 'sampleName',
+        width: 80,
+        render: (value, row) => renderContent(value, row.sampleRowSpan),
+      }, {
+        title: '分析项目',
+        dataIndex: 'name',
+        width: 140,
+      }, {
+        title: '实测值',
+        dataIndex: 'text',
+        width: 120,
+        render: (value, row) => {
+          return this.getPolymerizerText(row);
+        },
+      },
+    ];
     return (
       <div className={styles.warp}>
         <div className={styles.title}>
@@ -176,6 +225,7 @@ export default class EquipmentProductInfo extends PureComponent {
               </div>
             </div>
             <Scrollbars >
+              <div className={styles.secondTitle}>液体产品馏出口质量情况</div>
               <Table
                 dataSource={fakeData[0].outlet}
                 columns={cols}
@@ -183,6 +233,17 @@ export default class EquipmentProductInfo extends PureComponent {
                 rowClassName={(record, index) => {
                     return index % 2 === 0 ? styles.blue : styles.blueRow;
                         }}
+                bordered
+                scroll={{ x: 620 }}
+              />
+              <div className={styles.secondTitle}>聚合装置中控质量情况</div>
+              <Table
+                dataSource={fakeData[0].polymerizer}
+                columns={polymerizerCols}
+                pagination={false}
+                rowClassName={(record, index) => {
+                  return index % 2 === 0 ? styles.blue : styles.blueRow;
+                }}
                 bordered
                 scroll={{ x: 620 }}
               />

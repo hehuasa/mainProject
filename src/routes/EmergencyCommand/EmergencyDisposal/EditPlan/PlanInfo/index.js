@@ -276,6 +276,7 @@ export default class PlanInfo extends PureComponent {
   render() {
     const { isEdit, planBaseInfo, emgcResource, emgcCommand, emgcFeature,
       eventFeature, commandInfo, resourceInfo, hideFooter, planInfo } = this.props;
+    console.log(555, emgcFeature)
     const { isAdd } = this.state;
     // 实施方案 基本信息表头
     const columns = [

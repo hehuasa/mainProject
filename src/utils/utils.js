@@ -467,7 +467,6 @@ export const resetAccessStyle = (accessControlShow, dispatch, accessInfoExtent) 
         const { view } = mapConstants;
         if (view.goTo) {
           clearInterval(a);
-          debugger;
           view.goTo({ extent: accessInfoExtent }).then(() => {
             getBordStyle(view).then((style) => {
               dispatch({

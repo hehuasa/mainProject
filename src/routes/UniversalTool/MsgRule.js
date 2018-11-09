@@ -983,6 +983,7 @@ export default class TableList extends PureComponent {
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">查询</Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
+              <Button style={{ marginLeft: 8 }} icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>新增</Button>
               <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
                 展开 <Icon type="down" />
               </a>
@@ -1060,6 +1061,7 @@ export default class TableList extends PureComponent {
           <span style={{ float: 'right', marginBottom: 24 }}>
             <Button type="primary" htmlType="submit">查询</Button>
             <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
+            <Button style={{ marginLeft: 8 }} icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>新增</Button>
             <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
               收起 <Icon type="up" />
             </a>
@@ -1086,21 +1088,6 @@ export default class TableList extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>
               {this.renderForm()}
-            </div>
-            <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新增
-              </Button>
-              <Button icon="export" type="primary" onClick={() => this.export()}>
-                导出
-              </Button>
-              {
-                selectedRows.length > 0 && (
-                <Popconfirm title="确定删除？" onConfirm={() => this.deleteAll()}>
-                  <Button>批量删除</Button>
-                </Popconfirm>
-                )
-              }
             </div>
             <StandardTable
               selectedRows={selectedRows}

@@ -143,7 +143,7 @@ export default class HandAlarmDeal extends PureComponent {
   };
 
   render() {
-    const { form , emergency } = this.props;
+    const { form, emergency } = this.props;
     const { eventInfoReport } = this.props.emergency;
 
     return (

@@ -152,7 +152,7 @@ export default class SearchOrgUser extends PureComponent {
                   wrapperCol={{ span: 16 }}
                   label="应急组织"
                 >
-                  {getFieldDecorator('emgcOrgName')(
+                  {getFieldDecorator('orgnizationName')(
                     <Input placeholder="请输入应急组织" />
                   )}
                 </FormItem>
@@ -163,7 +163,7 @@ export default class SearchOrgUser extends PureComponent {
                   wrapperCol={{ span: 16 }}
                   label="应急岗位"
                 >
-                  {getFieldDecorator('emgcPostion')(
+                  {getFieldDecorator('postion')(
                     <Input placeholder="请输入应急岗位" />
                   )}
                 </FormItem>

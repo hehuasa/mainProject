@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Select, Table, Modal, Button, Row, Col, Form, Input } from 'antd';
 import { connect } from 'dva';
+import Scrollbars from 'react-custom-scrollbars';
 import PlanInfo from './PlanInfo/index';
 import styles from './index.less';
 
@@ -103,9 +104,9 @@ export default class SelectPlan extends PureComponent {
     // 获取预案列表
     this.page(pageNum, pageSize);
     // 获取应急等级列表
-    dispatch({
-      type: 'emergency/getPlanLevelList',
-    });
+    // dispatch({
+    //   type: 'emergency/getPlanLevelList',
+    // });
     //  获取预案类别
     dispatch({
       type: 'emergency/getPlanTypeList',
