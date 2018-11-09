@@ -35,7 +35,6 @@ export default class InfoContent extends PureComponent {
           });
         },
       },
-
     };
   }
   componentDidMount() {
@@ -56,14 +55,14 @@ export default class InfoContent extends PureComponent {
     }).then(() => {
       message.success('删除成功');
     });
-  }
+  };
 
   // 新增事件特征
   onShowModal = () => {
     this.setState({
       visible: true,
     });
-  }
+  };
   // 关闭窗口
   onHandleCancel = () => {
     if (this.state.showFeature) {
@@ -76,7 +75,7 @@ export default class InfoContent extends PureComponent {
         selectedRows: [],
       });
     }
-  }
+  };
   onEnterCancel = () => {
     this.setState({
       visible: false,

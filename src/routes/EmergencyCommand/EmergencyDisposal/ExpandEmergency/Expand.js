@@ -29,6 +29,7 @@ export default class Expand extends PureComponent {
     //   请求预案等级列表
     dispatch({
       type: 'emergency/getPlanLevelList',
+      payload: { eventID },
     });
     // 获取当前事件的响应等级
     dispatch({

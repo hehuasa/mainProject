@@ -125,7 +125,7 @@ const CreateForm = Form.create()((props) => {
                   {checkedUsers.map((user) => {
                     return (
                       <Tag key={user.userID} style={{ marginBottom: 4 }} closable afterClose={() => handleClose(user)}>
-                        {`${user.userName} ${user.mobile}`}
+                        {`${user.userName} ${user.mobile || ''}`}
                       </Tag>
                     );
                   })
@@ -133,7 +133,7 @@ const CreateForm = Form.create()((props) => {
                   {customUsers.map((user) => {
                     return (
                       <Tag key={user.id} style={{ marginBottom: 4 }} closable afterClose={() => closeCustom(user)}>
-                        {`${user.userName} ${user.mobile}`}
+                        {`${user.userName} ${user.mobile || ''}`}
                       </Tag>
                     );
                   })

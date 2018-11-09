@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import moment from 'moment';
 import {
   getPlanList, queryInfoContent, seveEventContent, seveCasualties, queryEventEventInfo, getFeatures,
   getPlanCommand, getPlanResource, selectByCodeByCode, eventFeatures, delEventFeatures,
@@ -26,6 +27,7 @@ import {
   addFeature, getPlansByEventID, findUserPage,
 } from '../services/api';
 import { checkCode, formatDuring } from '../utils/utils';
+
 
 export default {
   namespace: 'emergency',
@@ -624,7 +626,7 @@ export default {
     // },
     // 获取报警时间
     *continueTime({ payload }, { call, put }) {
-      payload.continueTime = formatDuring(payload.eventTime);
+      payload.continueTime = formatDuring(moment().valueOf(), payload.eventTime);
       yield put({
         type: 'saveEventInfoReportTime',
         payload,

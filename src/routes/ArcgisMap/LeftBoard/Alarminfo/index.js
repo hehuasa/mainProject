@@ -130,11 +130,11 @@ class AlarmInfo extends PureComponent {
       });
     }
     // 请求实时数据
-    if (ctrlResourceType.indexOf('102.102') === 0 || // 外排口
+    if (ctrlResourceType && (ctrlResourceType.indexOf('102.102') === 0 || // 外排口
       ctrlResourceType.indexOf('101.107.102') === 0 || // 气体实时数据
       ctrlResourceType.indexOf('103.101.2') === 0 || // 水电汽风实时数据
       ctrlResourceType.indexOf('103.101.1') === 0 // 生产设备 大机组、发电机、锅炉、裂解炉
-    ) {
+      )) {
       dispatch({
         type: 'resourceTree/getRealData',
         payload: { ctrlResourceType, resourceID: this.props.resourceTree.resourceInfo.resourceID },
@@ -836,7 +836,7 @@ class AlarmInfo extends PureComponent {
               ) : null
               }
               {
-                    resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201') === -1 ? (
+                    resourceInfo && resourceInfo.ctrlResourceType && resourceInfo.ctrlResourceType.indexOf('101.201') === -1 ? (
                       <Panel header={<div className={styles.panelHeader}>基本信息</div>} key="1">
                         <Row type="flex">
                           <Col span={8}>资源名称：</Col><Col span={16}>{resourceInfo.resourceName}</Col>
@@ -942,19 +942,19 @@ class AlarmInfo extends PureComponent {
                   ))}
                 </Panel>
               ) : null}
-              {resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201.101') === 0 ? (
+              {resourceInfo && resourceInfo.ctrlResourceType && resourceInfo.ctrlResourceType.indexOf('101.201.101') === 0 ? (
                 <Panel header={<div className={styles.panelHeader}>危险源</div>} key="14" className={styles.type}>
                   <SourceOfRisk />
                 </Panel>
               ) : null
               }
-              {resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201.102') === 0 ? (
+              {resourceInfo && resourceInfo.ctrlResourceType && resourceInfo.ctrlResourceType.indexOf('101.201.102') === 0 ? (
                 <Panel header={<div className={styles.panelHeader}>安全风险</div>} key="15" className={styles.type}>
                   <SourceOfRisk />
                 </Panel>
               ) : null
               }
-              {resourceInfo && resourceInfo.ctrlResourceType.indexOf('901.109.131') === 0 ? (
+              {resourceInfo && resourceInfo.ctrlResourceType && resourceInfo.ctrlResourceType.indexOf('901.109.131') === 0 ? (
                 <Panel header={<div className={styles.panelHeader}>作业监控</div>} key="17" className={styles.type}>
                   <Collapse
                     bordered={false}
@@ -983,7 +983,7 @@ class AlarmInfo extends PureComponent {
           </div>
         </Scrollbars>
         <div className={styles.btn}>
-          {resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201') === -1 ?
+          {resourceInfo && resourceInfo.ctrlResourceType && resourceInfo.ctrlResourceType.indexOf('101.201') === -1 ?
             <Button htmlType="button" size="small" onClick={this.linkMap}>地图定位</Button> :
                 null
             }

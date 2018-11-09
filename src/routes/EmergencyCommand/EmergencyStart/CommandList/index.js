@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Form, Button, Card, Table, Select, Input, Modal } from 'antd';
 import { connect } from 'dva';
+import moment from 'moment';
 import styles from './index.less';
 import InsertCommand from './InsertCommand/index';
 import { commandType } from '../../../../utils/utils';
@@ -197,6 +198,14 @@ export default class CommandList extends PureComponent {
           return str;
         },
       }, {
+        title: '下发时间',
+        dataIndex: 'sendTime',
+        width: 180,
+        key: 'sendTime',
+        render: (text) => {
+          return text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : '';
+        },
+      }, {
         title: '执行时长',
         dataIndex: 'executeTime',
         width: 100,
@@ -245,7 +254,7 @@ export default class CommandList extends PureComponent {
               columns={commandCols}
               dataSource={commandList}
               pagination={{ pageSize: 5 }}
-              scroll={{ x: 1300 }}
+              scroll={{ x: 1480 }}
             />
           </Card>
     ) : (

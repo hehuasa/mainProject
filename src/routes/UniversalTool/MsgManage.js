@@ -488,7 +488,7 @@ export default class TableList extends PureComponent {
     }
 
     dispatch({
-      type: 'template/page',
+      type: 'template/msgPage',
       payload: params,
     });
   };

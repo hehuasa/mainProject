@@ -1229,8 +1229,11 @@ export async function alarmDeal(params) {
   });
 }
 // 获取预案等级列表
-export async function getPlanLevelList() {
-  return request(`${path}/emgc/emgcEmgcLevel/list`);
+export async function getPlanLevelList(params) {
+  return request(`${path}/emgc/emgcEmgcLevel/selectLevel`, {
+    method: 'POST',
+    body: params,
+  });
 }
 // 根据eventID获取流程节点列表
 export async function getFlowNodeList(params) {

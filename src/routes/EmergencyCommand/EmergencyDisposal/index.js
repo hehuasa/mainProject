@@ -108,6 +108,11 @@ export default class EmergencyDisposal extends PureComponent {
   tabChange = (activeKey) => {
     const { dispatch, eventID } = this.props;
     if (activeKey === '5') {
+      //   请求预案等级列表
+      dispatch({
+        type: 'emergency/getPlanLevelList',
+        payload: { eventID },
+      });
       dispatch({
         type: 'emergency/selectExpandState',
         payload: { eventID },

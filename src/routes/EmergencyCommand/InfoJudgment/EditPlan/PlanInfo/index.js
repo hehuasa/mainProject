@@ -653,10 +653,9 @@ export default class PlanInfo extends PureComponent {
             <Card title="事件特征" style={{ }}>
               <Table
                 columns={featureCols}
-                dataSource={emgcFeature}
+                dataSource={emgcFeature.map((item, index) => { return { ...item, key: index }; })}
                 pagination={{ pageSize: 5 }}
                 scroll={{ x: 1200 }}
-                rowKey={record => record.featureID}
               />
             </Card>
           </TabPane>

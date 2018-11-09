@@ -12,6 +12,17 @@
     & .ant-tabs-nav-container{
       margin-right: 0 !important;
     }
+    & .ant-table-tbody tr td{
+      max-width: 0;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      white-space: nowrap;
+      overflow: hidden;
+      position: relative;
+    }
+    & .ant-table-tbody tr td:hover{
+      white-space: normal;
+    }
   }
 }
 .cardExtra{

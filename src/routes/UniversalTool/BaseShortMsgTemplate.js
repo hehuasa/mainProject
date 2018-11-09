@@ -360,22 +360,13 @@ export default class TableList extends PureComponent {
               )}
             </FormItem>
           </Col>
-          {/* <Col md={8} sm={24}>
-            <FormItem label="模板类型">
-              {getFieldDecorator('templateType')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="">请选择</Option>
-                  {this.props.typeCode.userTypeList.map(type =>
-                    <Option key={type.codeID} value={type.code}>{type.codeName}</Option>
-                  )}
-                </Select>
-              )}
-            </FormItem>
-          </Col> */}
           <Col md={8} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">查询</Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
+              <Button style={{ marginLeft: 8 }} icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+                新增
+              </Button>
             </span>
           </Col>
         </Row>
@@ -431,13 +422,6 @@ export default class TableList extends PureComponent {
     const { list } = this.props.template;
     const { selectedRows, modalVisible } = this.state;
     const columns = this.initData();
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-      </Menu>
-    );
-
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
@@ -449,21 +433,6 @@ export default class TableList extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>
               {this.renderForm()}
-            </div>
-            <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新增
-              </Button>
-              <Button icon="export" type="primary" onClick={() => this.export()}>
-                导出
-              </Button>
-              {
-                selectedRows.length > 0 && (
-                  <span>
-                    <Button onClick={() => this.deleteAll()}>批量删除</Button>
-                  </span>
-                )
-              }
             </div>
             <StandardTable
               selectedRows={selectedRows}

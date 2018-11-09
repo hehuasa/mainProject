@@ -368,7 +368,7 @@ export default class PlanInfo extends PureComponent {
           </TabPane>
           <TabPane tab="事件特征" key="3">
             <Card title="事件特征" style={{ }}>
-              <Table columns={featureCols} dataSource={planFeatures} scroll={{ x: 1200 }} />
+              <Table columns={featureCols} pagination={{ pageSize: 5 }} dataSource={planFeatures} scroll={{ x: 1200 }} />
             </Card>
           </TabPane>
           <TabPane tab="应急流程" key="4">
@@ -400,12 +400,12 @@ export default class PlanInfo extends PureComponent {
           </TabPane>
           <TabPane tab="预案指令" key="5">
             <Card title="预案指令" style={{ }}>
-              <Table columns={commandCols} dataSource={planCommand} scroll={{ x: 1200 }} />
+              <Table columns={commandCols}  pagination={{ pageSize: 5 }} dataSource={planCommand} scroll={{ x: 1200 }} />
             </Card>
           </TabPane>
           <TabPane tab="应急资源" key="6">
             <Card title="应急资源" style={{ }}>
-              <Table columns={resourceCols} dataSource={planResource} scroll={{ x: 1200 }} />
+              <Table columns={resourceCols}  pagination={{ pageSize: 5 }} dataSource={planResource} scroll={{ x: 1200 }} />
             </Card>
           </TabPane>
           <TabPane tab="预案附件" key="7">

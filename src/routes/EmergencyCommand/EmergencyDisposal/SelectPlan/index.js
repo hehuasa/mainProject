@@ -38,18 +38,6 @@ const SearchForm = Form.create()((props) => {
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
-            <FormItem label="预案级别">
-              {getFieldDecorator('planLevelID')(
-                <Select placeholder="请选择" style={{ width: 120 }}>
-                  <Option value="">请选择</Option>
-                  {planLevelList.map(type =>
-                    <Option key={type.emgcLevelID} value={type.emgcLevelID}>{type.levelName}</Option>
-                )}
-                </Select>
-            )}
-            </FormItem>
-          </Col>
-          <Col md={6} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">查询</Button>
               <Button style={{ marginLeft: 8 }} onClick={() => handleFormReset(form)}>重置</Button>
@@ -70,6 +58,7 @@ const SearchForm = Form.create()((props) => {
   planLevelList: emergency.planLevelList,
   planInfoPage: emergency.planInfoPage,
   planTypeList: emergency.planTypeList,
+  eventInfo: emergency.eventInfo,
 }))
 export default class SelectPlan extends PureComponent {
   state = {
@@ -87,11 +76,13 @@ export default class SelectPlan extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     const { pageNum, pageSize } = this.state;
-    // 获取预案列表
-    this.page(pageNum, pageSize);
-    // 获取应急等级列表
+    //  获取事件信息
     dispatch({
-      type: 'emergency/getPlanLevelList',
+      type: 'emergency/getEventInfo',
+      payload: { eventID: this.props.eventID },
+    }).then(() => {
+      // 获取预案列表
+      this.page(pageNum, pageSize);
     });
     //  获取预案类别
     dispatch({
@@ -100,12 +91,13 @@ export default class SelectPlan extends PureComponent {
     });
   }
   page = (pageNum, pageSize) => {
-    const { dispatch } = this.props;
+    const { dispatch, eventInfo } = this.props;
+    const { eventLevel } = eventInfo;
     const { isQuery, fuzzy } = this.state;
     // 获取预案列表
     dispatch({
       type: 'emergency/getPlanInfoPage',
-      payload: { pageNum, pageSize, isQuery, fuzzy, statu: 0 },
+      payload: { pageNum, pageSize, isQuery, planLevelID: eventLevel, fuzzy, statu: 0 },
     }).then(() => {
       const { planInfoPage } = this.props;
       this.setState({
@@ -151,13 +143,21 @@ export default class SelectPlan extends PureComponent {
     this.page(1, 5);
   };
   handleSearch = (form) => {
-    const { dispatch } = this.props;
+    const { dispatch, eventInfo } = this.props;
+    const { eventLevel } = eventInfo;
     const { isQuery, fuzzy } = this.state;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       dispatch({
         type: 'emergency/getPlanInfoPage',
-        payload: { pageNum: 1, pageSize: 5, isQuery, fuzzy: true, statu: 0, ...fieldsValue },
+        payload: {
+          pageNum: 1,
+          pageSize: 5,
+          isQuery,
+          fuzzy: true,
+          statu: 0,
+          planLevelID: eventLevel,
+          ...fieldsValue },
       }).then(() => {
         const { planInfoPage } = this.props;
         this.setState({
@@ -235,6 +235,7 @@ export default class SelectPlan extends PureComponent {
             dataSource={planInfoPage.result}
             columns={columns}
             rowSelection={rowSelection}
+            rowKey={record => record.planInfoID}
             pagination={{
               current: this.state.pageNum,
               pageSize: this.state.pageSize,
