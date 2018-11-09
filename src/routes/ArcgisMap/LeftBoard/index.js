@@ -87,7 +87,12 @@ class LeftBoard extends PureComponent {
              // 生产设备设施类 大机组、发电机、锅炉、裂解炉
              ctrlResourceType.indexOf('103.102') === 0 ||
             // 视频类设备
-            ctrlResourceType.indexOf('101.102.101') === 0) || ctrlResourceType.indexOf('event') !== -1 ? <AlarmInfo /> : null}
+            ctrlResourceType.indexOf('101.102.101') === 0) ||
+              // 事件
+            ctrlResourceType.indexOf('event') !== -1 ||
+            // 地图资源
+            ctrlResourceType.indexOf('mapResOnly') !== -1
+              ? <AlarmInfo /> : null}
             {/* 生产类 罐设备信息 */}
             {/* {ctrlResourceType.indexOf('103.101') === 0 ? <Production /> : null} */}
             {/* 门禁设备 */}

@@ -8,6 +8,32 @@ import down from '../../../assets/envi/carousel-down.png';
 import bar from '../../../assets/homePage/panel/bar.png';
 import { delLayer } from '../../../utils/mapService';
 
+const switchTitle = (title) => {
+  let name = '';
+  switch (Number(title)) {
+    case 1: name = '放大'; break;
+    case 2: name = '表格'; break;
+    case 3: name = '柱状图'; break;
+    case 4: name = '饼状图'; break;
+    case 5: name = '折线图'; break;
+    case 6: name = '柱状图1'; break;
+    default: break;
+  }
+  return name;
+};
+const switchTitle1 = (name) => {
+  let title = '';
+  switch (name) {
+    case '放大': title = 1; break;
+    case '表格': title = 2; break;
+    case '柱状图': title = 3; break;
+    case '饼状图': title = 4; break;
+    case '折线图': title = 5; break;
+    case '柱状图1': title = 6; break;
+    default: break;
+  }
+  return title;
+};
 class HeaderPanelData extends PureComponent {
   constructor(props) {
     super(props);
@@ -46,7 +72,7 @@ class HeaderPanelData extends PureComponent {
   // 添加一个图标(一个图形)，需要添加一个toggleIconPanel
   handleClick = (e) => {
     e.stopPropagation();
-    const targetTitle = e.target.title || e.target.parentElement.title || e.target.parentElement.parentElement.title;
+    const targetTitle = switchTitle1(e.target.title || e.target.parentElement.title || e.target.parentElement.parentElement.title);
     // if (!e.target.title) {
     //   if (!e.target.parentElement.title) {
     //     console.log(e.target.parentElement.parentElement.title);
@@ -101,7 +127,7 @@ class HeaderPanelData extends PureComponent {
                     <div
                       className={styles['zoom-in']}
                       data-type={item}
-                      title={item}
+                      title={switchTitle(item)}
                       key={item}
                       onClick={this.handleClick}
                     ><img data-type={item} src={bar} alt="柱状图" />
@@ -114,7 +140,7 @@ class HeaderPanelData extends PureComponent {
               }
     className={styles['zoom-in']}
     data-type={item}
-    title={item}
+    title={switchTitle(item)}
     onClick={this.handleClick}
   />
 );

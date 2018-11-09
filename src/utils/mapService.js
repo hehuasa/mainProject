@@ -53,7 +53,7 @@ export const addLegend = async ({ view, container, legendLayer, dispatch }) => {
   });
 };
 // 根据属性查询设备
-export const searchByAttrBySorting = async ({ searchText, layerIds, searchFields = ['设备名称', 'ObjCode'] }) => {
+export const searchByAttrBySorting = async ({ searchText, layerIds = getLayerIds(), searchFields = ['设备名称', 'ObjCode'] }) => {
   return new Promise(resolve =>
     esriLoader.loadModules(
       [
@@ -926,10 +926,6 @@ export const measure = async (map, view, para, dispatch) => {
             width: '16px',
             height: '16px',
             angle,
-            // outline: { // autocasts as new SimpleLineSymbol()
-            //   color: 'red',
-            //   width: 3, // points
-            // },
           };
           const close = new Graphic(
             new Point({
@@ -1064,7 +1060,7 @@ export const measure = async (map, view, para, dispatch) => {
             width: 2,
           } : {
             type: 'simple-fill', // autocasts as SimpleFillSymbol
-            color: '#f77e4b',
+            color: 'rgba(247,126,75, 0.6)',
             style: 'solid',
             outline: { // autocasts as SimpleLineSymbol
               color: 'red',

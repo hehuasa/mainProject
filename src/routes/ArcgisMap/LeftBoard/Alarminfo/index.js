@@ -682,6 +682,10 @@ class AlarmInfo extends PureComponent {
     const { alarmSelectIndex } = this.state;
     const { resourceInfo, rowInfo, materialHarmInfo, materialFireControl } = resourceTree;
     const { event } = resourceInfo;
+    let name;
+    if (ctrlResourceType === 'mapResOnly') {
+      name = resourceInfo['设备名称'] || resourceInfo['建筑名称'] || resourceInfo['罐区名称'] || resourceInfo['区域名称'] || resourceInfo['装置区名称'] || resourceInfo['名称'];
+    }
     const { universalData } = infoConstantly.data; // 实时数据
     const videoArray = [];
     if (resourceInfo.beMonitorObjs) {
@@ -745,97 +749,115 @@ class AlarmInfo extends PureComponent {
           autoHeightMax={mapHeight - 73 - 48 - 32 - 32}
         >
           <div className={styles.panelContent}>
-            <Collapse
-              bordered={false}
-              defaultActiveKey={['1', '18', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17']}
-            >
-              {alarmBoardData.length > 0 ? (
-                <Panel header={<div className={styles.panelHeader}>报警信息</div>} key="17">
-                  <RadioGroup onChange={this.handleAlarmChange} value={alarmSelectIndex} className={styles.alarmList}>
-                    <Collapse bordered={false} style={{ width: 294, fontSize: 12 }} defaultActiveKey={String(alarmBoardData.length - 1)}>
-                      {alarmBoardData.map((item, index) => {
-                                    const newIndex = String(JSON.parse(JSON.stringify(index)));
-                                    const level = parseInt(item.alarmType.dangerCoefficient, 0);
-                                    let index1;
-                                    index1 = 0;
-                                    const array1 = getArray(index1, level, []);
-                                    index1 = 0;
-                                    const array2 = getArray(index1, 5 - level, []);
-                                    const rate1 = array1.map(() => <span><img src={levelRed} alt="等级" /></span>);
-                                    const rate2 = array2.map(() => <span><img src={levelGray} alt="等级" /></span>);
-                                    return (
-                                      <Panel
-                                        header={
-                                          <Row>
-                                            <Col span={20}>
-                                              <span className={styles.type}>{item.alarmType ? item.alarmType.alarmTypeName : ''}</span>
-                                              <span>
-                                                {rate1}
-                                                {rate2}
-                                              </span>
-                                            </Col>
-                                            <Col span={4} onClick={(e) => { e.stopPropagation(); }}>
-                                              <Radio value={index} />
-                                            </Col>
-                                          </Row>
-                                            }
-                                        key={String(newIndex)}
-                                      >
-                                        <Row type="flex">
-                                          {/* <Col span={8}>报警号：</Col> */}
-                                          {/* <Col span={16}>{item.alarmCode}</Col> */}
-                                          <Col span={8}>报警状态：</Col>
-                                          <Col span={16}>{alarmStatus(item.alarmStatue)}</Col>
-                                          <Col span={8}>首报时间：</Col>
-                                          <Col span={16}>{item.receiveTime ? moment(item.receiveTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Col>
-                                          <Col span={8}>持续时长：</Col>
-                                          <Col span={16}>{item.receiveTime ?
-                                            formatDuring(nowTime, item.receiveTime) : ''}
-                                          </Col>
-                                          <Col span={8}>报警位置：</Col><Col span={16}>{item.areaName}</Col>
-                                          <Col span={8}>所属装置：</Col><Col span={16}>{item.orgName}</Col>
-                                        </Row>
-                                      </Panel>
-                                    );
-                                })}
-                    </Collapse>
-                  </RadioGroup>
-                </Panel>
-                ) : null}
-              {
-                ctrlResourceType === 'event' && event !== undefined ? (
-                  <Panel header={<div className={styles.panelHeader}>事件信息</div>} key="18">
+            {
+              ctrlResourceType === 'mapResOnly' ? (
+                <Collapse
+                  bordered={false}
+                  defaultActiveKey={['1']}
+                >
+                  <Panel header={<div className={styles.panelHeader}>基本信息</div>} key="1">
                     <Row type="flex">
-                      <Col span={8}>事件状态：</Col><Col span={16}>{event.eventStatu ? getEventStatus(Number(event.eventStatu)) : '/'}</Col>
-                      <Col span={8}>事件名称：</Col><Col span={16}>{event.eventName ? event.eventName : '/'}</Col>
-                      <Col span={8}>事发位置：</Col><Col span={16}>{event.eventPlace ? event.eventPlace : '/'}</Col>
-                      <Col span={8}>涉事部门：</Col><Col span={16}>{event.organization ? event.organization.orgnizationName : '/'}</Col>
-                      <Col span={8}>涉事设备：</Col><Col span={16}>{event.resResourceInfo ? event.resResourceInfo.resourceName : '/'}</Col>
-                      <Col span={8}>报警人：</Col><Col span={16}>{event.alarmPerson ? event.alarmPerson : '/'}</Col>
-                      <Col span={8}>报警电话：</Col><Col span={16}>{event.telPhone ? event.telPhone : '/'}</Col>
-                      <Col span={8}>人员编号：</Col><Col span={16}>{event.personCode ? event.personCode : '/'}</Col>
-                      <Col span={8}>警情摘要：</Col><Col span={16}>{event.alarmDes ? event.alarmDes : '/'}</Col>
-                      <Col span={8}>事生原因：</Col><Col span={16}>{event.incidentReason ? event.incidentReason : '/'}</Col>
-                      <Col span={8}>报警方式：</Col><Col span={16}>{event.alarmWay ? event.alarmWay : '/'}</Col>
-                      <Col span={8}>事发部门：</Col><Col span={16}>{event.accidentPostion ? event.accidentPostion : '/'}</Col>
-                      <Col span={8}>事件类型：</Col><Col span={16}>{event.eventType ? event.eventType : '/'}</Col>
-                      <Col span={8}>是否演练：</Col><Col span={16}>{event.isDrill ? event.isDrill : '/'}</Col>
-                      <Col span={8}>受伤人数：</Col><Col span={16}>{event.injured ? event.injured : '/'}</Col>
-                      <Col span={8}>死亡人数：</Col><Col span={16}>{event.death ? event.death : '/'}</Col>
-                      <Col span={8}>失踪人数：</Col><Col span={16}>{event.disappear ? event.disappear : '/'}</Col>
-                      <Col span={8}>报警现状：</Col><Col span={16}>{event.alarmStatuInfo ? event.alarmStatuInfo : '/'}</Col>
+                      <Col span={8}>资源名称：</Col><Col span={16}>{name}</Col>
+                      {/*<Col span={8}>工艺位号：</Col><Col span={16}>{resourceInfo['工艺位号']}</Col>*/}
+                      {/*<Col span={8}>设备状态：</Col><Col span={16}>{resourceInfo.resourceStatu === null ? '正常' : resourceInfo.resourceStatu}</Col>*/}
+                      {/*<Col span={8}>所在区域：</Col><Col span={16}>{resourceInfo.area ? resourceInfo.area.areaName : ''}</Col>*/}
+                      {/*<Col span={8}>所属部门：</Col><Col span={16}>{resourceInfo.organization ? resourceInfo.organization.orgnizationName : ''}</Col>*/}
+                      {/*<Col span={8}>安装位置：</Col><Col span={16}>{resourceInfo['安装位置']}</Col>*/}
                     </Row>
                   </Panel>
-                  ) :
-                  null
-              }
-              {universalData && universalData.length > 0 ? (
-                <Panel header={<div className={styles.panelHeader}>实时数据信息</div>} key="16" className={styles.type}>
-                  <UniversalTemplate data={universalData} showDashBoard dispatch={this.props.dispatch} />
-                </Panel>
-              ) : null
-              }
-              {
+                </Collapse>
+) : (
+  <Collapse
+    bordered={false}
+    defaultActiveKey={['1', '18', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17']}
+  >
+    {alarmBoardData.length > 0 ? (
+      <Panel header={<div className={styles.panelHeader}>报警信息</div>} key="17">
+        <RadioGroup onChange={this.handleAlarmChange} value={alarmSelectIndex} className={styles.alarmList}>
+          <Collapse bordered={false} style={{ width: 294, fontSize: 12 }} defaultActiveKey={String(alarmBoardData.length - 1)}>
+            {alarmBoardData.map((item, index) => {
+                            const newIndex = String(JSON.parse(JSON.stringify(index)));
+                            const level = parseInt(item.alarmType.dangerCoefficient, 0);
+                            let index1;
+                            index1 = 0;
+                            const array1 = getArray(index1, level, []);
+                            index1 = 0;
+                            const array2 = getArray(index1, 5 - level, []);
+                            const rate1 = array1.map(() => <span><img src={levelRed} alt="等级" /></span>);
+                            const rate2 = array2.map(() => <span><img src={levelGray} alt="等级" /></span>);
+                            return (
+                              <Panel
+                                header={
+                                  <Row>
+                                    <Col span={20}>
+                                      <span className={styles.type}>{item.alarmType ? item.alarmType.alarmTypeName : ''}</span>
+                                      <span>
+                                        {rate1}
+                                        {rate2}
+                                      </span>
+                                    </Col>
+                                    <Col span={4} onClick={(e) => { e.stopPropagation(); }}>
+                                      <Radio value={index} />
+                                    </Col>
+                                  </Row>
+                                }
+                                key={String(newIndex)}
+                              >
+                                <Row type="flex">
+                                  {/* <Col span={8}>报警号：</Col> */}
+                                  {/* <Col span={16}>{item.alarmCode}</Col> */}
+                                  <Col span={8}>报警状态：</Col>
+                                  <Col span={16}>{alarmStatus(item.alarmStatue)}</Col>
+                                  <Col span={8}>首报时间：</Col>
+                                  <Col span={16}>{item.receiveTime ? moment(item.receiveTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Col>
+                                  <Col span={8}>持续时长：</Col>
+                                  <Col span={16}>{item.receiveTime ?
+                                    formatDuring(nowTime, item.receiveTime) : ''}
+                                  </Col>
+                                  <Col span={8}>报警位置：</Col><Col span={16}>{item.areaName}</Col>
+                                  <Col span={8}>所属装置：</Col><Col span={16}>{item.orgName}</Col>
+                                </Row>
+                              </Panel>
+                            );
+                          })}
+          </Collapse>
+        </RadioGroup>
+      </Panel>
+                  ) : null}
+    {
+                    ctrlResourceType === 'event' && event !== undefined ? (
+                      <Panel header={<div className={styles.panelHeader}>事件信息</div>} key="18">
+                        <Row type="flex">
+                          <Col span={8}>事件状态：</Col><Col span={16}>{event.eventStatu ? getEventStatus(Number(event.eventStatu)) : '/'}</Col>
+                          <Col span={8}>事件名称：</Col><Col span={16}>{event.eventName ? event.eventName : '/'}</Col>
+                          <Col span={8}>事发位置：</Col><Col span={16}>{event.eventPlace ? event.eventPlace : '/'}</Col>
+                          <Col span={8}>涉事部门：</Col><Col span={16}>{event.organization ? event.organization.orgnizationName : '/'}</Col>
+                          <Col span={8}>涉事设备：</Col><Col span={16}>{event.resResourceInfo ? event.resResourceInfo.resourceName : '/'}</Col>
+                          <Col span={8}>报警人：</Col><Col span={16}>{event.alarmPerson ? event.alarmPerson : '/'}</Col>
+                          <Col span={8}>报警电话：</Col><Col span={16}>{event.telPhone ? event.telPhone : '/'}</Col>
+                          <Col span={8}>人员编号：</Col><Col span={16}>{event.personCode ? event.personCode : '/'}</Col>
+                          <Col span={8}>警情摘要：</Col><Col span={16}>{event.alarmDes ? event.alarmDes : '/'}</Col>
+                          <Col span={8}>事生原因：</Col><Col span={16}>{event.incidentReason ? event.incidentReason : '/'}</Col>
+                          <Col span={8}>报警方式：</Col><Col span={16}>{event.alarmWay ? event.alarmWay : '/'}</Col>
+                          <Col span={8}>事发部门：</Col><Col span={16}>{event.accidentPostion ? event.accidentPostion : '/'}</Col>
+                          <Col span={8}>事件类型：</Col><Col span={16}>{event.eventType ? event.eventType : '/'}</Col>
+                          <Col span={8}>是否演练：</Col><Col span={16}>{event.isDrill ? event.isDrill : '/'}</Col>
+                          <Col span={8}>受伤人数：</Col><Col span={16}>{event.injured ? event.injured : '/'}</Col>
+                          <Col span={8}>死亡人数：</Col><Col span={16}>{event.death ? event.death : '/'}</Col>
+                          <Col span={8}>失踪人数：</Col><Col span={16}>{event.disappear ? event.disappear : '/'}</Col>
+                          <Col span={8}>报警现状：</Col><Col span={16}>{event.alarmStatuInfo ? event.alarmStatuInfo : '/'}</Col>
+                        </Row>
+                      </Panel>
+                      ) :
+                      null
+                  }
+    {universalData && universalData.length > 0 ? (
+      <Panel header={<div className={styles.panelHeader}>实时数据信息</div>} key="16" className={styles.type}>
+        <UniversalTemplate data={universalData} showDashBoard dispatch={this.props.dispatch} />
+      </Panel>
+                  ) : null
+                  }
+    {
                     resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201') === -1 ? (
                       <Panel header={<div className={styles.panelHeader}>基本信息</div>} key="1">
                         <Row type="flex">
@@ -847,177 +869,184 @@ class AlarmInfo extends PureComponent {
                           <Col span={8}>安装位置：</Col><Col span={16}>{resourceInfo.installPosition}</Col>
                         </Row>
                       </Panel>
-) :
-                        null
-                }
+                      ) :
+                      null
+                  }
 
-              {/* {resourceInfo.monitorObjs && (resourceInfo.monitorObjs.length > 0) ? ( */}
-              {/* <Panel header={<div className={styles.panelHeader}>监控对象</div>} key="2"> */}
-              {/* <Table */}
-              {/* size="small" */}
-              {/* columns={monitorsCols} */}
-              {/* dataSource={resourceInfo.monitorObjs} */}
-              {/* pagination={{ pageSize: 10 }} */}
-              {/* // scroll={{ x: 500, y: 240 }} */}
-              {/* rowKey="resourceID" */}
-              {/* /> */}
-              {/* </Panel>) : null} */}
-              {resourceInfo.beMonitorObjs && (resourceInfo.beMonitorObjs.length > 0) ? (
-                <Panel header={<div className={styles.panelHeader}>监控摄像机</div>} key="3">
-                  <ul
-                    className={styles.checkList}
-                    onMouseOut={this.handleMouseOut}
-                    onMouseOver={this.handleMouseOver}
-                  >
-                    <li className={styles.title}>
-                      <Checkbox
-                        value="0"
-                        indeterminate={this.state.selectedRows.checkedVideos.length !== videoArray.length && this.state.selectedRows.checkedVideos.length !== 0}
-                        onChange={(e) => { this.handleVideoSelectAll(videoArray, e); }}
-                        checked={this.state.selectedRows.checkedVideos.length === videoArray.length}
-                      />
-                      <span>序号</span>
-                      <span>名称</span>
-                    </li>
-                    <CheckboxGroup style={{ width: '100%' }} onChange={(e) => { this.handleVideoSelect(e, videoArray); }} value={this.state.selectedRows.checkedVideos}>
-                      {videoArray.map((item) => {
-                      return (
-                        <li
-                          key={item.gISCode}
-                          title={item.sort}
-                        >
-                          <Checkbox value={item.gISCode} title={item.sort} />
-                          <span title={item.sort}>{item.sort}</span>
-                          <span title={item.sort}>{item.resourceName}</span>
-                        </li>);
-                    })}
-                      {/* <Pagination size="small" total={videoArray.length} pageSize={5} onChange={this.handleChange}/> */}
-                    </CheckboxGroup>
-                  </ul>
-                </Panel>) : null}
-              {rowInfo ? (
-                <Panel header={<div className={styles.panelHeader}>物料属性</div>} key="4">
-                  <Row type="flex">
-                    <Col span={8}>物料编码：</Col><Col span={16}>{rowInfo.explosionPoint}</Col>
-                    <Col span={8}>物料名称：</Col><Col span={16}>{rowInfo.rawMaterialName}</Col>
-                    <Col span={8}>物料类别：</Col><Col span={16}>{rowInfo.rawType}</Col>
-                    <Col span={8}>分子式：</Col><Col span={16}>{rowInfo.molecularStructure}</Col>
-                    <Col span={8}>相对密度：</Col><Col span={16}>{rowInfo.relativeDensity}</Col>
-                    <Col span={8}>引燃温度：</Col><Col span={16}>{rowInfo.boilingPoint}</Col>
-                    <Col span={8}>溶解性：</Col><Col span={16}>{rowInfo.solubility}</Col>
-                    <Col span={8}>外观与性状：</Col><Col span={16}>{rowInfo.shapeProperty}</Col>
-                  </Row>
-                </Panel>) : null
-              }
-              {(rowInfo && rowInfo.healthHazards) ? (
-                <Panel header={<div className={styles.panelHeader}>健康危害</div>} key="5">
-                  <div>{rowInfo.healthHazards}</div>
-                </Panel>
-              ) : null}
-              {materialFireControl.length > 0 ? (
-                <Panel header={<div className={styles.panelHeader}>消防措施</div>} key="6">
-                  {materialFireControl.map((item, index) => (
-                    <div>
-                      <Row gutter={{ xs: 8, sm: 16, md: 24 }} type="flex">
-                        <Col span={8}>危险特性：</Col><Col span={16}>{item.dangerous}</Col>
-                        <Col span={8}>消防处理：</Col><Col span={16}>{item.fireControlDeal}</Col>
-                        <Col span={8}>使用物品：</Col><Col span={16}>{item.useFireDevice}</Col>
-                        <Col span={8}>应急处理：</Col><Col span={16}>{item.emergencyDeal}</Col>
-                      </Row>
-                      {index === (materialFireControl.length - 1) ? null : <Divider dashed />}
-                    </div>
-                  ))}
-                </Panel>
-              ) : null}
-              {materialHarmInfo.length > 0 ? (
-                <Panel header={<div className={styles.panelHeader}>急救措施</div>} key="7">
-                  {materialHarmInfo.map((item, index) => (
-                    <div>
-                      <Row gutter={{ xs: 8, sm: 16, md: 24 }} type="flex">
-                        <Col span={8}>危害方式：</Col><Col span={16}>{item.harmMethod}</Col>
-                        <Col span={8}>处理方式：</Col><Col span={16}>{item.processMethod}</Col>
-                      </Row>
-                      {index === (materialHarmInfo.length - 1) ? null : <Divider dashed />}
-                    </div>
-                  ))}
-                </Panel>
-              ) : null}
-              {resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201.101') === 0 ? (
-                <Panel header={<div className={styles.panelHeader}>危险源</div>} key="14" className={styles.type}>
-                  <SourceOfRisk />
-                </Panel>
-              ) : null
-              }
-              {resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201.102') === 0 ? (
-                <Panel header={<div className={styles.panelHeader}>安全风险</div>} key="15" className={styles.type}>
-                  <SourceOfRisk />
-                </Panel>
-              ) : null
-              }
-              {resourceInfo && resourceInfo.ctrlResourceType.indexOf('901.109.131') === 0 ? (
-                <Panel header={<div className={styles.panelHeader}>作业监控</div>} key="17" className={styles.type}>
-                  <Collapse
-                    bordered={false}
-                  >
-                    <Panel header={<div className={styles.panelHeader}>作业监控1</div>} key="17-1" className={styles.type}>
-                      <Row type="flex">
-                        <Col span={10}>作业流水号：</Col><Col span={14}>123</Col>
-                        <Col span={10}>申请人：</Col><Col span={14}>123</Col>
-                        <Col span={10}>申请单位：</Col><Col span={14}>123</Col>
-                        <Col span={10}>装置区域：</Col><Col span={14}>123</Col>
-                        <Col span={10}>作业开始时间：</Col><Col span={14}>123</Col>
-                        <Col span={10}>作业结束时间：</Col><Col span={14}>123</Col>
-                        <Col span={10}>作业类别：</Col><Col span={14}>123</Col>
-                        <Col span={10}>作业等级：</Col><Col span={14}>123</Col>
-                        <Col span={10}>作业地点描述：</Col><Col span={14}>123</Col>
-                        <Col span={10}>项目负责人：</Col><Col span={14}>123</Col>
-                        <Col span={10}>施工单位：</Col><Col span={14}>123</Col>
-                        <Col span={10}>作业内容：</Col><Col span={14}>123</Col>
-                      </Row>
-                    </Panel>
-                  </Collapse>
-                </Panel>
-              ) : null
-              }
-            </Collapse>
+    {/* {resourceInfo.monitorObjs && (resourceInfo.monitorObjs.length > 0) ? ( */}
+    {/* <Panel header={<div className={styles.panelHeader}>监控对象</div>} key="2"> */}
+    {/* <Table */}
+    {/* size="small" */}
+    {/* columns={monitorsCols} */}
+    {/* dataSource={resourceInfo.monitorObjs} */}
+    {/* pagination={{ pageSize: 10 }} */}
+    {/* // scroll={{ x: 500, y: 240 }} */}
+    {/* rowKey="resourceID" */}
+    {/* /> */}
+    {/* </Panel>) : null} */}
+    {resourceInfo.beMonitorObjs && (resourceInfo.beMonitorObjs.length > 0) ? (
+      <Panel header={<div className={styles.panelHeader}>监控摄像机</div>} key="3">
+        <ul
+          className={styles.checkList}
+          onMouseOut={this.handleMouseOut}
+          onMouseOver={this.handleMouseOver}
+        >
+          <li className={styles.title}>
+            <Checkbox
+              value="0"
+              indeterminate={this.state.selectedRows.checkedVideos.length !== videoArray.length && this.state.selectedRows.checkedVideos.length !== 0}
+              onChange={(e) => { this.handleVideoSelectAll(videoArray, e); }}
+              checked={this.state.selectedRows.checkedVideos.length === videoArray.length}
+            />
+            <span>序号</span>
+            <span>名称</span>
+          </li>
+          <CheckboxGroup style={{ width: '100%' }} onChange={(e) => { this.handleVideoSelect(e, videoArray); }} value={this.state.selectedRows.checkedVideos}>
+            {videoArray.map((item) => {
+                            return (
+                              <li
+                                key={item.gISCode}
+                                title={item.sort}
+                              >
+                                <Checkbox value={item.gISCode} title={item.sort} />
+                                <span title={item.sort}>{item.sort}</span>
+                                <span title={item.sort}>{item.resourceName}</span>
+                              </li>);
+                          })}
+            {/* <Pagination size="small" total={videoArray.length} pageSize={5} onChange={this.handleChange}/> */}
+          </CheckboxGroup>
+        </ul>
+      </Panel>) : null}
+    {rowInfo ? (
+      <Panel header={<div className={styles.panelHeader}>物料属性</div>} key="4">
+        <Row type="flex">
+          <Col span={8}>物料编码：</Col><Col span={16}>{rowInfo.explosionPoint}</Col>
+          <Col span={8}>物料名称：</Col><Col span={16}>{rowInfo.rawMaterialName}</Col>
+          <Col span={8}>物料类别：</Col><Col span={16}>{rowInfo.rawType}</Col>
+          <Col span={8}>分子式：</Col><Col span={16}>{rowInfo.molecularStructure}</Col>
+          <Col span={8}>相对密度：</Col><Col span={16}>{rowInfo.relativeDensity}</Col>
+          <Col span={8}>引燃温度：</Col><Col span={16}>{rowInfo.boilingPoint}</Col>
+          <Col span={8}>溶解性：</Col><Col span={16}>{rowInfo.solubility}</Col>
+          <Col span={8}>外观与性状：</Col><Col span={16}>{rowInfo.shapeProperty}</Col>
+        </Row>
+      </Panel>) : null
+                  }
+    {(rowInfo && rowInfo.healthHazards) ? (
+      <Panel header={<div className={styles.panelHeader}>健康危害</div>} key="5">
+        <div>{rowInfo.healthHazards}</div>
+      </Panel>
+                  ) : null}
+    {materialFireControl.length > 0 ? (
+      <Panel header={<div className={styles.panelHeader}>消防措施</div>} key="6">
+        {materialFireControl.map((item, index) => (
+          <div>
+            <Row gutter={{ xs: 8, sm: 16, md: 24 }} type="flex">
+              <Col span={8}>危险特性：</Col><Col span={16}>{item.dangerous}</Col>
+              <Col span={8}>消防处理：</Col><Col span={16}>{item.fireControlDeal}</Col>
+              <Col span={8}>使用物品：</Col><Col span={16}>{item.useFireDevice}</Col>
+              <Col span={8}>应急处理：</Col><Col span={16}>{item.emergencyDeal}</Col>
+            </Row>
+            {index === (materialFireControl.length - 1) ? null : <Divider dashed />}
+          </div>
+                      ))}
+      </Panel>
+                  ) : null}
+    {materialHarmInfo.length > 0 ? (
+      <Panel header={<div className={styles.panelHeader}>急救措施</div>} key="7">
+        {materialHarmInfo.map((item, index) => (
+          <div>
+            <Row gutter={{ xs: 8, sm: 16, md: 24 }} type="flex">
+              <Col span={8}>危害方式：</Col><Col span={16}>{item.harmMethod}</Col>
+              <Col span={8}>处理方式：</Col><Col span={16}>{item.processMethod}</Col>
+            </Row>
+            {index === (materialHarmInfo.length - 1) ? null : <Divider dashed />}
+          </div>
+                      ))}
+      </Panel>
+                  ) : null}
+    {resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201.101') === 0 ? (
+      <Panel header={<div className={styles.panelHeader}>危险源</div>} key="14" className={styles.type}>
+        <SourceOfRisk />
+      </Panel>
+                  ) : null
+                  }
+    {resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201.102') === 0 ? (
+      <Panel header={<div className={styles.panelHeader}>安全风险</div>} key="15" className={styles.type}>
+        <SourceOfRisk />
+      </Panel>
+                  ) : null
+                  }
+    {resourceInfo && resourceInfo.ctrlResourceType.indexOf('901.109.131') === 0 ? (
+      <Panel header={<div className={styles.panelHeader}>作业监控</div>} key="17" className={styles.type}>
+        <Collapse
+          bordered={false}
+        >
+          <Panel header={<div className={styles.panelHeader}>作业监控1</div>} key="17-1" className={styles.type}>
+            <Row type="flex">
+              <Col span={10}>作业流水号：</Col><Col span={14}>123</Col>
+              <Col span={10}>申请人：</Col><Col span={14}>123</Col>
+              <Col span={10}>申请单位：</Col><Col span={14}>123</Col>
+              <Col span={10}>装置区域：</Col><Col span={14}>123</Col>
+              <Col span={10}>作业开始时间：</Col><Col span={14}>123</Col>
+              <Col span={10}>作业结束时间：</Col><Col span={14}>123</Col>
+              <Col span={10}>作业类别：</Col><Col span={14}>123</Col>
+              <Col span={10}>作业等级：</Col><Col span={14}>123</Col>
+              <Col span={10}>作业地点描述：</Col><Col span={14}>123</Col>
+              <Col span={10}>项目负责人：</Col><Col span={14}>123</Col>
+              <Col span={10}>施工单位：</Col><Col span={14}>123</Col>
+              <Col span={10}>作业内容：</Col><Col span={14}>123</Col>
+            </Row>
+          </Panel>
+        </Collapse>
+      </Panel>
+                  ) : null
+                  }
+  </Collapse>
+)}
+
           </div>
         </Scrollbars>
         <div className={styles.btn}>
-          {resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201') === -1 ?
-            <Button htmlType="button" size="small" onClick={this.linkMap}>地图定位</Button> :
+          {ctrlResourceType !== 'mapResOnly' ? (
+            <div>
+              {resourceInfo && resourceInfo.ctrlResourceType.indexOf('101.201') === -1 ?
+                <Button htmlType="button" size="small" onClick={this.linkMap}>地图定位</Button> :
                 null
-            }
+              }
 
-          {/* 该资源被检测 */}
-          {resourceInfo.beMonitorObjs && resourceInfo.beMonitorObjs.length > 0 ?
-            <Button htmlType="button" size="small" disabled={this.state.selectedRows.checkedVideos.length === 0} onClick={() => { this.handleVideoPlay(videoArray); }}>视频联动</Button> : null
-          }
-          {/* 视频设备 */}
-          {resourceInfo.ctrlResourceType && resourceInfo.ctrlResourceType.indexOf('101.102.101') === 0 ?
-            <Button htmlType="button" size="small" onClick={this.handleVideoPlay}>播放视频</Button> : null
-          }
-          {
-            resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.107.102') === 0 ||
-              // 环保
-              resourceInfo.ctrlResourceType.indexOf('102.102') === 0 ||
-              // 生成设备
-              resourceInfo.ctrlResourceType.indexOf('103.101.1') === 0 ||
-              // 水电汽风
-              resourceInfo.ctrlResourceType.indexOf('103.101.2') === 0) ? (
-                <Button htmlType="button" size="small" onClick={this.addToBoard}>加入看板 </Button>
-              ) : null
-          }
-          {/* 扩音设备或扩音分区 */}
-          {resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.103.102') === 0 ||
-            resourceInfo.ctrlResourceType.indexOf('101.103.103') === 0) ?
-              <Button htmlType="button" size="small">打开/关闭广播</Button> : null
-          }
-          {alarmBoardData && JSON.stringify(alarmBoardData) !== '{}' ?
-            <Button htmlType="button" size="small" onClick={this.alarmDeal}>报警处理</Button> : null
-          }
-          { ctrlResourceType === 'event' && event !== undefined ?
-            <Button htmlType="button" size="small" onClick={this.enterEvent}>进入事件列表</Button> : null
-          }
+              {/* 该资源被检测 */}
+              {resourceInfo.beMonitorObjs && resourceInfo.beMonitorObjs.length > 0 ?
+                <Button htmlType="button" size="small" disabled={this.state.selectedRows.checkedVideos.length === 0} onClick={() => { this.handleVideoPlay(videoArray); }}>视频联动</Button> : null
+              }
+              {/* 视频设备 */}
+              {resourceInfo.ctrlResourceType && resourceInfo.ctrlResourceType.indexOf('101.102.101') === 0 ?
+                <Button htmlType="button" size="small" onClick={this.handleVideoPlay}>播放视频</Button> : null
+              }
+              {
+                resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.107.102') === 0 ||
+                  // 环保
+                  resourceInfo.ctrlResourceType.indexOf('102.102') === 0 ||
+                  // 生成设备
+                  resourceInfo.ctrlResourceType.indexOf('103.101.1') === 0 ||
+                  // 水电汽风
+                  resourceInfo.ctrlResourceType.indexOf('103.101.2') === 0) ? (
+                    <Button htmlType="button" size="small" onClick={this.addToBoard}>加入看板 </Button>
+                ) : null
+              }
+              {/* 扩音设备或扩音分区 */}
+              {resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.103.102') === 0 ||
+                resourceInfo.ctrlResourceType.indexOf('101.103.103') === 0) ?
+                  <Button htmlType="button" size="small">打开/关闭广播</Button> : null
+              }
+              {alarmBoardData && JSON.stringify(alarmBoardData) !== '{}' ?
+                <Button htmlType="button" size="small" onClick={this.alarmDeal}>报警处理</Button> : null
+              }
+              { ctrlResourceType === 'event' && event !== undefined ?
+                <Button htmlType="button" size="small" onClick={this.enterEvent}>进入事件列表</Button> : null
+              }
+            </div>
+) : null }
+
         </div>
       </div>);
   }

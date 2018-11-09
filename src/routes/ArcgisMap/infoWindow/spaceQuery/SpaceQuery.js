@@ -112,6 +112,7 @@ const SpaceQuery = ({ style, show, map, view, dispatch, mapPoint, screenPoint, i
           style={{ left: 120,
             bottom: -6 }}
         />
+        <div className={styles.circle} style={{ left: 116, bottom: -12 }} />
       </div>
     ) : null
   );

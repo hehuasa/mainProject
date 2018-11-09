@@ -45,7 +45,7 @@ export default class ConstructMonitor extends PureComponent {
   render() {
     const { data } = this.props;
     data.sort((a, b) => {
-     return b.count - a.count;
+      return b.count - a.count;
     });
     const scales = getCols(data[0].count);
     return (
@@ -54,14 +54,14 @@ export default class ConstructMonitor extends PureComponent {
           name="areaName"
           label={{
             autoRotate: false,
-            offset: 5,
+            offset: 15,
                 // 设置文本的显示样式，还可以是个回调函数，回调函数的参数为该坐标轴对应字段的数值
                 textStyle: {
-                textAlign: 'end', // 文本对齐方向，可取值为： start center end
+                textAlign: data.length > 5 ? 'end' : 'center', // 文本对齐方向，可取值为： start center end
                 fill: '#404040', // 文本的颜色
                 fontSize: '12', // 文本大小
                 fontWeight: 'bold', // 文本粗细
-                rotate: -45,
+                rotate: data.length > 5 ? -45 : 0,
             },
                 textBaseline: 'bottom', // 文本基准线，可取 top middle bottom，默认为middle
             // formatter(text, item1, index) {

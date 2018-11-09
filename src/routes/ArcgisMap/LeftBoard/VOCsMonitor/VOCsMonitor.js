@@ -81,9 +81,6 @@ export default class ConstructMontior extends PureComponent {
             </Collapse>
           </div>
         </Scrollbars>
-        <div className={styles.btn}>
-          <Button size="small" onClick={this.openBoard}>打开看板</Button>
-        </div>
       </div>
     ) : <div />;
     return (

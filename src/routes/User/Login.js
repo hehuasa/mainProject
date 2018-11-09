@@ -62,6 +62,10 @@ export default class LoginPage extends Component {
               visible: true,
             });
           }
+          if (Number(this.props.login.code) === 1005) {
+            const { setFieldsValue } = this.login.props.form;
+            setFieldsValue({ password: "" });
+          }
         });
       }
     });
@@ -87,6 +91,7 @@ close = () => {
           defaultActiveKey={type}
           onTabChange={this.onTabChange}
           onSubmit={this.handleSubmit}
+          wrappedComponentRef={(ref) => {this.login = ref}}
         >
 
           <VideoSocket onmessage={this.onmessage1} />

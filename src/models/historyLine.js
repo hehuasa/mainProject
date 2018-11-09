@@ -411,7 +411,6 @@ export default {
         resourceId,
         quotaIds: payload.quotaIds,
       });
-      console.log('历史list', response)
       const list = storeRealData({ list: payload.list, resourceID: payload.resourceId, response })
       yield put({
         type: 'historyList',

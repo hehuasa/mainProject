@@ -139,18 +139,17 @@ export default {
         const status = yield call(selectByCode, resourceInfo.resourceStatu);
         resourceInfo.status = status.data[0] || {};
       }
+      resourceInfo.ctrlResourceType = resourceInfo.ctrlResourceType || 'mapResOnly';
       // 保存取到的资源信息
       yield put({
         type: 'saveResourceInfo',
         payload: resourceInfo,
       });
       // 左侧打开相应的面板，通过ctrResourceType
-      if (resourceInfo.ctrlResourceType) {
-        yield put({
-          type: 'saveCtrlResourceType',
-          payload: resourceInfo.ctrlResourceType || '101.101.102',
-        });
-      }
+      yield put({
+        type: 'saveCtrlResourceType',
+        payload: resourceInfo.ctrlResourceType,
+      });
     },
     *selectEventByGISCode({ payload }, { call, put }) {
       // 先关掉资源信息窗口
@@ -174,7 +173,6 @@ export default {
         resourceInfo.status = status.data[0] || {};
       }
       // 保存取到的资源信息
-      console.log('payload.event', payload.event);
       yield put({
         type: 'saveResourceInfo',
         payload: { ...response.data.result[0], event: payload.event },

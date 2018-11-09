@@ -57,8 +57,16 @@
     top: 5px;
     right: 8px;
     font-size: 20px;
-    color: @border-color;
+    color: @bord-background;
     cursor: pointer;
+  }
+  & .circle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid red;
   }
   & .bottom {
     position: absolute;
@@ -76,7 +84,7 @@
     width: 0;
     height: 0;
     line-height: 0;
-    border-top: 6px solid #c6c6c6;
+    border-top: 6px solid #999;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
     transform: translateX(-50%);
