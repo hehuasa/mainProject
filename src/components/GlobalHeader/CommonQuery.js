@@ -8,18 +8,18 @@ const { TreeNode } = TreeSelect;
 const columnsTitle = () => {
   return (
     [{
-      title: '装置区域',
-      dataIndex: 'area',
-      width: 200,
-      render: (text) => {
-        return text ? text.areaName : '';
-      },
-    }, {
       title: '机构名称',
       dataIndex: 'organization',
       width: 200,
       render: (text) => {
         return text ? text.orgnizationName : '';
+      },
+    }, {
+      title: '装置区域',
+      dataIndex: 'area',
+      width: 200,
+      render: (text) => {
+        return text ? text.areaName : '';
       },
     }, {
       title: '资源名称',
@@ -225,6 +225,29 @@ export default class CommonQuery extends PureComponent {
                       <FormItem
                         labelCol={{ span: 7 }}
                         wrapperCol={{ span: 15 }}
+                        label="所属部门"
+                      >
+                        {form.getFieldDecorator('orgID', {
+                        })(
+                          <TreeSelect
+                            showSearch
+                            style={{ width: '100%' }}
+                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                            placeholder="请选择事发部门"
+                            disabled={form.getFieldValue('orgID')}
+                            treeNodeFilterProp="title"
+                            allowClear
+                            treeDefaultExpandAll
+                          >
+                            {renderTreeNodes(alarmDeal.apparatusList)}
+                          </TreeSelect>
+                        )}
+                      </FormItem>
+                    </Col>
+                    <Col md={6} sm={24}>
+                      <FormItem
+                        labelCol={{ span: 7 }}
+                        wrapperCol={{ span: 15 }}
                         label="装置区域"
                       >
                         {form.getFieldDecorator('areaID', {
@@ -246,28 +269,6 @@ export default class CommonQuery extends PureComponent {
                               </Option>
                             ))}
                           </Select>
-                        )}
-                      </FormItem>
-                    </Col>
-                    <Col md={6} sm={24}>
-                      <FormItem
-                        labelCol={{ span: 7 }}
-                        wrapperCol={{ span: 15 }}
-                        label="所属部门"
-                      >
-                        {form.getFieldDecorator('orgID', {
-                        })(
-                          <TreeSelect
-                            showSearch
-                            style={{ width: '100%' }}
-                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                            placeholder="请选择事发部门"
-                            treeNodeFilterProp="title"
-                            allowClear
-                            treeDefaultExpandAll
-                          >
-                            {renderTreeNodes(alarmDeal.apparatusList)}
-                          </TreeSelect>
                         )}
                       </FormItem>
                     </Col>

@@ -230,9 +230,6 @@ class VOCs extends PureComponent {
             </Panel>
           </Collapse>
         </Scrollbars>
-        <div className={styles.btn}>
-          <Button size="small" onClick={this.openBoard}>VOCs治理看板</Button>
-        </div>
       </div>);
   }
 }

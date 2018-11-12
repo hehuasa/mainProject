@@ -85,7 +85,7 @@ export default class Casualties extends PureComponent {
                 type="primary"
                 disabled={this.props.current !== this.props.viewNode}
                 style={{ width: '33%', margin: '8px 0 24px 0' }}
-              >发送
+              >提交
               </Button>
             </Col>
           </Row>

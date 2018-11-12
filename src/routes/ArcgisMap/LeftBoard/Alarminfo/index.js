@@ -705,30 +705,6 @@ class AlarmInfo extends PureComponent {
         dataIndex: 'resourceName',
       // width: 120,
       },
-      // {
-      //   title: '资源编码',
-      //   dataIndex: 'processNumber',
-      // // width: 100,
-      // },
-    //   {
-    //   title: '安装位置',
-    //   dataIndex: 'installPosition',
-    //   width: 160,
-    // }, {
-    //   title: '所在区域',
-    //   dataIndex: 'areaName',
-    //   width: 160,
-    //   render: (text, record) => {
-    //     return record.area ? record.area.areaName : '';
-    //   },
-    // }, {
-    //   title: '所属分部',
-    //   dataIndex: 'orgnizationName',
-    //   width: 160,
-    //   render: (text, record) => {
-    //     return record.organization ? record.organization.orgnizationName : '';
-    //   },
-    // }
     ];
     return (
       <div className={styles.warp}>

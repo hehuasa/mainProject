@@ -211,11 +211,10 @@ export default class EquipmentProductInfo extends PureComponent {
           <div className={styles.text}>中韩石化质量控制日报（二）</div>
           <div className={styles.left} />
         </div>
-        <div className={styles.dataSource}>数据来源: 质量系统</div>
+        <div className={styles.dataSource}>数据来源: Limis系统</div>
         { showChart ? <Trend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> : (
           <div className={styles.content}>
             <div className={styles.timeArea}>
-              <div className={styles.timeProcess}>数据来源: 质量系统</div>
               <div className={styles.creatTime}>制表时间:
                 <DatePicker
                   defaultValue={moment(moment().subtract(1, 'days').valueOf())}

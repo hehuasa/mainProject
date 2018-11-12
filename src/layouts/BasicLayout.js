@@ -451,7 +451,7 @@ class BasicLayout extends React.PureComponent {
             if (isNew) {
               notification.warning({
                 message: '接收到新报警消息',
-                description: `设备名称: ${socketMessage.B.resourceName}`,
+                description: `设备名称: ${socketMessage.B.resourceName || ''}`,
                 placement: 'bottomRight',
                 style: {
                   width: 300,
