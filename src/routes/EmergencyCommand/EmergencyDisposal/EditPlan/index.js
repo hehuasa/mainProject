@@ -176,7 +176,7 @@ export default class EditPlan extends PureComponent {
           <Select
             placeholder="请选择"
             value={`${this.props.eventExecPlanID}`}
-            style={{ width: 200 }}
+            style={{ width: 600 }}
             onChange={this.onPlanChange}
           >
             {this.props.executeList.map(item => (

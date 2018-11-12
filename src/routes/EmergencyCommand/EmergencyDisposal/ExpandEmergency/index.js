@@ -117,7 +117,7 @@ export default class ExpandEmergency extends PureComponent {
             <Steps size="small">
               <Step status={this.props.expandCurrent === 3 ? 'process' : (expandCurrent > 3 ? 'finish' : 'wait')} title="扩大应急" />
               <Step status={this.props.expandCurrent === 4 ? 'process' : (expandCurrent > 4 ? 'finish' : 'wait')} title="预案选择" />
-              <Step status={this.props.expandCurrent === 5 ? 'process' : (expandCurrent > 5 ? 'finish' : 'wait')} title="编辑预案" />
+              <Step status={this.props.expandCurrent === 5 ? 'process' : (expandCurrent > 5 ? 'finish' : 'wait')} title="编辑方案" />
               <Step status={this.props.expandCurrent === 6 ? 'process' : (expandCurrent > 6 ? 'finish' : 'wait')} title="发布" />
             </Steps>
           </div>

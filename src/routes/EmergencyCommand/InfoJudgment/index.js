@@ -25,9 +25,9 @@ export default class InfoJudgment extends PureComponent {
       type: 'emergency/getPlanList',
     });
     // 获取应急等级列表
-    // dispatch({
-    //   type: 'emergency/getPlanLevelList',
-    // });
+    dispatch({
+      type: 'emergency/getPlanLevelList',
+    });
   }
   onChange = (activeKey) => {
     const { eventID, currentUser, viewNode, current } = this.props;
