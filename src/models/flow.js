@@ -10,8 +10,8 @@ export default {
     GraphiceDatas: {},
     currentFlow: {
       show: false,
-      data: {},
-        treeNode: {},
+      data: { graphicsName: '' },
+      treeNode: {},
     },
   },
 

@@ -925,12 +925,14 @@ export const measure = async (map, view, para, dispatch) => {
             url: closePic,
             width: '16px',
             height: '16px',
+            yoffset: '-12px',
+            xoffset: '-12px',
             angle,
           };
           const close = new Graphic(
             new Point({
-              x: evt.vertices[evt.vertices.length - 1][0] - 30,
-              y: evt.vertices[evt.vertices.length - 1][1] - 60,
+              x: evt.vertices[evt.vertices.length - 1][0],
+              y: evt.vertices[evt.vertices.length - 1][1],
               spatialReference: view.spatialReference,
             }), closeSy, { close: true });
           measureLayer.graphics.add(close);

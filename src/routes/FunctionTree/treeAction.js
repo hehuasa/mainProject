@@ -657,7 +657,6 @@ export const handleCheck = (event, treeId, treeNode, that) => {
             type: 'vocsMonitor/fetchList',
           }).then(() => {
             const { list } = that.props.vocsMonitor;
-            console.log('list', list);
             addVocsIcon({ map: mainMap, layer: subLayers[0], scale: popupScale, list, dispatch });
           });
         } else {

@@ -80,8 +80,6 @@ export const ajaxDataFilter = (treeId, parentNode, responseData) => {
         node.isParent = false;
         if (node.ctrlResourceType.indexOf('101.102.101.101.103') === -1) {
           node.name = `${node.processNumber}_${node.name}`;
-        } else {
-          console.log('node.ctrlResourceType', node.ctrlResourceType);
         }
       }
       // 判断分区与组织，若有,修改相应属性

@@ -10,7 +10,7 @@ import SourceOfRisk from './SourceOfRisk/index';
 import levelGray from '../../../../assets/map/alarm/levelGray.png';
 import levelRed from '../../../../assets/map/alarm/levelRed.png';
 import { alarmStatus, getBrowserStyle, getBrowserScroll, formatDuring } from '../../../../utils/utils';
-import { searchByAttr, addVideoIcon, changeIcon, transToPoint } from '../../../../utils/mapService';
+import {searchByAttr, addVideoIcon, changeIcon, transToPoint, delLayer} from '../../../../utils/mapService';
 import { infoConstantly, constantlyPanelModal, infoPopsModal } from '../../../../services/constantlyModal';
 import { getRealHistoryData } from '../../../../utils/Panel';
 import close from '../../../../assets/map/叉叉.png';
@@ -134,7 +134,7 @@ class AlarmInfo extends PureComponent {
       ctrlResourceType.indexOf('101.107.102') === 0 || // 气体实时数据
       ctrlResourceType.indexOf('103.101.2') === 0 || // 水电汽风实时数据
       ctrlResourceType.indexOf('103.101.1') === 0 // 生产设备 大机组、发电机、锅炉、裂解炉
-      )) {
+    )) {
       dispatch({
         type: 'resourceTree/getRealData',
         payload: { ctrlResourceType, resourceID: this.props.resourceTree.resourceInfo.resourceID },
@@ -216,6 +216,8 @@ class AlarmInfo extends PureComponent {
     infoConstantly.data = {};
     //  清空报警持续时长的轮询
     clearInterval(alarmIntervalID);
+    // 关闭视频图标图层
+    delLayer(mapConstants.mainMap, ['视频搜索结果']);
   };
   // 视频点击
   handleVideoClick = (item) => {
@@ -754,11 +756,11 @@ class AlarmInfo extends PureComponent {
                   <Panel header={<div className={styles.panelHeader}>基本信息</div>} key="1">
                     <Row type="flex">
                       <Col span={8}>资源名称：</Col><Col span={16}>{name}</Col>
-                      {/*<Col span={8}>工艺位号：</Col><Col span={16}>{resourceInfo['工艺位号']}</Col>*/}
-                      {/*<Col span={8}>设备状态：</Col><Col span={16}>{resourceInfo.resourceStatu === null ? '正常' : resourceInfo.resourceStatu}</Col>*/}
-                      {/*<Col span={8}>所在区域：</Col><Col span={16}>{resourceInfo.area ? resourceInfo.area.areaName : ''}</Col>*/}
-                      {/*<Col span={8}>所属部门：</Col><Col span={16}>{resourceInfo.organization ? resourceInfo.organization.orgnizationName : ''}</Col>*/}
-                      {/*<Col span={8}>安装位置：</Col><Col span={16}>{resourceInfo['安装位置']}</Col>*/}
+                      {/* <Col span={8}>工艺位号：</Col><Col span={16}>{resourceInfo['工艺位号']}</Col> */}
+                      {/* <Col span={8}>设备状态：</Col><Col span={16}>{resourceInfo.resourceStatu === null ? '正常' : resourceInfo.resourceStatu}</Col> */}
+                      {/* <Col span={8}>所在区域：</Col><Col span={16}>{resourceInfo.area ? resourceInfo.area.areaName : ''}</Col> */}
+                      {/* <Col span={8}>所属部门：</Col><Col span={16}>{resourceInfo.organization ? resourceInfo.organization.orgnizationName : ''}</Col> */}
+                      {/* <Col span={8}>安装位置：</Col><Col span={16}>{resourceInfo['安装位置']}</Col> */}
                     </Row>
                   </Panel>
                 </Collapse>
@@ -1010,15 +1012,15 @@ class AlarmInfo extends PureComponent {
                 null
             }
 
-          {/* 该资源被检测 */}
-          {resourceInfo.beMonitorObjs && resourceInfo.beMonitorObjs.length > 0 ?
-            <Button htmlType="button" size="small" disabled={this.state.selectedRows.checkedVideos.length === 0} onClick={() => { this.handleVideoPlay(videoArray); }}>视频联动</Button> : null
+              {/* 该资源被检测 */}
+              {resourceInfo.beMonitorObjs && resourceInfo.beMonitorObjs.length > 0 ?
+                <Button htmlType="button" size="small" disabled={this.state.selectedRows.checkedVideos.length === 0} onClick={() => { this.handleVideoPlay(videoArray); }}>视频联动</Button> : null
           }
-          {/* 视频设备 */}
-          {resourceInfo.ctrlResourceType && resourceInfo.ctrlResourceType.indexOf('101.102.101') === 0 ?
-            <Button htmlType="button" size="small" onClick={this.handleVideoPlay}>播放视频</Button> : null
+              {/* 视频设备 */}
+              {resourceInfo.ctrlResourceType && resourceInfo.ctrlResourceType.indexOf('101.102.101') === 0 ?
+                <Button htmlType="button" size="small" onClick={this.handleVideoPlay}>播放视频</Button> : null
           }
-          {
+              {
             resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.107.102') === 0 ||
               // 环保
               resourceInfo.ctrlResourceType.indexOf('102.102') === 0 ||
@@ -1029,19 +1031,21 @@ class AlarmInfo extends PureComponent {
                 <Button htmlType="button" size="small" onClick={this.addToBoard}>加入看板 </Button>
               ) : null
           }
-          {/* 扩音设备或扩音分区 */}
-          {resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.103.102') === 0 ||
+              {/* 扩音设备或扩音分区 */}
+              {resourceInfo.ctrlResourceType && (resourceInfo.ctrlResourceType.indexOf('101.103.102') === 0 ||
             resourceInfo.ctrlResourceType.indexOf('101.103.103') === 0) ?
               <Button htmlType="button" size="small">打开/关闭广播</Button> : null
           }
-          {alarmBoardData && JSON.stringify(alarmBoardData) !== '{}' ?
-            <Button htmlType="button" size="small" onClick={this.alarmDeal}>报警处理</Button> : null
+              {alarmBoardData && JSON.stringify(alarmBoardData) !== '{}' ?
+                <Button htmlType="button" size="small" onClick={this.alarmDeal}>报警处理</Button> : null
           }
-          { ctrlResourceType === 'event' && event !== undefined ?
-            <Button htmlType="button" size="small" onClick={this.enterEvent}>进入事件列表</Button> : null
+              { ctrlResourceType === 'event' && event !== undefined ?
+                <Button htmlType="button" size="small" onClick={this.enterEvent}>进入事件列表</Button> : null
           }
+            </div>) : null }
         </div>
-      </div>);
+      </div>
+    );
   }
 }
 export default connect(mapStateToProps)(AlarmInfo);

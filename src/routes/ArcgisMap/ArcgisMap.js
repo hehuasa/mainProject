@@ -549,11 +549,11 @@ export default class ArcgisMap extends PureComponent {
                 //     });
                 //   }
                 // });
-                mapConstants.view.watch('scale', () => {
+                mapConstants.view.watch('scale', (a) => {
                   // if (newVal > oldVal) {
                   //   mapView.scale += 1000;
-                  if (mapConstants.view.scale > 25000) {
-                    mapConstants.view.scale = 25000;
+                  if (mapConstants.view.scale > 13000) {
+                    mapConstants.view.scale = 13000;
                   } else if (mapConstants.view.scale < 500) {
                     mapConstants.view.scale = 500;
                   }

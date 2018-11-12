@@ -1,14 +1,22 @@
 import React, { PureComponent } from 'react';
 import { Chart, Axis, Geom, Tooltip } from 'bizcharts';
+import LeftTitle from '../../LeftTitle/LeftTitle';
 import { searchByAttr } from '../../../../../utils/mapService';
 import styles from '../panel.less';
 
 const getCols = (length) => {
-  const obj = {};
+  const obj = {
+    device: {
+      alias: '报警设备',
+    },
+    count: {
+      alias: '报警数量',
+    },
+  };
   if (length < 5 && length > 0) {
-    obj.tickInterval = 1;
+    obj.count.tickInterval = 1;
   }
-  return { count: obj };
+  return obj;
 };
 export default class AlarmCountingStatistics extends PureComponent {
   constructor(props) {
@@ -39,7 +47,7 @@ export default class AlarmCountingStatistics extends PureComponent {
     );
   };
   render() {
-    const { list } = this.props;
+    const { list, titleColor } = this.props;
     let newArray;
     if (list.length > 0) {
         newArray = list.sort((a, b) => { return a.count < b.count; });
@@ -50,11 +58,12 @@ export default class AlarmCountingStatistics extends PureComponent {
         <div className={styles.noData}>暂无数据</div> :
         (
           <div>
+            <LeftTitle title={scales.count.alias} />
             <Chart
               height={300}
               data={list}
               scale={scales}
-              style={{ marginLeft: -33 }}
+              padding={[20, 30, 40, 30]}
               forceFit
               onGetG2Instance={(g2Chart) => {
                 g2Chart.animate(false);
@@ -73,7 +82,7 @@ export default class AlarmCountingStatistics extends PureComponent {
               }}
             >
               <Axis name="device" />
-              <Axis name="count" />
+              <Axis name="count" line={{ lineWidth: 1, stroke: '#ccc' }} />
               <Tooltip crosshairs={{ type: 'y' }} />
               <Geom type="interval" position="device*count" color={['#4ea5fb']} />
             </Chart>

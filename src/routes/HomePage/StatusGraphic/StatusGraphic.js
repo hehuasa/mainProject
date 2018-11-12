@@ -31,7 +31,7 @@ export default class StatusGraphic extends PureComponent {
         forceFit: true,
         fitView: 'autoZoom',
         // width: 1200,
-        height: this.props.mapHeight,
+        height: this.props.mapHeight - 54,
         grid: null,
       });
       const { currentFlow } = this.props;
@@ -40,6 +40,13 @@ export default class StatusGraphic extends PureComponent {
       const newNodes = [];
       const newEdges = [];
       for (const edge of data.source.edges) {
+        // 临时对深色箭头的样式处理
+        if (edge.color) {
+          if (edge.color === '#7f0003') {
+            edge.color = '#f9000e';
+            edge.size = 1.5;
+          }
+        }
         let isAdd = true;
         if (edge.controlPoints) {
           for (const item of edge.controlPoints) {
@@ -124,8 +131,10 @@ export default class StatusGraphic extends PureComponent {
     // });
   }
   render() {
+    const { currentFlow } = this.props;
     return (
       <div className={styles.warp} style={{ height: this.props.mapHeight }}>
+        <div className={styles.title}>{currentFlow.data.graphicsName}</div>
         <div className={styles.close} onClick={this.handleClose}>
           <Icon type="close" style={{ fontSize: 20, color: '#fff', fontWeight: 800 }} />
         </div>

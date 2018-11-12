@@ -16,7 +16,7 @@ const colorObj = {
   text2: '#f7e541',
   text3: '#d9d9d9',
   text4: '#000',
-  line1: '#7f0003',
+  line1: '#f9000e',
   line5: '#f7000f',
   line2: '#d9d9d9',
   line3: '#f7e541',
@@ -112,7 +112,15 @@ export default class Canvas extends PureComponent {
     // 提取画布内容
     if (record.item.graphicsContent) {
       const { source } = JSON.parse(record.item.graphicsContent);
-      window.test11 = record.item.graphicsContent;
+      for (const edge of source.edges) {
+        // 临时对深色箭头的样式处理
+        if (edge.color) {
+          if (edge.color === '#7f0003') {
+            edge.color = '#f9000e';
+            edge.size = 2;
+          }
+        }
+      }
       editor.net.source(source);
     }
 
@@ -407,20 +415,20 @@ export default class Canvas extends PureComponent {
       case 'line':
         editor.net.beginAdd('edge', {
           shape: 'lineNewArrow',
-          color: '#7f0003',
+          color: '#f9000e',
         });
         break;
       // 自定义箭头的直线2
       case 'lineWithNewArrow':
         editor.net.beginAdd('edge', {
           shape: 'lineNewArrow1',
-          color: '#7f0003',
+          color: '#f9000e',
         });
         break;
       case 'lineNewArrowWithAngel':
         editor.net.beginAdd('edge', {
           shape: 'lineNewArrowWithAngel',
-          color: '#7f0003',
+          color: '#f9000e',
         });
         break;
       case 'strengthLine':
@@ -532,7 +540,6 @@ export default class Canvas extends PureComponent {
         // 提取画布内容
         if (record.item.graphicsContent) {
           const { source } = JSON.parse(record.item.graphicsContent);
-          window.test11 = record.item.graphicsContent;
           editor.net.changeData(source);
         }
       }

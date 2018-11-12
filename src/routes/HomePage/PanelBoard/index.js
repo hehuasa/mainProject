@@ -8,6 +8,7 @@ import HeaderPanel from './HeaderPanel';
 import { constantlyPanelModal } from '../../../services/constantlyModal';
 import styles from './index.less';
 
+const titleColor = '#000';
 const { Panel } = Collapse;
 @connect(({ panelBoard, map, alarm }) => {
   return {
@@ -107,9 +108,22 @@ export default class PanelBoard extends PureComponent {
                   key={item.keys}
                   showArrow={false}
                 >
-                  <Route
-                    render={props => <Component {...props} param={item.param} uniqueKey={item.uniqueKey} type={item.type} keys={item.keys} />}
-                  />
+                  <div style={{ position: 'relative' }}>
+                    <Route
+                      render={props =>
+                        (
+                          <Component
+                            {...props}
+                            param={item.param}
+                            uniqueKey={item.uniqueKey}
+                            type={item.type}
+                            keys={item.keys}
+                            titleColor={titleColor}
+                          />
+                        )
+                      }
+                    />
+                  </div>
                 </Panel>
               ) : null
             );

@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Chart, Axis, Geom, Tooltip } from 'bizcharts';
 import { searchByAttr } from '../../../../../utils/mapService';
+import LeftTitle from "../../LeftTitle/LeftTitle";
 
 const getCols = (length) => {
   const obj = {};
@@ -49,7 +50,17 @@ export default class ConstructMonitor extends PureComponent {
     });
     const scales = getCols(data[0].count);
     return (
-      <Chart height={400} data={data} forceFit onPlotClick={this.handleClick} onGetG2Instance={(chart) => { this.chart = chart; }} scale={scales} animate={false}>
+      <Chart
+        height={300}
+        data={data}
+        forceFit
+        onPlotClick={this.handleClick}
+        onGetG2Instance={(chart) => { this.chart = chart; }}
+        scale={scales}
+        padding={[20, 30, 40, 30]}
+        animate={false}
+      >
+        <LeftTitle title="作业数量" />
         <Axis
           name="areaName"
           label={{
@@ -95,7 +106,7 @@ export default class ConstructMonitor extends PureComponent {
             //     },
             }}
         />
-        <Axis name="count" />
+        <Axis name="count" line={{ lineWidth: 1, stroke: '#ccc' }} />
         <Tooltip
           crosshairs={{ type: 'y' }}
           itemTpl='<tr class="g2-tooltip-list-item"><td style="color:{color}">作业数量： </td><td>{value}</td></tr>'

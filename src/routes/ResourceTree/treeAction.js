@@ -22,7 +22,7 @@ export const handleClick = (event, treeId, treeNode, d, that) => {
           expandKeys,
           activeKeys: [
             { name, uniqueKey: 0, keys: `${nameKeys || boardType}`, param },
-              ...activeKeys,
+            ...activeKeys,
           ],
         },
       });
@@ -248,27 +248,24 @@ export const handleCheck = (event, treeId, treeNode, that) => {
   const deviceArrayIndex = treeNode.checkClickFunTemplate + treeNode.treeID;
   const { treeID } = treeNode;
   // 隐藏视频
-  if (that.state.isInit) {
-    if (video.layout !== 'reset') {
+  if (video.layout !== 'reset') {
+    dispatch({
+      type: 'video/switch',
+      payload: {
+        CmdCode: 'Hide',
+      },
+    });
+    if (videoFooterHeight.current !== 0) {
       dispatch({
-        type: 'video/switch',
-        payload: {
-          CmdCode: 'Hide',
-        },
+        type: 'homepage/getVideoFooterHeight',
+        payload: { current: 0, cache: videoFooterHeight.current },
       });
-      if (videoFooterHeight.current !== 0) {
-        dispatch({
-          type: 'homepage/getVideoFooterHeight',
-          payload: { current: 0, cache: videoFooterHeight.current },
-        });
-        dispatch({
-          type: 'homepage/getMapHeight',
-          payload: { domType: 'map', changingType: 'evrVideo' },
-        });
-      }
+      dispatch({
+        type: 'homepage/getMapHeight',
+        payload: { domType: 'map', changingType: 'evrVideo' },
+      });
     }
   }
-
   // 存储被checked的node，以及关联expand的node
   if (treeNode.checked) {
     // const para = treeNode.resourceID || treeNode.name;

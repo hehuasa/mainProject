@@ -14,7 +14,7 @@ import { mapConstants } from '../../../../../services/mapConstant';
 }))
 export default class AlarmCountingPanel extends PureComponent {
   components = (key, typeList) => {
-    const { view } = this.props;
+    const { view, titleColor } = this.props;
     switch (key) {
       case 'table':
         return (
@@ -29,6 +29,7 @@ export default class AlarmCountingPanel extends PureComponent {
           <AlarmCountingStatistics
             list={typeList}
             view={view}
+            titleColor={titleColor}
             dispatch={this.props.dispatch}
           />
         );
@@ -37,6 +38,7 @@ export default class AlarmCountingPanel extends PureComponent {
           <AlarmCountingRound
             list={typeList}
             view={view}
+            titleColor={titleColor}
             dispatch={this.props.dispatch}
           />
         );
@@ -47,6 +49,7 @@ export default class AlarmCountingPanel extends PureComponent {
           <AlarmCountingStatistics
             list={typeList}
             view={view}
+            titleColor={titleColor}
             mainMap={this.props.mainMap}
             dispatch={this.props.dispatch}
           />
