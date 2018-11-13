@@ -108,27 +108,40 @@ export default class CommonQuery extends PureComponent {
       const { form } = this.props;
       form.validateFields((err, fieldsValue) => {
         if (err) return;
-        this.props.dispatch({
-          type: 'alarmDeal/getResourceQueryPage',
-          payload: {
-            pageNum: pagination.current,
-            pageSize: pagination.pageSize,
-            resourceName: fieldsValue.resourceName,
-            specialties: fieldsValue.specialties,
-            profession: fieldsValue.profession,
-            resourceClassify: fieldsValue.resourceClassify,
-            installPosition: fieldsValue.installPosition,
-            areaID: fieldsValue.areaID,
-            orgID: fieldsValue.orgID,
-          },
-        });
+        if (this.props.whether) {
+          this.props.dispatch({
+            type: 'alarmDeal/getResourceQueryPage',
+            payload: {
+              pageNum: pagination.current,
+              pageSize: pagination.pageSize,
+              resourceName: fieldsValue.resourceName,
+              specialties: fieldsValue.specialties,
+              profession: fieldsValue.profession,
+              resourceClassify: fieldsValue.resourceClassify,
+              installPosition: fieldsValue.installPosition,
+              areaID: fieldsValue.areaID,
+              orgID: fieldsValue.orgID,
+            },
+          });
+        } else {
+          this.props.dispatch({
+            type: 'alarmDeal/getMaterialPage',
+            payload: {
+              pageNum: pagination.current,
+              pageSize: pagination.pageSize,
+              isQuery: true,
+              fuzzy: true,
+              rawMaterialName: fieldsValue.rawMaterialName,
+            },
+          });
+        }
       });
     }
   }
   onHandleSearch = (e) => {
     e.preventDefault();
     const { form, useChangePage } = this.props;
-    // useChangePage();
+    if (useChangePage) { useChangePage(); }
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       this.props.dispatch({
@@ -146,10 +159,28 @@ export default class CommonQuery extends PureComponent {
       });
     });
   };
+  onSearchMaterial = (e) => {
+    e.preventDefault();
+    const { form, useChangePage } = this.props;
+    if (useChangePage) { useChangePage(); }
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      this.props.dispatch({
+        type: 'alarmDeal/getMaterialPage',
+        payload: {
+          pageNum: 1,
+          pageSize: 10,
+          isQuery: true,
+          fuzzy: true,
+          rawMaterialName: fieldsValue.rawMaterialName,
+        },
+      });
+    });
+  };
   onHandleFormReset = (e) => {
     e.preventDefault();
     const { form, useChangePage } = this.props;
-    // useChangePage();
+    if (useChangePage) { useChangePage(); }
     form.setFieldsValue({
       resourceName: '',
       specialties: '',
@@ -157,16 +188,27 @@ export default class CommonQuery extends PureComponent {
       installPosition: '',
       orgID: null,
       areaID: null,
+      rawMaterialName: null,
     });
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      this.props.dispatch({
-        type: 'alarmDeal/getResourceQueryPage',
-        payload: {
-          pageNum: 1,
-          pageSize: 10,
-        },
-      });
+      if (this.props.whether) {
+        this.props.dispatch({
+          type: 'alarmDeal/getResourceQueryPage',
+          payload: {
+            pageNum: 1,
+            pageSize: 10,
+          },
+        });
+      } else {
+        this.props.dispatch({
+          type: 'alarmDeal/getMaterialPage',
+          payload: {
+            pageNum: 1,
+            pageSize: 10,
+          },
+        });
+      }
     });
   };
   setOrgID = (orgID) => {
@@ -328,7 +370,30 @@ export default class CommonQuery extends PureComponent {
                   </Row>
                 </Form>
               </div>
-            ) : null
+            ) : (
+              <div className={styles.tableListForm}>
+                <Form layout="inline" >
+                  <Row type="flex" gutter={{ md: 8, lg: 24, xl: 48 }} >
+                    <Col md={6} sm={24}>
+                      <FormItem
+                        labelCol={{ span: 7 }}
+                        wrapperCol={{ span: 15 }}
+                        label="物料名称"
+                      >
+                        {form.getFieldDecorator('rawMaterialName', {
+                        })(
+                          <Input placeholder="请输入物料名称" />
+                        )}
+                      </FormItem>
+                    </Col>
+                    <Col >
+                      <Button type="primary" onClick={this.onSearchMaterial}>搜索</Button>
+                      <Button style={{ marginLeft: 8 }} onClick={this.onHandleFormReset}>重置</Button>
+                    </Col>
+                  </Row>
+                </Form>
+              </div>
+            )
           }
           <Table
             columns={columns}

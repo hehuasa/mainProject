@@ -1,7 +1,7 @@
 import {
   alarmEvent, alarmDeal, queryEventInfoReport, getResourceQueryPage,
   getMonitorResourceObj, getByResourceIDs, getApparatus, getAlarmConten,
-  selectByTypeParent, selectByCodeByCode, queryAreaListByAreaType,
+  selectByTypeParent, selectByCodeByCode, queryAreaListByAreaType, materialPage,
 } from '../services/api';
 
 
@@ -106,6 +106,14 @@ export default {
       const response = yield call(queryAreaListByAreaType, payload);
       yield put({
         type: 'saveAreaList',
+        payload: response.data,
+      });
+    },
+    // 获取事件物资
+    *getMaterialPage({ payload }, { call, put }) {
+      const response = yield call(materialPage, payload);
+      yield put({
+        type: 'saveSearchList',
         payload: response.data,
       });
     },
