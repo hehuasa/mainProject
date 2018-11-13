@@ -10,23 +10,66 @@ export default class DeviceMonitor extends PureComponent {
     data: [],
   };
   componentDidMount() {
-    const { deviceMonitor, dispatch } = this.props;
-    const { ctrlResourceType } = deviceMonitor;
-    const option = JSON.parse(this.props.currentFlow.data.graphicsContent);
-    dispatch({
-      type: 'constantlyData/getDeviceMonitorData',
-      payload: { ctrlResourceType, selectRunDay: option.selectRunDay },
-    }).then(() => {
-      this.getData(ctrlResourceType, option);
-    });
-    timer = setInterval(() => {
+    const { deviceMonitor, dispatch, currentFlows } = this.props;
+    const { Monitors } = deviceMonitor;
+    const options = [];
+    for (const flow of currentFlows.data) {
+      options.push(flow);
+    }
+    let index = 0;
+    const datas = [];
+    for (const Monitor of Monitors) {
+      const { ctrlResourceType, resourceID } = Monitor;
+      const cache = options.find(value => Number(value.resourceID) === Number(resourceID));
+      if (!cache) {
+        return false;
+      }
+      const option = JSON.parse(cache.graphicsContent);
       dispatch({
         type: 'constantlyData/getDeviceMonitorData',
-        payload: { ctrlResourceType },
+        payload: { ctrlResourceType, selectRunDay: option.selectRunDay },
       }).then(() => {
-        this.getData(ctrlResourceType, option);
+        index += 1;
+        datas.push(...this.getData(ctrlResourceType, option));
       });
-    }, option.spaceTime);
+    }
+    const a = setInterval(() => {
+      if (index === Monitors.length) {
+        clearInterval(a);
+        this.setState({ data: datas });
+      }
+    }, 500);
+    // dispatch({
+    //   type: 'constantlyData/getDeviceMonitorData',
+    //   payload: { ctrlResourceType, selectRunDay: option.selectRunDay },
+    // }).then(() => {
+    //   this.getData(ctrlResourceType, option);
+    // });
+    timer = setInterval(() => {
+      let index1 = 0;
+      const datas1 = [];
+      for (const Monitor of Monitors) {
+        const { ctrlResourceType, resourceID } = Monitor;
+        const cache = options.find(value => Number(value.resourceID) === Number(resourceID));
+        if (!cache) {
+          return false;
+        }
+        const option = JSON.parse(cache.graphicsContent);
+        dispatch({
+          type: 'constantlyData/getDeviceMonitorData',
+          payload: { ctrlResourceType, selectRunDay: option.selectRunDay },
+        }).then(() => {
+          index1 += 1;
+          datas.push(...this.getData(ctrlResourceType, option));
+        });
+      }
+      const b = setInterval(() => {
+        if (index1 === Monitors.length) {
+          clearInterval(b);
+          this.setState({ data: datas1 });
+        }
+      }, 500);
+    }, 30000);
   }
   componentWillUnmount() {
     clearInterval(timer);
@@ -66,6 +109,7 @@ export default class DeviceMonitor extends PureComponent {
         return a.sort - b.sort;
       });
       this.setState({ data: array });
+      return array;
     }
   };
   render() {

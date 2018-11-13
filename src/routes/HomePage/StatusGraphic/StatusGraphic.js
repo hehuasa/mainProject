@@ -76,14 +76,6 @@ export default class StatusGraphic extends PureComponent {
       editor.net.render();
       // editor.net.autoZoom();
       currentResourceID = this.props.currentFlow.data.resourceID;
-      // 增加数据刷新动效
-      for (const node of data.source.nodes) {
-        // 需要刷新的节点
-        const item = this.props.GraphiceDatas[node.device];
-        if (item) {
-          console.log('item', item);
-        }
-      }
       this.props.dispatch({
         type: 'flow/getGraphiceDatas',
         payload: { resourceID: this.props.currentFlow.data.resourceID },
@@ -104,10 +96,25 @@ export default class StatusGraphic extends PureComponent {
       });
       timer = setInterval(() => {
         currentResourceID = this.props.currentFlow.data.resourceID;
+        const animates = [];
+        // 增加数据刷新动效
+        for (const node of data.source.nodes) {
+          // 需要刷新的节点
+          const item = this.props.GraphiceDatas[node.device];
+          if (item) {
+            item.value = '';
+            const animateNode = { x: node.x, y: node.y, id: Math.random(), shape: 'loading', size: [80, 80] };
+            animates.push(animateNode);
+          }
+        }
+        data.source.nodes.push(...animates);
+        editor.net.changeData(data.source);
         this.props.dispatch({
           type: 'flow/getGraphiceDatas',
           payload: { resourceID: this.props.currentFlow.data.resourceID },
         }).then(() => {
+          const newNodes = data.source.nodes.filter(value => value.shape !== 'loading');
+          data.source.nodes = newNodes;
           for (const node of data.source.nodes) {
             const item = this.props.GraphiceDatas[node.device];
             if (item) {
@@ -142,11 +149,14 @@ export default class StatusGraphic extends PureComponent {
     const { currentFlow } = this.props;
     return (
       <div className={styles.warp} style={{ height: this.props.mapHeight }}>
-        <div className={styles.title}>{currentFlow.data.graphicsName}</div>
-        <div className={styles.close} onClick={this.handleClose}>
-          <Icon type="close" style={{ fontSize: 20, color: '#fff', fontWeight: 800 }} />
+        <div style={{ position: 'relative' }}>
+          <div className={styles.title}>{currentFlow.data.graphicsName}</div>
+          <div className={styles.close} onClick={this.handleClose}>
+            <Icon type="close" style={{ fontSize: 20, color: '#fff', fontWeight: 800 }} />
+          </div>
+          <div className={styles.canvas} ref={(ref) => { this.flow = ref; }} />
         </div>
-        <div className={styles.canvas} ref={(ref) => { this.flow = ref; }} />
+
       </div>
     );
   }

@@ -583,9 +583,16 @@ export const handleCheck = (event, treeId, treeNode, that) => {
       // 设备监测
       case 'DeviceMonitor':
         if (treeNode.checked) {
+          // 临时将ctrlResourceType与checkFunctionCode组成数组，
+          const resourceIDs = treeNode.checkFunctionCode.split(',');
+          const ctrlResourceTypes = treeNode.ctrlResourceType.split(',');
+          const Monitors = [];
+          for (const [index, item] of ctrlResourceTypes.entries()) {
+            Monitors.push({ ctrlResourceType: item, resourceID: resourceIDs[index] });
+          }
           dispatch({
-            type: 'flow/fetchDeviceOption',
-            payload: { resourceID: treeNode.checkFunctionCode },
+            type: 'flow/fetchDeviceOptions',
+            payload: { resourceIDs },
           }).then(() => {
             dispatch({
               type: 'homepage/queryModalType',
@@ -593,7 +600,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
             });
             dispatch({
               type: 'homepage/queryDeviceMonitor',
-              payload: { show: true, devicesName: treeNode.name, ctrlResourceType: treeNode.ctrlResourceType },
+              payload: { show: true, devicesName: treeNode.name, Monitors },
             });
           });
         } else {

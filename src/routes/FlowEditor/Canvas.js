@@ -123,7 +123,6 @@ export default class Canvas extends PureComponent {
       }
       editor.net.source(source);
     }
-
     editor.net.render();
     // 鼠标移动事件， 用于新增node时的触发
     editor.net.on('mousemove', (ev) => {
@@ -486,19 +485,19 @@ export default class Canvas extends PureComponent {
         const newNodes = [];
         for (const node of data.source.nodes) {
           if (parseFloat(node.x) < 5000 || parseFloat(node.y) < 5000) {
-              newNodes.push(node);
+            newNodes.push(node);
           }
           if (node.device) {
             obj.pointStr.push({
               pointCode: node.device,
               // otherSystemCode: node.otherSystemCode,
-                otherSystemCode: node.otherSystemCode ? '901.101.101' : '',
+              otherSystemCode: node.otherSystemCode ? '901.101.101' : '',
               remark: node.remark || '',
             });
           }
         }
-          data.source.nodes = newNodes;
-          obj.graphicsContent = JSON.stringify(data);
+        data.source.nodes = newNodes;
+        obj.graphicsContent = JSON.stringify(data);
         obj.pointStr = JSON.stringify(obj.pointStr);
         this.props.dispatch({
           type: 'flow/save',

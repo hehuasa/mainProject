@@ -13,6 +13,8 @@ export default {
       data: { graphicsName: '' },
       treeNode: {},
     },
+    currentFlows: [],
+
   },
 
   effects: {
@@ -50,6 +52,19 @@ export default {
       yield put({
         type: 'queryCurrentFlow',
         payload: { show: false, data: response.data },
+      });
+    },
+    // 获取多个（设备监测）
+    *fetchDeviceOptions({ payload }, { call, put }) {
+      const datas = [];
+      for (const resourceID of payload.resourceIDs) {
+        const { data } = yield call(getFlowData, { resourceID });
+        datas.push(data);
+      }
+      console.log('datas', datas);
+      yield put({
+        type: 'queryCurrentDevices',
+        payload: { show: false, data: datas },
       });
     },
     // 保存
@@ -103,6 +118,13 @@ export default {
       return {
         ...state,
         currentFlow: payload,
+      };
+    },
+    // 当前展示的设备监测图(多个)
+    queryCurrentDevices(state, { payload }) {
+      return {
+        ...state,
+        currentFlows: payload,
       };
     },
     // 实时数据

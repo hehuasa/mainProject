@@ -16,6 +16,7 @@ const { Util } = G6;
 * lineNewArrow 默认自定义连接线（直线+自定义箭头）
 * strengthLine 粗线条（连线）
 * lineNewArrowWithAngel 默认自定义连接线（直线+自定义箭头）+ 三角形
+* loading 加载中
  */
 
 /* 动态计算线条锚点
@@ -117,7 +118,7 @@ export const registerNode = () => {
           width: cfg.size[0],
           height: cfg.size[1],
           radius: 4,
-          fill: fill,
+          fill,
           stroke: '#202121',
         },
       });
@@ -170,7 +171,7 @@ export const registerNode = () => {
           rx: cfg.size[0] / 2,
           ry: 18,
           fill: 'l (90) 0:#373737 1:#f3f3f3',
-        }
+        },
       });
       group.addShape('ellipse', {
         attrs: {
@@ -179,7 +180,7 @@ export const registerNode = () => {
           rx: cfg.size[0] / 2,
           ry: 18,
           fill: 'l (90) 0:#f3f3f3 1:#373737',
-        }
+        },
       });
       group.addShape('rect', {
         attrs: {
@@ -328,7 +329,7 @@ export const registerNode = () => {
   G6.registNode('customNode5', {
     draw: (cfg, group) => {
       const { stroke } = cfg.model;
-       group.addShape('line', {
+      group.addShape('line', {
         attrs: {
           x1: cfg.x - 28,
           y1: cfg.y + 20,
@@ -337,7 +338,7 @@ export const registerNode = () => {
           stroke,
         },
       });
-       group.addShape('line', {
+      group.addShape('line', {
         attrs: {
           x1: cfg.x - 28,
           y1: cfg.y + 20,
@@ -764,7 +765,7 @@ export const registerNode = () => {
           fill: cfg.model.stroke,
         },
       });
-     return group.addShape('rect', {
+      return group.addShape('rect', {
         attrs: {
           x: cfg.x - cfg.size[0] / 2,
           y: cfg.y - cfg.size[1] / 2,
@@ -830,7 +831,7 @@ export const registerNode = () => {
           lineWidth: cfg.model.lineWidth,
         },
       });
-     return group.addShape('rect', {
+      return group.addShape('rect', {
         attrs: {
           x: cfg.x,
           y: cfg.y - 20,
@@ -1019,6 +1020,26 @@ export const registerNode = () => {
         class: 'arrow',
       });
       Util.arrowTo(arrow, end.x, end.y, start.x, start.y, end.x, end.y);
+    },
+  });
+  G6.registNode('loading', {
+    draw: (cfg, group) => {
+      const d1 = group.addShape('arc', {
+        attrs: {
+          x: cfg.x + cfg.size[0] / 2,
+          y: cfg.y + cfg.size[1] - 8,
+          r: 6,
+          startAngle: 1 / 6 * Math.PI,
+          endAngle: 5 / 4 * Math.PI,
+          stroke: '#f7e541',
+          lineDash: [20, 20],
+        },
+      });
+      d1.animate({
+        repeat: true,
+        startAngle: 1 / 6 * Math.PI + 5,
+        endAngle: 5 / 4 * Math.PI + 5,
+      }, 500, 'linear');
     },
   });
 };

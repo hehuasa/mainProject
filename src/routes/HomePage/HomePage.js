@@ -19,10 +19,12 @@ const dragEvent = {
   return {
     trueMapShow: map.trueMapShow,
     deviceMonitor: homepage.deviceMonitor,
+    deviceMonitors: homepage.deviceMonitors,
     dealModel: alarmDeal.dealModel,
     alarmInfo: alarmDeal.alarmInfo,
     alarmInfoConten: alarmDeal.alarmInfoConten,
     currentFlow: flow.currentFlow,
+    currentFlows: flow.currentFlows,
     mapHeight: homepage.mapHeight,
     modalType: homepage.modalType,
     accessControl,
@@ -126,7 +128,7 @@ export default class HomePage extends PureComponent {
   }
   render() {
     const { modalZIndex } = this.state;
-    const { currentFlow, dealModel, deviceMonitor, mapHeight, dispatch, accessControl, modalType } = this.props;
+    const { currentFlow, dealModel, deviceMonitor, currentFlows, mapHeight, dispatch, accessControl, modalType, deviceMonitors } = this.props;
     const { isDeal } = dealModel;
 
     return (
@@ -135,7 +137,7 @@ export default class HomePage extends PureComponent {
               currentFlow.show ? <StatusGraphic zIndex={modalType === 'currentFlow' ? modalZIndex : -1} /> : null
             }
         {
-              deviceMonitor.show ? <DeviceMonitor zIndex={modalType === 'deviceMonitor' ? modalZIndex : -1} mapHeight={mapHeight} dispatch={dispatch} deviceMonitor={deviceMonitor} currentFlow={currentFlow} /> : null
+              deviceMonitor.show ? <DeviceMonitor zIndex={modalType === 'deviceMonitor' ? modalZIndex : -1} currentFlows={currentFlows} deviceMonitors={deviceMonitors} mapHeight={mapHeight} dispatch={dispatch} deviceMonitor={deviceMonitor} currentFlow={currentFlow} /> : null
             }
         <div className={styles.mapContent} onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp} onMouseLeave={this.handleMouseUp}>
           <ArcgisMap />
