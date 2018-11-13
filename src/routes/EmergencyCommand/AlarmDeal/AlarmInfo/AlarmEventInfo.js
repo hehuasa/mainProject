@@ -119,6 +119,7 @@ export default class AlarmEventInfo extends PureComponent {
               pageNum: 1,
               pageSize: 10,
               resourceName: fieldsValue,
+              orgID,
             },
           }).then(() => {
             this.setState({
@@ -631,6 +632,7 @@ export default class AlarmEventInfo extends PureComponent {
           orgTree={this.props.orgTree}
           onHandleOk={this.onHandleOk}
           onHandleCancel={this.onHandleCancel}
+          useChangePage={this.useChangePage}
           onRef={this.onRef}
           title={title}
           searchValue={searchValue}

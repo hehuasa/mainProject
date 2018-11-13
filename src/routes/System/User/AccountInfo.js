@@ -183,7 +183,7 @@ const ConfigRole = Form.create()((props) => {
   return (
     <Modal
       destroyOnClose={destroyOnClose}
-      title="账户配置角色"
+      title="配置角色"
       visible={configRoleVisible}
       onOk={okHandle}
       width="80%"
@@ -314,11 +314,15 @@ export default class TableList extends PureComponent {
     // 操作列
     tableTitles.push({
       title: '操作',
-      width: '20%',
+      width: '30%',
       render: (text, record) => {
         // 获取该行的id，可以获取的到，传到函数里的时候打印直接把整个表格所有行id全部打印了
         return (
           <Fragment>
+            <a href="javascript: void(0)" onClick={() => this.accountEnable(record)}>启用</a>
+            <Divider type="vertical" />
+            <a href="javascript: void(0)" onClick={() => this.resetPwd(record)}>重置密码</a>
+            <Divider type="vertical" />
             <a href="javascript: void(0)" onClick={() => this.showRoleConfig(record)}>配置角色</a>
           </Fragment>
         );
@@ -635,7 +639,7 @@ export default class TableList extends PureComponent {
       handleModalVisible: this.handleModalVisible,
     };
     return (
-      <PageHeaderLayout title="账户列表">
+      <PageHeaderLayout title="用户列表">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>

@@ -46,7 +46,7 @@ export default class TableList extends PureComponent {
               dataSource={dataSource}
               columns={columns}
               pagination={{
-                pageSize: 8,
+                pageSize: 10,
               }}
               rowKey={record => record.pluginID}
             />

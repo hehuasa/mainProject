@@ -12,7 +12,7 @@ const Option = Select.Option;
 
 // 多个指标，多个点位
 const ContentZb = ({ queryLineData, onCheckAllChange, onChange }) => {
-  // const { queryLineData } = queryLineData; // indeterminate, checkAll, plainOptions, checkedList, 
+  // const { queryLineData } = queryLineData; // indeterminate, checkAll, plainOptions, checkedList,
   return (
     <div className={styles.contentWarp}>
       <div style={{ borderBottom: '1px solid #E9E9E9' }}>
@@ -39,7 +39,7 @@ const ContentZb = ({ queryLineData, onCheckAllChange, onChange }) => {
   );
 };
 const ContentDot = ({ queryLineData, onCheckAllChange, onChange }) => {
-  // const { queryLineData } = queryLineData; //targetIndeterminate, targetCheckAll, targetCheckedList, target, 
+  // const { queryLineData } = queryLineData; //targetIndeterminate, targetCheckAll, targetCheckedList, target,
   return (
     <div className={styles.contentWarp}>
       <div style={{ borderBottom: '1px solid #E9E9E9' }}>
@@ -65,6 +65,9 @@ const ContentDot = ({ queryLineData, onCheckAllChange, onChange }) => {
 };
 // CommonLine
 class CommonLine extends PureComponent {
+  componentDidMount() {
+    this.props.onChangeTime(10);
+  }
   handleChange = () => {
     // this.props.dispatch({
     // type: 'homepage/setRefreshTime',
@@ -72,13 +75,12 @@ class CommonLine extends PureComponent {
     // });
   }
   render() {
-
     const { queryLineData, activeKeys, constantlyConditionCalc } = this.props;
-    let newQueryLineData = undefined;
+    let newQueryLineData;
     if (queryLineData) {
       newQueryLineData = JSON.parse(JSON.stringify(queryLineData));
     }
-    const showLineData = getSelctData({ queryLineData: newQueryLineData }); //获取需要展示的 点位
+    const showLineData = getSelctData({ queryLineData: newQueryLineData }); // 获取需要展示的 点位
     const data = objByArea({ dataOll: showLineData });
     const newData = [];
     // 需要展示的指标
@@ -104,15 +106,9 @@ class CommonLine extends PureComponent {
       <div>
         <div style={{ float: 'right' }}>
           <Select defaultValue="10分钟以内的数据" onSelect={this.props.onChangeTime} size="small" style={{ marginRight: 5 }} >
-            <Option title="1分钟以内的数据" value={1}>1分钟以内的数据</Option>
-            <Option title="5分钟以内的数据" value={5}>5分钟以内的数据</Option>
             <Option title="10分钟以内的数据" value={10}>10分钟以内的数据</Option>
-            <Option title="20分钟以内的数据" value={20}>20分钟以内的数据</Option>
             <Option title="30分钟以内的数据" value={30}>30分钟以内的数据</Option>
-            <Option title="1小时以内的数据" value={60}>1小时以内的数据</Option>
             <Option title="1天以内的数据" value={60 * 24}>1天以内的数据</Option>
-            <Option title="30天以内的数据" value={60 * 24 * 30}>30天以内的数据</Option>
-            <Option title="3天以内的数据" value={60 * 24 * 3}>3天以内的数据</Option>
           </Select>
           <Popover
             placement="bottomRight"

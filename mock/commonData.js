@@ -28,7 +28,7 @@ export const commonData = {
     // 当前页
     pageNum: 1,
     // 每页显示条数
-    pageSize: 5,
+    pageSize: 10,
     // isQuery: false,
     // fuzzy: false,
   },
@@ -171,7 +171,7 @@ export const commonData = {
           dataIndex: 'baseUserInfo',
           isExport: false,
           isTableItem: true,
-          width: '20%',
+          width: '15%',
           key: 'baseUserInfo',
           render: (text) => {
             return text ? text.orgnizationName : '';
@@ -193,16 +193,24 @@ export const commonData = {
           dataIndex: 'loginAccount',
           isExport: true,
           isTableItem: true,
-          width: '15%',
+          width: '10%',
           key: 'loginAccount',
         },
         {
-          title: '账户类型',
+          title: '用户类型',
           dataIndex: 'accountTypeName',
           isExport: true,
           isTableItem: true,
-          width: '20%',
+          width: '10%',
           key: 'accountType',
+        },
+        {
+          title: '用户状态',
+          dataIndex: 'enable',
+          isExport: true,
+          isTableItem: true,
+          width: '10%',
+          key: 'enable',
         },
         {
           title: '备注',

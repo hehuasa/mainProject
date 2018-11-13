@@ -84,9 +84,6 @@ export default class EquipmentProductInfo extends PureComponent {
         }, { title: '驾驶员姓名',
           dataIndex: 'driverName',
           width: 110,
-        }, { title: '驾驶员身份证',
-          dataIndex: 'driverIDCard',
-          width: 190,
         }, { title: '联系手机',
           dataIndex: 'mobile',
           width: 140,
@@ -98,7 +95,7 @@ export default class EquipmentProductInfo extends PureComponent {
           width: 180,
         }, { title: '车位',
           dataIndex: 'parkingLot',
-          width: 100,
+          width: 150,
         }, { title: '进厂门岗',
           dataIndex: 'inFatoryDoor',
           width: 120,
@@ -141,7 +138,7 @@ export default class EquipmentProductInfo extends PureComponent {
                     return index % 2 === 0 ? styles.blue : styles.blueRow;
                         }}
                   bordered
-                  scroll={{ x: 2480, y: 540 }}
+                  scroll={{ x: 2340, y: 540 }}
                 />
               </Scrollbars>
             </div>

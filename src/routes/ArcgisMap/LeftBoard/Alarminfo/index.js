@@ -12,7 +12,7 @@ import levelRed from '../../../../assets/map/alarm/levelRed.png';
 import { alarmStatus, getBrowserStyle, getBrowserScroll, formatDuring } from '../../../../utils/utils';
 import {searchByAttr, addVideoIcon, changeIcon, transToPoint, delLayer} from '../../../../utils/mapService';
 import { infoConstantly, constantlyPanelModal, infoPopsModal } from '../../../../services/constantlyModal';
-import { getRealHistoryData } from '../../../../utils/Panel';
+import {getRealData, getRealHistoryData} from '../../../../utils/Panel';
 import close from '../../../../assets/map/叉叉.png';
 
 const CheckboxGroup = Checkbox.Group;

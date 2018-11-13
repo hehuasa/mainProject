@@ -230,11 +230,17 @@ export default class HandAlarmDeal extends PureComponent {
           resourceIDs.push(selectedData.resourceID);
         }
         this.props.dispatch({
-          type: 'alarmDeal/getByResourceIDs',
+          // type: 'alarmDeal/getByResourceIDs',
+          type: 'alarmDeal/getMaterialPage',
           payload: {
-            resourceIDs,
+            // resourceIDs,
+            pageNum: 1,
+            pageSize: 10,
+            isQuery: true,
+            fuzzy: true,
           },
         }).then(() => {
+          // this.useChangePage;
           this.setState({
             isUsePage: isUse,
             visible: true,
@@ -356,19 +362,24 @@ export default class HandAlarmDeal extends PureComponent {
     this.setState({
       isUsePage: false,
     });
-  }
+  };
+
+  onSelect = (value, node) => {
+    const { dataRef } = node.props;
+    // 取出区域信息放入装置区域字段
+  };
 
   // 循环获取数据
   renderTreeNodes = (data) => {
     return data.map((item) => {
       if (item.children) {
         return (
-          <TreeNode title={item.orgnizationName} key={`${item.orgID}`} value={`${item.orgID}`}>
+          <TreeNode dataRef={item} title={item.orgnizationName} key={`${item.orgID}`} value={`${item.orgID}`}>
             {this.renderTreeNodes(item.children)}
           </TreeNode>
         );
       }
-      return <TreeNode title={item.orgnizationName} key={`${item.orgID}`} value={`${item.orgID}`} />;
+      return <TreeNode dataRef={item} title={item.orgnizationName} key={`${item.orgID}`} value={`${item.orgID}`} />;
     });
   }
 
@@ -463,6 +474,7 @@ export default class HandAlarmDeal extends PureComponent {
                   treeNodeFilterProp="title"
                   allowClear
                   treeDefaultExpandAll
+                  onSelect={this.onSelect}
                 >
                   {this.renderTreeNodes(this.props.alarmDeal.apparatusList)}
                 </TreeSelect>
@@ -473,10 +485,10 @@ export default class HandAlarmDeal extends PureComponent {
             <FormItem
               labelCol={{ span: 7 }}
               wrapperCol={{ span: 15 }}
-              label="报警现状"
+              label="装置区域"
             >
-              {form.getFieldDecorator('alarmStatuInfo')(
-                <Input placeholder="报警现状" />
+              {form.getFieldDecorator('areaName')(
+                <Input disabled placeholder="请选择事发部门" />
               )}
             </FormItem>
           </Col>
@@ -599,6 +611,17 @@ export default class HandAlarmDeal extends PureComponent {
           </Col>
         </Row>
         <Row>
+          <Col md={12} sm={24}>
+            <FormItem
+              labelCol={{ span: 7 }}
+              wrapperCol={{ span: 15 }}
+              label="报警现状"
+            >
+              {form.getFieldDecorator('alarmStatuInfo')(
+                <TextArea rows={3} placeholder="报警现状" />
+              )}
+            </FormItem>
+          </Col>
           <Col md={12} sm={24}>
             <FormItem
               labelCol={{ span: 7 }}
