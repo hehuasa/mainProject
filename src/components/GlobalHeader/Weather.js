@@ -9,6 +9,9 @@ import weatherIcon27 from '../../assets/header/weatherIcon_27.png';
 
 
 const Content = ({ weather }) => {
+  const test = () => {
+    window.open('http://www.baidu.com');
+  };
   return (
     <div style={{ width: 200 }}>
       <div className={styles.weatherBack}>

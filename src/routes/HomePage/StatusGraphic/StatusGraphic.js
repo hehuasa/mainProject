@@ -76,6 +76,14 @@ export default class StatusGraphic extends PureComponent {
       editor.net.render();
       // editor.net.autoZoom();
       currentResourceID = this.props.currentFlow.data.resourceID;
+      // 增加数据刷新动效
+      for (const node of data.source.nodes) {
+        // 需要刷新的节点
+        const item = this.props.GraphiceDatas[node.device];
+        if (item) {
+          console.log('item', item);
+        }
+      }
       this.props.dispatch({
         type: 'flow/getGraphiceDatas',
         payload: { resourceID: this.props.currentFlow.data.resourceID },

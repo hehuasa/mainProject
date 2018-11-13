@@ -114,8 +114,15 @@ export default {
         payload: (payload.CmdCode === 'Show'),
       });
     },
-    *devTools({ payload }, { call }) {
-      // yield call(videoCtrl, payload);
+    *devTools({ payload }) {
+      const a = setInterval(() => {
+        if (SocketVideo.socket) {
+          clearInterval(a);
+          SocketVideo.socket.send(JSON.stringify(payload));
+        }
+      }, 50);
+    },
+    *loginOut({ payload }) {
       const a = setInterval(() => {
         if (SocketVideo.socket) {
           clearInterval(a);

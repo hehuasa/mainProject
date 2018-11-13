@@ -45,6 +45,18 @@ export default {
       if (response.code === 1001) {
         delCookies();
         // yield setTimeout(() => {
+        yield put({
+          type: 'video/switch',
+          payload: {
+            CmdCode: 'Hide',
+          },
+        });
+        yield put({
+          type: 'video/loginOut',
+          payload: {
+            Commond: 'StopVideo',
+          },
+        });
         yield put(routerRedux.push('/user/login'));
         // try {
         //   // get location pathname
