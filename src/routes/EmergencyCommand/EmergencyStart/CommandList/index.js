@@ -6,6 +6,7 @@ import styles from './index.less';
 import InsertCommand from './InsertCommand/index';
 import { commandType } from '../../../../utils/utils';
 import { commonData } from '../../../../../mock/commonData';
+import {emgcIntervalInfo} from "../../../../services/constantlyData";
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -27,6 +28,7 @@ export default class CommandList extends PureComponent {
     editingKey: '',
     executeContent: '',
     visible: '',
+    commandModel: null,
   };
   componentDidMount() {
     const { dispatch, eventID, viewNode } = this.props;
@@ -49,6 +51,13 @@ export default class CommandList extends PureComponent {
     dispatch({
       type: 'emergency/getCommandStatus',
     });
+    // 刷新指令列表
+    emgcIntervalInfo.commondList.forEach((item) => {
+      clearInterval(item);
+    });
+    const id = setInterval(this.getCommandList,
+      emgcIntervalInfo.timeSpace);
+    emgcIntervalInfo.commondList.push(id);
   }
   // 根据指令类型获取指令列表
   getCommandListByModel = (commandModel) => {
@@ -59,8 +68,19 @@ export default class CommandList extends PureComponent {
       payload: { eventID, commandModel, nodeType: viewNodeType },
     });
   };
+  getCommandList = () => {
+    const { dispatch, eventID, viewNodeType } = this.props;
+    const { commandModel } = this.state;
+    dispatch({
+      type: 'emergency/getCommandList',
+      payload: { eventID, commandModel, nodeType: viewNodeType },
+    });
+  };
   // 指令类型下拉框改变 根据不同类型获取指令列表
   commandTypeChange = (value) => {
+    this.setState({
+      commandModel: value,
+    });
     this.getCommandListByModel(value);
   };
   // 打开指令插入界面
@@ -153,7 +173,8 @@ export default class CommandList extends PureComponent {
         render: (value, record) => {
           return (
             <Select
-              defaultValue={value ? value.toString() : ''}
+              // defaultValue={value ? value.toString() : ''}
+              value={value ? value.toString() : ''}
               style={{ width: 100 }}
               onChange={select => this.handleChange(select, record.cmdExecID)}
             >

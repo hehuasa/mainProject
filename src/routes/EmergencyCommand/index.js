@@ -8,6 +8,7 @@ import EarlyWarning from './EarlyWarning/index';
 import EmergencyDisposal from './EmergencyDisposal/index';
 import EmergencyStop from './EmergencyStop/index';
 import InfoContentRecord from './InfoContentRecord/InfoContentRecord';
+import { emgcIntervalInfo } from '../../services/constantlyData';
 
 @connect(({ emergency, user }) => ({
   current: emergency.current,
@@ -21,13 +22,19 @@ export default class EmergencyCommand extends PureComponent {
       type: 'user/fetchCurrent',
     });
     // 请求事件信息
+    this.getEventInfo();
+    const id = setInterval(this.getEventInfo, emgcIntervalInfo.timeSpace);
+    emgcIntervalInfo.intervalIDs.push(id);
+  }
+  // 请求事件信息
+  getEventInfo = () => {
     this.props.dispatch({
       type: 'emergency/queryEventFeatures',
       payload: {
         eventID: this.props.eventID,
       },
     });
-  }
+  };
   nodeClick = (viewNode, viewNodeType) => {
     this.props.dispatch({
       type: 'emergency/saveViewNode',

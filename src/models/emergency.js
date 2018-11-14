@@ -261,6 +261,10 @@ export default {
         type: 'saveEventInfoReport',
         payload: res.data,
       });
+      yield put({
+        type: 'eventFeaturesList',
+        payload: res.data.eventFeatureList,
+      });
     },
     // 搜索事件特征
     *searchEventFeatures({ payload }, { call, put }) {

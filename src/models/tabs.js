@@ -1,4 +1,5 @@
 import { getMenuData } from '../common/menu';
+import { emgcIntervalInfo } from '../services/constantlyData';
 
 const menuData = getMenuData();
 const getTabTitle = (array, tabPath) => {
@@ -70,6 +71,12 @@ export default {
       });
     },
     *del({ payload }, { put }) {
+      // 清空事件的轮训
+      const { intervalIDs, infoRecord, commondList, userPage } = emgcIntervalInfo;
+      const arr = intervalIDs.concat(infoRecord, commondList, userPage);
+      arr.forEach((item) => {
+        clearInterval(item);
+      });
       yield put({
         type: 'delTab',
         payload: payload.key,
