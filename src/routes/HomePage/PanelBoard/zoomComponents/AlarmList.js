@@ -38,8 +38,8 @@ const columns = [
     key: 'resourceName',
   }, {
     title: '首报时间',
-    dataIndex: 'receiveTime',
-    key: 'receiveTime',
+    dataIndex: 'startTime',
+    key: 'startTime',
     className: styles.cursorStyle,
     defaultSortOrder: 'descend',
     sorter: (a, b) => {

@@ -214,6 +214,9 @@ export default class CommonQuery extends PureComponent {
   setOrgID = (orgID) => {
     this.props.form.setFieldsValue({ orgID });
   };
+  setAreaID = (areaID) => {
+    this.props.form.setFieldsValue({ areaID });
+  };
 
   render() {
     const { form } = this.props;
@@ -298,6 +301,7 @@ export default class CommonQuery extends PureComponent {
                             placeholder="请选择装置区域"
                             onChange={this.handleChange}
                             optionFilterProp="title"
+                            disabled={form.getFieldValue('areaID')}
                             showSearch
                             style={{ width: '100%' }}
                           >

@@ -1,7 +1,7 @@
 import {
   alarmEvent, alarmDeal, queryEventInfoReport, getResourceQueryPage,
   getMonitorResourceObj, getByResourceIDs, getApparatus, getAlarmConten,
-  selectByTypeParent, selectByCodeByCode, queryAreaListByAreaType, materialPage,
+  selectByTypeParent, selectByCodeByCode, queryAreaListByAreaType, materialPage, getMonitorResource,
 } from '../services/api';
 
 
@@ -41,6 +41,17 @@ export default {
     // 查询事发设备list
     *getMonitorResourceObj({ payload }, { call, put }) {
       const response = yield call(getMonitorResourceObj, payload);
+      yield put({
+        type: 'saveSearchList',
+        payload: {
+          result: response.data,
+          pagination: {},
+        },
+      });
+    },
+    // 查询事发设备对应的 监测器具list
+    *getMonitorResource({ payload }, { call, put }) {
+      const response = yield call(getMonitorResource, payload);
       yield put({
         type: 'saveSearchList',
         payload: {

@@ -178,7 +178,7 @@ export default class EquipmentProductInfo extends PureComponent {
           <div className={styles.text}>中韩石化质量控制日报（一）</div>
           <div className={styles.left} />
         </div>
-        <div className={styles.dataSource}>数据来源: Limis系统</div>
+        <div className={styles.dataSource}>数据来源: LIMS系统</div>
         { showChart ? <Trend click={this.rawClick} sortIndex={sortIndex} name={chartName} dateTimes={dateTimes} /> : (
           <div className={styles.content}>
             <div className={styles.timeArea}>

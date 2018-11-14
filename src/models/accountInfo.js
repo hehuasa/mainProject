@@ -1,6 +1,6 @@
 import {
   accountPage, addAccountInfo, getAccountInfo, deleteAccountInfo, exportAccountInfo, resetPwd, updateAccountInfo,
-  accountRolePage, rolePage, getRolesByAccountID, saveAccountRole
+  accountRolePage, rolePage, getRolesByAccountID, saveAccountRole, accountEnable
 } from '../services/api';
 import { commonData } from '../../mock/commonData';
 import { checkCode } from '../utils/utils';
@@ -77,6 +77,10 @@ export default {
     },
     *reset(payload, { call }) {
       const response = yield call(resetPwd, payload.payload);
+      checkCode(response);
+    },
+    *accountEnable(payload, { call }) {
+      const response = yield call(accountEnable, payload.payload);
       checkCode(response);
     },
     *get(payload, { call, put }) {

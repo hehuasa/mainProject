@@ -314,11 +314,11 @@ export async function orgDelete(params) {
     body: { id: params },
   });
 }
-
+// 重置密码
 export async function resetPwd(params) {
-  return request(`${path}/system/reset`, {
+  return request(`${path}/system/accountInfo/resetPass`, {
     method: 'POST',
-    body: { id: params },
+    body: params,
   });
 }
 
@@ -2361,5 +2361,12 @@ export async function saveAccountRole(params) {
 // 接口平台 接口列表
 export async function getPluginList() {
   return request(`${path}/plugin/getpluginstate`);
+}
+// 账户启用停用
+export async function accountEnable(params) {
+  return request(`${path}/system/accountInfo/updateState`, {
+    method: 'POST',
+    body: params,
+  });
 }
 

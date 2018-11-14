@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { Tag } from 'antd';
 import { switchCode } from '../src/services/statusCode';
 
 export const commonData = {
@@ -206,11 +207,14 @@ export const commonData = {
         },
         {
           title: '用户状态',
-          dataIndex: 'enable',
+          dataIndex: 'accountState',
           isExport: true,
           isTableItem: true,
           width: '10%',
-          key: 'enable',
+          key: 'accountState',
+          render: (text) => {
+            return text === 1 ? <span color="blue">已启用</span> : <span color="red">已停用</span>;
+          },
         },
         {
           title: '备注',

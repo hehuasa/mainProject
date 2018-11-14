@@ -174,21 +174,31 @@ export default class HandAlarmDeal extends PureComponent {
   onShowModal = (value, id) => {
     let isUse = false;
     const orgID = this.props.form.getFieldsValue(['alarmOrgID']).alarmOrgID || null;
+    const areaID = this.props.form.getFieldsValue(['alarmAreaID']).alarmAreaID || null;
     switch (id) {
       case 1:
         title = '监测器具';
         whether = true;
         searchValue = value;
+        // 检测器具受事发设备影响
+        let urls = '';
+        const param = {};
+        const { alarmResourceID } = this.props.form.getFieldsValue(['alarmResourceID']);
+        if (alarmResourceID) {
+          urls = 'alarmDeal/getMonitorResource';
+          param.resourceID = alarmResourceID;
+        } else {
+          urls = 'alarmDeal/getResourceQueryPage';
+          param.resourceName = value;
+          param.isQuery = true;
+          param.fuzzy = true;
+          param.orgID = orgID;
+          param.pageNum = 1;
+          param.pageSize = 10;
+        }
         this.props.dispatch({
-          type: 'alarmDeal/getResourceQueryPage',
-          payload: {
-            resourceName: value,
-            isQuery: true,
-            fuzzy: true,
-            orgID,
-            pageNum: 1,
-            pageSize: 10,
-          },
+          type: urls,
+          payload: param,
         }).then(() => {
           this.setState({
             isUsePage: isUse,
@@ -197,6 +207,7 @@ export default class HandAlarmDeal extends PureComponent {
             orgID,
           });
           this.child.setOrgID(orgID);
+          this.child.setAreaID(areaID);
         });
         break;
       case 2:
@@ -204,14 +215,27 @@ export default class HandAlarmDeal extends PureComponent {
         whether = true;
         searchValue = null;
         isUse = true;
+        const params = {};
+        let url = '';
+        if (selectedValue) {
+          url = 'alarmDeal/getMonitorResourceObj';
+          params.resourceID = selectedValue.resourceID;
+        } else {
+          url = 'alarmDeal/getResourceQueryPage';
+          params.pageNum = 1;
+          params.pageSize = 10;
+          params.isQuery = true;
+          params.fuzzy = true;
+          params.orgID = orgID;
+        }
         this.props.dispatch({
-          type: 'alarmDeal/getMonitorResourceObj',
-          payload: {
-            resourceID: selectedValue ? selectedValue.resourceID : null,
-          },
+          type: url,
+          payload: params,
         }).then(() => {
+          this.child.setOrgID(orgID);
+          this.child.setAreaID(areaID);
           this.setState({
-            isUsePage: isUse,
+            isUsePage: false,
             visible: true,
             clickWhether: id,
             orgID: null,
@@ -240,9 +264,8 @@ export default class HandAlarmDeal extends PureComponent {
             fuzzy: true,
           },
         }).then(() => {
-          // this.useChangePage;
           this.setState({
-            isUsePage: isUse,
+            isUsePage: false,
             visible: true,
             orgID: null,
             clickWhether: id,
@@ -265,6 +288,7 @@ export default class HandAlarmDeal extends PureComponent {
         resourceID: selectedValue.resourceID,
         resourceID1: selectedValue.resourceName,
         alarmOrgID: selectedValue.organization.orgID || null,
+        alarmAreaID: selectedValue.area.areaID || null,
       });
       // 事发设备请求的数据
       this.props.dispatch({
@@ -278,6 +302,7 @@ export default class HandAlarmDeal extends PureComponent {
           form.setFieldsValue({
             alarmResourceID: this.props.alarmDeal.searchList[0].resourceID,
             alarmResourceID1: this.props.alarmDeal.searchList[0].resourceName,
+            installPosition: this.props.alarmDeal.searchList[0].installPosition,
           });
           resourceIDs.push(this.props.alarmDeal.searchList[0].resourceID);
         }
@@ -308,6 +333,9 @@ export default class HandAlarmDeal extends PureComponent {
       form.setFieldsValue({
         alarmResourceID: selectedData.resourceID,
         alarmResourceID1: selectedData.resourceName,
+        installPosition: selectedData.installPosition,
+        alarmOrgID: selectedData.organization.orgID || null,
+        alarmAreaID: selectedData.area.areaID || null,
       });
       const resourceIDs = [];
       if (selectedValue) {
@@ -317,6 +345,23 @@ export default class HandAlarmDeal extends PureComponent {
         resourceIDs.push(selectedData.resourceID);
       }
       if (resourceIDs.length > 0) {
+        // 请求事发设备对应的监测器具
+        this.props.dispatch({
+          type: 'alarmDeal/getMonitorResource',
+          payload: {
+            resourceID: selectedData.resourceID,
+          },
+        }).then(() => {
+          if (this.props.alarmDeal.searchList.length === 1) {
+            // 如果只有一个检测器具则选中
+            form.setFieldsValue({
+              resourceID: this.props.alarmDeal.searchList[0].resourceID,
+              resourceID1: this.props.alarmDeal.searchList[0].resourceName,
+
+            });
+          }
+        });
+        // 请求事件物质
         this.props.dispatch({
           type: 'alarmDeal/getByResourceIDs',
           payload: {
@@ -365,8 +410,28 @@ export default class HandAlarmDeal extends PureComponent {
   };
 
   onSelect = (value, node) => {
-    const { dataRef } = node.props;
+    // const { dataRef } = node.props;
     // 取出区域信息放入装置区域字段
+    const arr = [
+      'rawMaterialIds',
+      'rawMaterialIds1',
+      'resourceID',
+      'resourceID1',
+      'alarmOrgID',
+      'alarmAreaID',
+      'alarmResourceID',
+      'alarmResourceID1',
+      'installPosition',
+    ];
+    this.props.form.resetFields(arr);
+    const { areaList } = this.props.alarmDeal;
+    const orgAreaList = areaList.filter(item => Object.is(item.orgID, value));
+    this.props.form.resetFields(arr);
+    if (orgAreaList.length > 0) {
+      this.props.form.setFieldsValue({
+        areaID: orgAreaList[0].areaID,
+      });
+    }
   };
 
   // 循环获取数据
@@ -384,7 +449,7 @@ export default class HandAlarmDeal extends PureComponent {
   }
 
   render() {
-    const { form, emergency } = this.props;
+    const { form, emergency, alarmDeal } = this.props;
     return (
       <div className={styles.alarmReport}>
         <Row type="flex">
@@ -474,7 +539,7 @@ export default class HandAlarmDeal extends PureComponent {
                   treeNodeFilterProp="title"
                   allowClear
                   treeDefaultExpandAll
-                  onSelect={this.onSelect}
+                  onChange={this.onSelect}
                 >
                   {this.renderTreeNodes(this.props.alarmDeal.apparatusList)}
                 </TreeSelect>
@@ -487,8 +552,24 @@ export default class HandAlarmDeal extends PureComponent {
               wrapperCol={{ span: 15 }}
               label="装置区域"
             >
-              {form.getFieldDecorator('areaName')(
-                <Input disabled placeholder="请选择事发部门" />
+              {form.getFieldDecorator('alarmAreaID')(
+                <Select
+                  placeholder="请选择装置区域"
+                  // onChange={this.handleChange}
+                  optionFilterProp="title"
+                  showSearch
+                  disabled
+                  style={{ width: '100%' }}
+                >
+                  {alarmDeal.areaList.map(item => (
+                    <Option
+                      key={item.areaID}
+                      value={item.areaID}
+                      title={item.areaName}
+                    >{item.areaName}
+                    </Option>
+                  ))}
+                </Select>
               )}
             </FormItem>
           </Col>
@@ -547,10 +628,9 @@ export default class HandAlarmDeal extends PureComponent {
               wrapperCol={{ span: 15 }}
               label="设备位置"
             >
-              <Input
-                value={selectedData ? selectedData.installPosition : ''}
-                disabled
-              />
+              {form.getFieldDecorator('installPosition')(
+                <Input placeholder="设备位置" />
+              )}
             </FormItem>
           </Col>
           <Col md={12} sm={24}>
