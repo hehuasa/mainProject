@@ -3,7 +3,7 @@ import { lineData, getSelctData } from '../utils/Panel';
 import { addDoorIcon, envMap } from '../utils/mapService';
 import {
   getGuardCounting, getGuardDoorCounting, getConditionCalc, findByTime, getAllNewsData, getNewsData, getNewsDataByGroup, getNewsDataByCtrlResourceType,
-  getHotFurnaceRunDay, getAlternatorRunDay, getDissociationRunDay,
+  getHotFurnaceRunDay, getAlternatorRunDay, getDissociationRunDay, resourceTreeByCtrlType,
 } from '../services/api';
 import { constantlyModal, constantlyPanelModal, constantlyConditionCalc } from '../services/constantlyModal';
 // 公共函数，在地图显示各种实时专题数据
@@ -149,7 +149,20 @@ export default {
     },
     // 设备监测实时值
     *getDeviceMonitorData({ payload }, { call }) {
+      const resourceInfos = yield call(resourceTreeByCtrlType, { ctrlType: payload.ctrlResourceType });
       const response = yield call(getAllNewsData, payload);
+      const newData = [];
+      for (const item of resourceInfos.data) {
+        const data = response.data.find(value => value.gISCode === item.gISCode);
+        if (data) {
+          newData.push(data);
+        } else {
+          newData.push({
+            gISCode: item.gISCode,
+            resResourceInfo: item,
+          });
+        }
+      }
       let runDayUrl;
       switch (payload.selectRunDay) {
         case 'proRptAlternatorInfo':
@@ -163,14 +176,15 @@ export default {
             break;
         default: break;
       }
-      // const rundayData = yield call(runDayUrl, { date: new Date().getTime() });
-      const runDayData = yield call(runDayUrl, { date: 1538958903000 });
+      // 运行天数,同时更新实时数据
+      const runDayData = yield call(runDayUrl, { date: new Date().getTime() });
       if (constantlyModal[payload.ctrlResourceType] === undefined) {
         constantlyModal[payload.ctrlResourceType] = {};
-        constantlyModal[payload.ctrlResourceType].data = response.data;
+        constantlyModal[payload.ctrlResourceType].data = newData;
+        // constantlyModal[payload.ctrlResourceType].data = response.data;
         constantlyModal[payload.ctrlResourceType].runDayData = runDayData.data;
       } else {
-        constantlyModal[payload.ctrlResourceType].data = response.data;
+        constantlyModal[payload.ctrlResourceType].data = newData;
         constantlyModal[payload.ctrlResourceType].runDayData = runDayData.data;
       }
     },

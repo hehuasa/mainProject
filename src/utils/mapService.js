@@ -1872,8 +1872,7 @@ export const addConstructIcon = ({ map, layer, list, dispatch }) => {
 export const addVocsIcon = ({ map, layer, list, dispatch }) => {
   esriLoader.loadModules([
     'esri/layers/GraphicsLayer',
-    'esri/Graphic',
-  ]).then(([GraphicsLayer, Graphic]) => {
+  ]).then(([GraphicsLayer]) => {
     if (map.findLayerById('Vocs监控专题图')) {
       delLayer(map, ['Vocs监控专题图'], dispatch);
       return false;
@@ -1907,7 +1906,6 @@ export const addVocsIcon = ({ map, layer, list, dispatch }) => {
           data.push(obj);
         }
       }
-      console.log('data', data);
       dispatch({
         type: 'map/queryVocsPopup',
         payload: { show: true, load: true, data },
@@ -2331,18 +2329,20 @@ export const switchAlarmIcon = ({ layer }) => {
   };
   const changeIcon = () => {
     for (const graphic of mapConstants.alarmGraphics) {
-      const alarmGraphicClone = graphic.clone();
-      const newSy = alarmGraphicClone.attributes.symbolObj.clone();
-      if (index === 0) {
-        alarmGraphicClone.symbol = emptySy;
-        graphic.symbol = emptySy;
-      } else {
-        alarmGraphicClone.symbol = newSy;
-        graphic.symbol = newSy;
+      if (!graphic.attributes.isEvent) {
+        const alarmGraphicClone = graphic.clone();
+        const newSy = alarmGraphicClone.attributes.symbolObj.clone();
+        if (index === 0) {
+          alarmGraphicClone.symbol = emptySy;
+          graphic.symbol = emptySy;
+        } else {
+          alarmGraphicClone.symbol = newSy;
+          graphic.symbol = newSy;
+        }
+        graphicArray.push(alarmGraphicClone);
       }
-      graphicArray.push(alarmGraphicClone);
+      layer.graphics.addMany(graphicArray);
     }
-    layer.graphics.addMany(graphicArray);
   };
   const timer = setInterval(() => {
     index = index === 0 ? 1 : 0;
@@ -2399,13 +2399,13 @@ export const alarmAnimation = async ({ alarm, geometry }) => {
   });
 };
 // 新建事件图标
-export const addEventIcon = (popupScale, events) => {
+export const addEventIcon = (events) => {
   esriLoader.loadModules([
     'esri/layers/GraphicsLayer', 'esri/Graphic']).then(([GraphicsLayer, Graphic]) => {
     const { mainMap } = mapConstants;
     let eventLayer = mainMap.findLayerById('事件专题图');
     if (!eventLayer) {
-      eventLayer = new GraphicsLayer({ id: '事件专题图', minScale: popupScale });
+      eventLayer = new GraphicsLayer({ id: '事件专题图', minScale: mapConstants.popupScale });
       mainMap.add(eventLayer);
     }
     const eventSy = {
@@ -2425,6 +2425,11 @@ export const addEventIcon = (popupScale, events) => {
       if (event.gISCode !== null) {
         searchByAttr({ searchText: event.gISCode, searchFields: ['ObjCode'], layerIds: alarmLayerIds }).then((res) => {
           if (res[0]) {
+            // 在报警列表里做一个标记
+            const index = mapConstants.alarmGraphics.findIndex(value => value.attributes.resourceGisCode === event.gISCode);
+            if (index !== -1) {
+              mapConstants.alarmGraphics[index].attributes.isEvent = true;
+            }
             const newGeo = transToPoint(res[0].feature.geometry);
             const eventGraphic = new Graphic(newGeo, eventSy, { ...res[0].feature.attributes, event, isEvent: true });
             eventLayer.graphics.add(eventGraphic);

@@ -63,7 +63,7 @@ export default class AlarmCountingStatistics extends PureComponent {
               height={300}
               data={list}
               scale={scales}
-              padding={[20, 30, 40, 30]}
+              padding={[20, 30, 40, 60]}
               forceFit
               onGetG2Instance={(g2Chart) => {
                 g2Chart.animate(false);

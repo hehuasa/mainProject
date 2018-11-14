@@ -57,7 +57,7 @@ export default class ConstructMonitor extends PureComponent {
         onPlotClick={this.handleClick}
         onGetG2Instance={(chart) => { this.chart = chart; }}
         scale={scales}
-        padding={[20, 30, 40, 30]}
+        padding={[20, 30, 40, 60]}
         animate={false}
       >
         <LeftTitle title="作业数量" />

@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import AlarmInfo from './AlarmInfo/index';
 import Footer from './Footer/index';
 import styles from './index.less';
-import { delAlarmAnimation } from '../../../utils/mapService';
+import { addEventIcon, delAlarmAnimation } from '../../../utils/mapService';
 import { mapConstants } from '../../../services/mapConstant';
 
 const { TabPane } = Tabs;
@@ -43,6 +43,7 @@ const RealEvent = Form.create()((props) => {
   isDrill: alarmDeal.isDrill,
   alarmDeal,
   emergency,
+  undoneEventList: emergency.undoneEventList,
   alarm,
 }))
 @Form.create()
@@ -56,7 +57,6 @@ export default class AlarmDeal extends PureComponent {
       type: 'alarmDeal/getAlarmDealTypeList',
       payload: 104,
     });
-    console.log(666, this.props.alarmInfoConten)
   }
   // 保存报警处理信息
   save = () => {
@@ -101,6 +101,8 @@ export default class AlarmDeal extends PureComponent {
           // 删除地图报警图标
           const { mainMap } = mapConstants;
           delAlarmAnimation(mainMap, alarmInfo);
+          // 更新事件图标
+          addEventIcon(this.props.undoneEventList);
           // 更新头部应急事件下拉.
           dispatch({
             type: 'emergency/undoneEventList',

@@ -8,6 +8,7 @@ export const mapConstants = {
   spaceQueryPolygon: {},
   baseLayer: {},
   domWarp: {},
+  popupScale: 0,
   accessBordPoints: {
     0: { x: 12749837.301726628, y: 3587955.2118009147 },
     1: { x: 12748550.788611474, y: 3587408.497789186 },

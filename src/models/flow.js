@@ -61,7 +61,6 @@ export default {
         const { data } = yield call(getFlowData, { resourceID });
         datas.push(data);
       }
-      console.log('datas', datas);
       yield put({
         type: 'queryCurrentDevices',
         payload: { show: false, data: datas },

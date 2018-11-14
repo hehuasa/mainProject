@@ -129,7 +129,7 @@ export default class StatusGraphic extends PureComponent {
             // editor.net.refresh();
           }
         });
-      }, 30000);
+      }, 10000);
     }, 500);
   }
   componentWillUnmount() {

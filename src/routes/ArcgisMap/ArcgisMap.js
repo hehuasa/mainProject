@@ -147,6 +147,7 @@ export default class ArcgisMap extends PureComponent {
                 type: 'map/mapPopupScale',
                 payload: popupScale,
               });
+              mapConstants.popupScale = popupScale;
               mapConstants.extent = extent;
               mapConstants.accessInfoExtent = accessInfoExtent;
               // mapConstants.domWarp = this.warp;
@@ -201,7 +202,7 @@ export default class ArcgisMap extends PureComponent {
                 const getEvent = setInterval(() => {
                   if (this.props.undoneEventList.length > 0) {
                     clearInterval(getEvent);
-                    addEventIcon(popupScale, this.props.undoneEventList);
+                    addEventIcon(this.props.undoneEventList);
                   }
                 }, 500);
                 dispatch({
