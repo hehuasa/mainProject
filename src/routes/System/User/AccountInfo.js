@@ -12,7 +12,7 @@ import {
   Button,
   Dropdown,
   Menu,
-  InputNumber,
+  Tag,
   TreeSelect,
   Modal,
   message,
@@ -23,6 +23,7 @@ import StandardTable from '../../../components/StandardTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
 import { commonData } from '../../../../mock/commonData';
+import { accountEnable } from '../../../services/api';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -319,10 +320,26 @@ export default class TableList extends PureComponent {
         // 获取该行的id，可以获取的到，传到函数里的时候打印直接把整个表格所有行id全部打印了
         return (
           <Fragment>
-            <a href="javascript: void(0)" onClick={() => this.accountEnable(record)}>启用</a>
+            { record.accountState === 1 ? (
+              <Popconfirm title="确定停用该用户？" onConfirm={() => this.accountEnable(record, 0)}>
+                <a href="#">停用</a>
+              </Popconfirm>
+            ) : (
+              <Popconfirm title="确定启用该用户？" onConfirm={() => this.accountEnable(record, 1)}>
+                <a href="#">启用</a>
+              </Popconfirm>
+            )}
             <Divider type="vertical" />
-            <a href="javascript: void(0)" onClick={() => this.resetPwd(record)}>重置密码</a>
-            <Divider type="vertical" />
+            { record.accountType === '100.101' ? (
+              <Popconfirm title="确定重置密码？" onConfirm={() => this.resetPwd(record)}>
+                <a href="#">重置密码</a>
+              </Popconfirm>
+            ) : null
+            }
+            { record.accountType === '100.101' ? (
+              <Divider type="vertical" />
+            ) : null
+            }
             <a href="javascript: void(0)" onClick={() => this.showRoleConfig(record)}>配置角色</a>
           </Fragment>
         );
@@ -469,38 +486,22 @@ export default class TableList extends PureComponent {
     });
   };
   // 重置密码
-  reset = (record) => {
+  resetPwd = (record) => {
     this.props.dispatch({
       type: 'accountInfo/reset',
-      payload: [record.accountID],
-    });
-  }
-  // 导出函数
-  export = () => {
-    const para = commonData.pageInitial;
-    delete para.pageNum;
-    delete para.pageSize;
-    para.showJson = [];
-    commonData.columns.account.attributes.forEach((item) => {
-      if (item.isExport) {
-        para.showJson.push({ en: item.dataIndex, cn: item.title });
-      }
-    }
-    );
-    para.showJson = JSON.stringify(para.showJson);
-    this.props.dispatch({
-      type: 'accountInfo/export',
-      payload: para,
+      payload: { accountID: record.accountID },
     });
   };
-  deleteAll=() => {
-    const userIds = [];
-    this.state.selectedRows.forEach((user) => {
-      userIds.push(user.accountID);
-    });
+  // 启用停用账户
+  accountEnable = (record, accountState) => {
     this.props.dispatch({
-      type: 'accountInfo/delete',
-      payload: userIds,
+      type: 'accountInfo/accountEnable',
+      payload: { accountState, accountID: record.accountID },
+    }).then(() => {
+      const { pagination } = this.props.accountInfo.data;
+      console.log(888, pagination)
+      console.log(777, this.props.accountInfo.data)
+      this.page(pagination);
     });
   };
   update = (record) => {

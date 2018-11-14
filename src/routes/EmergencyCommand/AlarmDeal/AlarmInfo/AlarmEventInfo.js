@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, TreeSelect, Row, Col, Input, message, Icon, Table, Modal } from 'antd';
+import { Form, TreeSelect, Row, Col, Input, message, Icon, Table, Modal, Select } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import { alarmStatus } from '../../../../utils/utils';
@@ -10,6 +10,7 @@ import styles from './index.less';
 // const { TabPane } = Tabs;
 const FormItem = Form.Item;
 const { TextArea, Search } = Input;
+const { Option } = Select;
 const TreeNode = TreeSelect.TreeNode;
 
 let selectedData = null; // 选择事发设备的一行的值
@@ -105,6 +106,7 @@ export default class AlarmEventInfo extends PureComponent {
   onShowModal = (value, id) => {
     const { alarmInfo } = this.props.alarmDeal;
     const { orgID } = this.props.form.getFieldsValue(['orgID']);
+    const areaID = this.props.form.getFieldsValue(['alarmAreaID']).alarmAreaID || null;
     switch (id) {
       case 1:
         // if (err) return;
@@ -112,21 +114,33 @@ export default class AlarmEventInfo extends PureComponent {
         title = '监测器具';
         whether = true;
         searchValue = fieldsValue;
+        // 检测器具受事发设备影响
+        let urls = '';
+        const param = {};
+        const { resourceID } = this.props.form.getFieldsValue(['resourceID']);
+        if (resourceID) {
+          urls = 'alarmDeal/getMonitorResource';
+          param.resourceID = resourceID;
+        } else {
+          urls = 'alarmDeal/getResourceQueryPage';
+          param.resourceName = fieldsValue;
+          param.isQuery = true;
+          param.fuzzy = true;
+          param.orgID = orgID;
+          param.pageNum = 1;
+          param.pageSize = 10;
+        }
         if (alarmInfo) {
           this.props.dispatch({
-            type: 'alarmDeal/getResourceQueryPage',
-            payload: {
-              pageNum: 1,
-              pageSize: 10,
-              resourceName: fieldsValue,
-              orgID,
-            },
+            type: urls,
+            payload: param,
           }).then(() => {
             this.setState({
               visible: true,
               clickWhether: id,
             });
             this.child.setOrgID(orgID);
+            this.child.setAreaID(areaID);
           });
         } else {
           this.setState({
@@ -139,24 +153,30 @@ export default class AlarmEventInfo extends PureComponent {
         title = '事发设备';
         whether = true;
         searchValue = null;
+        const params = {};
+        let url = '';
         if (alarmInfo && alarmInfo.resourceId !== 0) {
-          this.props.dispatch({
-            type: 'alarmDeal/getMonitorResourceObj',
-            payload: {
-              resourceID: alarmInfo.resourceId,
-            },
-          }).then(() => {
-            this.setState({
-              visible: true,
-              clickWhether: id,
-            });
-          });
+          url = 'alarmDeal/getMonitorResourceObj';
+          params.resourceID = alarmInfo.resourceId;
         } else {
+          url = 'alarmDeal/getResourceQueryPage';
+          params.pageNum = 1;
+          params.pageSize = 10;
+          params.isQuery = true;
+          params.fuzzy = true;
+          params.orgID = orgID;
+        }
+        this.props.dispatch({
+          type: url,
+          payload: params,
+        }).then(() => {
+          this.child.setOrgID(orgID);
+          this.child.setAreaID(areaID);
           this.setState({
             visible: true,
             clickWhether: id,
           });
-        }
+        });
         break;
       case 3:
         title = '事件物质';
@@ -170,9 +190,14 @@ export default class AlarmEventInfo extends PureComponent {
         }
         if (resourceIDs.length > 0) {
           this.props.dispatch({
-            type: 'alarmDeal/getByResourceIDs',
+            // type: 'alarmDeal/getByResourceIDs',
+            type: 'alarmDeal/getMaterialPage',
             payload: {
-              resourceIDs,
+              // resourceIDs,
+              pageNum: 1,
+              pageSize: 10,
+              isQuery: true,
+              fuzzy: true,
             },
           }).then(() => {
             this.setState({
@@ -273,7 +298,28 @@ export default class AlarmEventInfo extends PureComponent {
       form.setFieldsValue({
         resourceID: selectedData.resourceID,
         resourceID1: selectedData.resourceName,
+        installPosition: selectedData.installPosition,
+        orgID: selectedData.organization.orgID || null,
+        alarmAreaID: selectedData.area.areaID || null,
       });
+      if (selectedData.resourceID) {
+        // 请求事发设备对应的监测器具
+        this.props.dispatch({
+          type: 'alarmDeal/getMonitorResource',
+          payload: {
+            resourceID: selectedData.resourceID,
+          },
+        }).then(() => {
+          if (this.props.alarmDeal.searchList.length === 1) {
+            // 如果只有一个检测器具则选中
+            form.setFieldsValue({
+              probeResourceID: this.props.alarmDeal.searchList[0].resourceID,
+              probeResourceID1: this.props.alarmDeal.searchList[0].resourceName,
+
+            });
+          }
+        });
+      }
     } else if (this.state.clickWhether === 3) {
       if (!selectedVal) {
         return message.info('请选择一条数据');
@@ -290,6 +336,23 @@ export default class AlarmEventInfo extends PureComponent {
       form.setFieldsValue({
         probeResourceID: selectedVal.resourceID,
         probeResourceID1: selectedVal.resourceName,
+        orgID: selectedVal.organization.orgID || null,
+        alarmAreaID: selectedVal.area.areaID || null,
+      });
+      // 事发设备请求的数据
+      this.props.dispatch({
+        type: 'alarmDeal/getMonitorResourceObj',
+        payload: {
+          resourceID: selectedVal.resourceID,
+        },
+      }).then(() => {
+        if (this.props.alarmDeal.searchList.length === 1) {
+          form.setFieldsValue({
+            resourceID: this.props.alarmDeal.searchList[0].resourceID,
+            resourceID1: this.props.alarmDeal.searchList[0].resourceName,
+            installPosition: this.props.alarmDeal.searchList[0].installPosition,
+          });
+        }
       });
     }
 
@@ -309,6 +372,27 @@ export default class AlarmEventInfo extends PureComponent {
       type: 'alarmDeal/resetSearchList',
     });
   }
+  // 事发部门改变触发
+  onSelectTreeChange = (value) => {
+    // 取出区域信息放入装置区域字段
+    const arr = [
+      'resourceID',
+      'resourceID1',
+      'alarmOrgID',
+      'alarmAreaID',
+      'probeResourceID',
+      'probeResourceID1',
+      'installPosition',
+    ];
+    const { areaList } = this.props.alarmDeal;
+    const orgAreaList = areaList.filter(item => Object.is(item.orgID, value));
+    this.props.form.resetFields(arr);
+    if (orgAreaList.length > 0) {
+      this.props.form.setFieldsValue({
+        areaID: orgAreaList[0].areaID,
+      });
+    }
+  };
   // 循环获取数据
   renderTreeNodes = (data) => {
     return data.map((item) => {
@@ -425,6 +509,7 @@ export default class AlarmEventInfo extends PureComponent {
                   treeNodeFilterProp="title"
                   allowClear
                   treeDefaultExpandAll
+                  onChange={this.onSelectTreeChange}
                 >
                   {this.renderTreeNodes(apparatusList)}
                 </TreeSelect>
@@ -435,14 +520,26 @@ export default class AlarmEventInfo extends PureComponent {
             <FormItem
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
-              label="报警现状"
+              label="装置区域"
             >
-              {form.getFieldDecorator('alarmStatuInfo', {
-                initialValue: alarmInfoConten.alarmExtendAlarmInfoVO ? alarmInfoConten.alarmExtendAlarmInfoVO.alarmStatuInfo : null,
-                rules: [
-                ],
-              })(
-                <Input disabled={!isEvent} placeholder="请输入报警现状" />
+              {form.getFieldDecorator('alarmAreaID')(
+                <Select
+                  placeholder="请选择装置区域"
+                  // onChange={this.handleChange}
+                  optionFilterProp="title"
+                  showSearch
+                  disabled
+                  style={{ width: '100%' }}
+                >
+                  {this.props.alarmDeal.areaList.map(item => (
+                    <Option
+                      key={item.areaID}
+                      value={item.areaID}
+                      title={item.areaName}
+                    >{item.areaName}
+                    </Option>
+                  ))}
+                </Select>
               )}
             </FormItem>
           </Col>
@@ -455,7 +552,7 @@ export default class AlarmEventInfo extends PureComponent {
               {form.getFieldDecorator('probeResourceID1', {
                 initialValue: alarmInfoConten.monitorResourceInfoVO ? alarmInfoConten.monitorResourceInfoVO.resourceName : null,
                 rules: [
-                  { required: isEvent, message: '监测器具不能为空' },
+                  // { required: isEvent, message: '监测器具不能为空' },
                 ],
               })(
                 <Input
@@ -490,7 +587,7 @@ export default class AlarmEventInfo extends PureComponent {
               {form.getFieldDecorator('resourceID1', {
                 initialValue: alarmInfoConten.resourceInfoVO ? alarmInfoConten.resourceInfoVO.resourceName : null,
                 rules: [
-                  { required: isEvent, message: '事发设备不能为空' },
+                  // { required: isEvent, message: '事发设备不能为空' },
                 ],
               })(
                 <Input
@@ -507,10 +604,9 @@ export default class AlarmEventInfo extends PureComponent {
               wrapperCol={{ span: 15 }}
               label="设备位置"
             >
-              <Input
-                disabled
-                value={selectedData ? selectedData.installPosition : ''}
-              />
+              {form.getFieldDecorator('installPosition')(
+                <Input placeholder="设备位置" />
+              )}
             </FormItem>
           </Col>
           <Col md={12} sm={24}>
@@ -576,6 +672,21 @@ export default class AlarmEventInfo extends PureComponent {
                 ],
               })(
                 <Input disabled={!isEvent} placeholder="请输入联系电话" />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={12} sm={24}>
+            <FormItem
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+              label="报警现状"
+            >
+              {form.getFieldDecorator('alarmStatuInfo', {
+                initialValue: alarmInfoConten.alarmExtendAlarmInfoVO ? alarmInfoConten.alarmExtendAlarmInfoVO.alarmStatuInfo : null,
+                rules: [
+                ],
+              })(
+                <Input disabled={!isEvent} placeholder="请输入报警现状" />
               )}
             </FormItem>
           </Col>

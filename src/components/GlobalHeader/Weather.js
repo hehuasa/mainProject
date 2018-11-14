@@ -61,7 +61,7 @@ const Content = ({ weather }) => {
       {/*</Row>*/}
       <Divider className={styles.weatherLine} />
       <div className={styles.weatherFooter} >
-          数据来源于： <a href="http://www.cjw.gov.cn/" title="水利部长江水利委员会" target="_blank"><img src={weatherIcon25} alt="水利部长江水利委员会" /></a>-
+          数据来源于： <a href="www.cjh.com.cn" title="长江水文网" target="_blank"><img src={weatherIcon25} alt="长江水文网" /></a>-
 
            <a href="http://www.cma.gov.cn/2011qxfw/2011qtqyb/" title="中国气象" target="_blank"><img src={weatherIcon27} alt="中国气象" /></a>
       </div>
