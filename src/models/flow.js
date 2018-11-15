@@ -62,6 +62,10 @@ export default {
         datas.push(data);
       }
       yield put({
+        type: 'queryCurrentFlow',
+        payload: { show: false, data: {}, treeNode: payload.treeNode },
+      });
+      yield put({
         type: 'queryCurrentDevices',
         payload: { show: false, data: datas },
       });

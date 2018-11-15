@@ -72,38 +72,9 @@ export default class ConstructMonitor extends PureComponent {
                 fill: '#404040', // 文本的颜色
                 fontSize: '12', // 文本大小
                 fontWeight: 'bold', // 文本粗细
-                rotate: data.length > 5 ? -45 : 0,
+                rotate: data.length > 3 ? -45 : 0,
             },
                 textBaseline: 'bottom', // 文本基准线，可取 top middle bottom，默认为middle
-            // formatter(text, item1, index) {
-            //   const arr = text.split(' ');
-            //   console.log('text', text);
-            //   console.log('item', item1);
-            //   console.log('index', index);
-            //   let str = '\n';
-            //   for (const item of text) {
-            //     str += `${item}\n`;
-            //   }
-            //   return str;
-            // },
-            //     htmlTemplate: (text, item, index1) => {
-            //         const { length } = text;
-            //         console.log(item);
-            //       console.log('index1', index1);
-            //         let index = 0;
-            //         const getText = () => {
-            //           let str = '';
-            //           while (index < length) {
-            //               str += `<div>${text[index]}</div>`;
-            //               index += 1;
-            //           }
-            //           return str;
-            //         };
-            //         return (
-            //             // `<div >${getText()}</div>`
-            //           `<div style="writing-mode: vertical-lr">${text}</div>`
-            //         );
-            //     },
             }}
         />
         <Axis name="count" line={{ lineWidth: 1, stroke: '#ccc' }} />

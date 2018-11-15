@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import Scrollbars from 'react-custom-scrollbars';
-import { Col, Spin } from 'antd';
+import { Col, Spin, Icon } from 'antd';
 import styles from './index.less';
 import { constantlyModal } from '../../../services/constantlyModal';
 
@@ -121,6 +121,11 @@ export default class DeviceMonitor extends PureComponent {
       return array;
     }
   };
+  handleClose = () => {
+    const { ztreeObj, currentFlow } = this.props;
+    const node = ztreeObj.getNodeByTId(currentFlow.treeNode.tId);
+    ztreeObj.selectNode(node);
+  }
   render() {
     const { mapHeight, deviceMonitor } = this.props;
     const { data } = this.state;
@@ -128,6 +133,9 @@ export default class DeviceMonitor extends PureComponent {
       <div className={styles.warp}>
         <Scrollbars style={{ height: mapHeight }}>
           <div className={styles.deviceType}>{deviceMonitor.devicesName}</div>
+          <div className={styles.close} onClick={this.handleClose}>
+            <Icon type="close" style={{ fontSize: 20, fontWeight: 800 }} />
+          </div>
           <div className={styles.cardWarp}>
             { data && data.length > 0 ? data.map(item => (
               <Col xs={12} sm={21} md={12} lg={12} xl={12} xxl={8} style={{ textAlign: 'center' }} key={Math.random() * new Date().getTime()}>

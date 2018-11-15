@@ -592,7 +592,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
           }
           dispatch({
             type: 'flow/fetchDeviceOptions',
-            payload: { resourceIDs },
+            payload: { resourceIDs, treeNode },
           }).then(() => {
             dispatch({
               type: 'homepage/queryModalType',

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Icon } from 'antd';
+import { Icon, Spin } from 'antd';
 import styles from './index.less';
 import { registerNode } from '../../FlowEditor/lib/customResgister';
 
@@ -10,12 +10,13 @@ const editor = { net: {} };
 
 let timer; // 定时器id
 let currentResourceID;
-@connect(({ flow, homepage, sysFunction }) => {
+@connect(({ flow, homepage, sysFunction, loading }) => {
   return {
     currentFlow: flow.currentFlow,
     GraphiceDatas: flow.GraphiceDatas,
     mapHeight: homepage.mapHeight,
     ztreeObj: sysFunction.ztreeObj,
+    loading: loading.effects['flow/getGraphiceDatas'],
   };
 })
 export default class StatusGraphic extends PureComponent {
@@ -98,15 +99,15 @@ export default class StatusGraphic extends PureComponent {
         currentResourceID = this.props.currentFlow.data.resourceID;
         const animates = [];
         // 增加数据刷新动效
-        for (const node of data.source.nodes) {
-          // 需要刷新的节点
-          const item = this.props.GraphiceDatas[node.device];
-          if (item) {
-            item.value = '';
-            const animateNode = { x: node.x, y: node.y, id: Math.random(), shape: 'loading', size: [80, 80] };
-            animates.push(animateNode);
-          }
-        }
+        // for (const node of data.source.nodes) {
+        //   // 需要刷新的节点
+        //   const item = this.props.GraphiceDatas[node.device];
+        //   if (item) {
+        //     item.value = '';
+        //     const animateNode = { x: node.x, y: node.y, id: Math.random(), shape: 'loading', size: [80, 80] };
+        //     animates.push(animateNode);
+        //   }
+        // }
         data.source.nodes.push(...animates);
         editor.net.changeData(data.source);
         this.props.dispatch({
@@ -137,16 +138,12 @@ export default class StatusGraphic extends PureComponent {
     editor.net.destroy();
   }
   handleClose() {
-    const { ztreeObj, dispatch, currentFlow } = this.props;
+    const { ztreeObj, currentFlow } = this.props;
     const node = ztreeObj.getNodeByTId(currentFlow.treeNode.tId);
     ztreeObj.selectNode(node);
-    // dispatch({
-    //   type: 'flow/queryCurrentFlow',
-    //   payload: { show: false, data: {} },
-    // });
   }
   render() {
-    const { currentFlow } = this.props;
+    const { currentFlow, loading } = this.props;
     return (
       <div className={styles.warp} style={{ height: this.props.mapHeight }}>
         <div style={{ position: 'relative' }}>
@@ -154,10 +151,13 @@ export default class StatusGraphic extends PureComponent {
           <div className={styles.close} onClick={this.handleClose}>
             <Icon type="close" style={{ fontSize: 20, color: '#fff', fontWeight: 800 }} />
           </div>
-          <div className={styles.canvas} ref={(ref) => { this.flow = ref; }} />
+          <Spin spinning={loading} wrapperClassName={styles.canvas}>
+            <div className={styles.canvas} ref={(ref) => { this.flow = ref; }} />
+          </Spin>
         </div>
 
       </div>
+
     );
   }
 }

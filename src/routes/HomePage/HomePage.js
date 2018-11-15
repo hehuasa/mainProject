@@ -15,7 +15,7 @@ import { mapConstants } from '../../services/mapConstant';
 const dragEvent = {
   isDrag: false,
 };
-@connect(({ homepage, map, alarmDeal, flow, accessControl }) => {
+@connect(({ homepage, map, alarmDeal, flow, accessControl, sysFunction }) => {
   return {
     trueMapShow: map.trueMapShow,
     deviceMonitor: homepage.deviceMonitor,
@@ -29,6 +29,7 @@ const dragEvent = {
     modalType: homepage.modalType,
     accessControl,
     spaceQueryPop: map.spaceQueryPop,
+    ztreeObj: sysFunction.ztreeObj,
   };
 })
 export default class HomePage extends PureComponent {
@@ -128,7 +129,7 @@ export default class HomePage extends PureComponent {
   }
   render() {
     const { modalZIndex } = this.state;
-    const { currentFlow, dealModel, deviceMonitor, currentFlows, mapHeight, dispatch, accessControl, modalType, deviceMonitors } = this.props;
+    const { currentFlow, dealModel, deviceMonitor, currentFlows, mapHeight, dispatch, accessControl, modalType, deviceMonitors, ztreeObj } = this.props;
     const { isDeal } = dealModel;
 
     return (
@@ -137,7 +138,7 @@ export default class HomePage extends PureComponent {
               currentFlow.show ? <StatusGraphic zIndex={modalType === 'currentFlow' ? modalZIndex : -1} /> : null
             }
         {
-              deviceMonitor.show ? <DeviceMonitor zIndex={modalType === 'deviceMonitor' ? modalZIndex : -1} currentFlows={currentFlows} deviceMonitors={deviceMonitors} mapHeight={mapHeight} dispatch={dispatch} deviceMonitor={deviceMonitor} currentFlow={currentFlow} /> : null
+              deviceMonitor.show ? <DeviceMonitor ztreeObj={ztreeObj} zIndex={modalType === 'deviceMonitor' ? modalZIndex : -1} currentFlows={currentFlows} deviceMonitors={deviceMonitors} mapHeight={mapHeight} dispatch={dispatch} deviceMonitor={deviceMonitor} currentFlow={currentFlow} /> : null
             }
         <div className={styles.mapContent} onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} onMouseUp={this.handleMouseUp} onMouseLeave={this.handleMouseUp}>
           <ArcgisMap />
