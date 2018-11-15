@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Chart, Axis, Geom, Tooltip } from 'bizcharts';
-import LeftTitle from "../../LeftTitle/LeftTitle";
+import LeftTitle from '../../LeftTitle/LeftTitle';
 
 const getCols = (length) => {
   const obj = {};

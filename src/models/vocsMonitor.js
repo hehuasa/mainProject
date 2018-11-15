@@ -1,5 +1,5 @@
-import { response } from '../../mock/vocsData';
-// import { vocsList } from '../services/api';
+// import { response } from '../../mock/vocsData';
+import { vocsList } from '../services/api';
 
 export default {
   namespace: 'vocsMonitor',
@@ -12,8 +12,8 @@ export default {
   effects: {
     // 获取列表
     * fetchList({ payload }, { call, put }) {
-      // const response = yield call(vocsList, payload);
-      const newData = response.data.filter(value => value.gisCode);
+      const { data } = yield call(vocsList, payload);
+      const newData = data.filter(value => value.gisCode);
       yield put({
         type: 'queryList',
         payload: newData,
