@@ -36,7 +36,7 @@ const columns = [{
   userId: user.currentUser.baseUserInfo.userID,
 }))
 @Form.create()
-export default class EventContent extends PureComponent {
+export default class  EventContent extends PureComponent {
   state = {
     visible: false,
     rowSelection: {
@@ -164,7 +164,7 @@ export default class EventContent extends PureComponent {
     return (
       <div className={styles.eventContent}>
         <Row type="flex" >
-          <Col md={12} sm={24}>
+          <Col md={5} sm={24}>
             <FormItem
               labelCol={{ span: 0 }}
               wrapperCol={{ span: 0 }}
@@ -174,7 +174,7 @@ export default class EventContent extends PureComponent {
               )}
             </FormItem>
             <FormItem
-              labelCol={{ span: 6 }}
+              labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               label="特征分类"
             >
@@ -199,9 +199,9 @@ export default class EventContent extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={12} sm={24}>
+          <Col md={5} sm={24}>
             <FormItem
-              labelCol={{ span: 6 }}
+              labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               label="发生时间"
             >
@@ -220,9 +220,9 @@ export default class EventContent extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={12} sm={24} >
+          <Col md={5} sm={24} >
             <FormItem
-              labelCol={{ span: 6 }}
+              labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               label="特征名称"
             >
@@ -235,7 +235,7 @@ export default class EventContent extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={12} sm={24} >
+          <Col md={5} sm={24} >
             <FormItem
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
@@ -250,7 +250,7 @@ export default class EventContent extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={12} sm={24} >
+          <Col md={4} sm={24} >
             <FormItem
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 16 }}
@@ -265,7 +265,9 @@ export default class EventContent extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={8} offset={3} sm={24} >
+        </Row>
+        <Row>
+          <Col md={8} offset={8} sm={24} >
             <Button className={styles.eventButton} onClick={this.showModal}>查看特征库</Button>
             <Modal
               title="事件特征"

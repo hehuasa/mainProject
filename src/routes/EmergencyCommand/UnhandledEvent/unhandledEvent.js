@@ -171,7 +171,7 @@ export default class Analysis extends PureComponent {
       width: 200,
     },
     {
-      title: '涉事部门',
+      title: '事发部门',
       dataIndex: 'organization',
       width: 120,
       render: (val) => {
@@ -180,7 +180,7 @@ export default class Analysis extends PureComponent {
         }
       },
     }, {
-      title: '涉事设备',
+      title: '事发设备',
       dataIndex: 'resResourceInfo',
       width: 170,
       render: (val) => {
@@ -205,7 +205,7 @@ export default class Analysis extends PureComponent {
       dataIndex: 'alarmDes',
       width: 200,
     }, {
-      title: '事生原因',
+      title: '事发原因',
       dataIndex: 'incidentReason',
       width: 200,
     }, {
@@ -213,7 +213,7 @@ export default class Analysis extends PureComponent {
       dataIndex: 'alarmWay',
       width: 200,
     }, {
-      title: '事发部门',
+      title: '事发部位',
       dataIndex: 'accidentPostion',
       width: 100,
     }, {
@@ -224,6 +224,9 @@ export default class Analysis extends PureComponent {
       title: '是否演练',
       dataIndex: 'isDrill',
       width: 100,
+      render: (value) => {
+        return value === 1 ? '是' : '否';
+      },
     }, {
       title: '受伤人数',
       dataIndex: 'injured',
@@ -241,7 +244,7 @@ export default class Analysis extends PureComponent {
       dataIndex: 'alarmStatuInfo',
       width: 200,
     }, {
-      title: '探测设备',
+      title: '监测器具',
       dataIndex: 'probeResourceID',
     }, {
       title: '操作',

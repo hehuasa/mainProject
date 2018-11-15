@@ -604,7 +604,9 @@ export default class AlarmEventInfo extends PureComponent {
               wrapperCol={{ span: 15 }}
               label="设备位置"
             >
-              {form.getFieldDecorator('installPosition')(
+              {form.getFieldDecorator('installPosition', {
+                initialValue: alarmInfoConten.resourceInfoVO ? alarmInfoConten.resourceInfoVO.installPosition : null,
+              })(
                 <Input placeholder="设备位置" />
               )}
             </FormItem>
