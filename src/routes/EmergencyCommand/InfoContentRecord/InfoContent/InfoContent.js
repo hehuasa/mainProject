@@ -233,31 +233,6 @@ export default class InfoContent extends PureComponent {
             isHidden
           />
         </div>
-        {
-          // !(emergency.current > emergency.viewNode) ? (
-          //   <div className={styles.footer}>
-          //     <Button type="primary" onClick={this.onGenerateReport}>生成应急报告</Button>
-          //     <Button onClick={this.onShowModal} >新增事件特征</Button>
-          //     <AddEventFeature
-          //       {...this.state}
-          //       mask={false}
-          //       onAddFeature={this.onAddFeature}
-          //       onHandleCancel={this.onHandleCancel}
-          //       onShowFeature={this.onShowFeature}
-          //       dispatch={this.props.dispatch}
-          //       classificationList={emergency.classificationList}
-          //       eventID={emergency.eventId}
-          //       existEventFeaturesList={emergency.existEventFeaturesList}
-          //       pagination={emergency.pagination}
-          //       onSearchFeature={this.onSearchFeature}
-          //       onhandleTableChange={this.onhandleTableChange}
-          //       onEnterCancel={this.onEnterCancel}
-          //     />
-          //   </div>
-          // ) : null
-        }
-
-
       </div >
     );
   }

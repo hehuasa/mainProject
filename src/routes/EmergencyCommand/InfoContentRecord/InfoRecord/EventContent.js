@@ -209,6 +209,7 @@ export default class EventContent extends PureComponent {
                 rules: [
                   { required: true, message: '时间不能为空' },
                 ],
+                initialValue: moment(),
               })(
                 <DatePicker
                   style={{ width: '100%' }}
@@ -295,7 +296,7 @@ export default class EventContent extends PureComponent {
                 rowKey={record => record.featureID}
               />
             </Modal>
-            <Button type="primary" className={styles.eventButton} onClick={this.onSend} >发送</Button>
+            <Button type="primary" className={styles.eventButton} onClick={this.onSend} >提交</Button>
           </Col>
         </Row >
       </div>

@@ -7,6 +7,7 @@ import { getBrowserStyle } from '../../../utils/utils';
 import Result from '../../../components/Result';
 import {mapConstants} from "../../../services/mapConstant";
 import {getBordStyle} from "../../../utils/mapService";
+import {emgcIntervalInfo} from "../../../services/constantlyData";
 
 const { TabPane } = Tabs;
 @connect(({ emergency, user, tabs, video, homepage, global }) => ({
@@ -34,17 +35,23 @@ export default class EmergencyStop extends PureComponent {
       type: 'emergency/getFinishConditionList',
     }).then(() => {
       // 获取应急终止已勾选条件的list
-      dispatch({
-        type: 'emergency/getCheckedConditionList',
-        payload: { eventID: this.props.eventID },
-      }).then(() => {
-        // 是否勾选完
-        this.setState({
-          disabled: this.isAllConditionFinish(),
-        });
-      });
+      this.getCheckedCondition();
+      const id = setInterval(this.getCheckedCondition, emgcIntervalInfo.timeSpace);
+      emgcIntervalInfo.intervalIDs.push(id);
     });
   }
+  // 获取已勾选的list
+  getCheckedCondition = () => {
+    this.props.dispatch({
+      type: 'emergency/getCheckedConditionList',
+      payload: { eventID: this.props.eventID },
+    }).then(() => {
+      // 是否勾选完
+      this.setState({
+        disabled: this.isAllConditionFinish(),
+      });
+    });
+  };
   // 应急终止
   confirm = () => {
     const { eventID, dispatch, currentUser } = this.props;

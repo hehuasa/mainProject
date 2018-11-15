@@ -498,10 +498,12 @@ export default class TableList extends PureComponent {
       type: 'accountInfo/accountEnable',
       payload: { accountState, accountID: record.accountID },
     }).then(() => {
-      const { pagination } = this.props.accountInfo.data;
-      console.log(888, pagination)
-      console.log(777, this.props.accountInfo.data)
-      this.page(pagination);
+      const { pagination } = this.props.accountInfo.accountRolePage;
+      const page = {
+        pageNum: pagination.current,
+        pageSize: pagination.pageSize,
+      };
+      this.page(page);
     });
   };
   update = (record) => {

@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Form, Row, Col, Input, Button, Card, Table, Divider, Select } from 'antd';
 import { connect } from 'dva';
 import styles from './index.less';
+import { emgcIntervalInfo } from '../../../../services/constantlyData';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -25,6 +26,13 @@ export default class SearchOrgUser extends PureComponent {
       payload: { eventID },
     }).then(() => {
       this.page(pageNum, pageSize);
+      //  刷新签到情况
+      emgcIntervalInfo.userPage.forEach((item) => {
+        clearInterval(item);
+      });
+      const id = setInterval(() => this.page(pageNum, pageSize),
+        emgcIntervalInfo.timeSpace);
+      emgcIntervalInfo.userPage.push(id);
     });
   }
   // 重置搜索条件

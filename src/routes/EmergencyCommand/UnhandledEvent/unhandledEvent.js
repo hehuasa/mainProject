@@ -6,9 +6,9 @@ import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import StandardTable from '../../../components/StandardTable';
 import { commonData } from '../../../../mock/commonData';
 import styles from './unhandledEvent.less';
-import { getBordStyle } from '../../../utils/mapService';
+import { emgcIntervalInfo } from '../../../services/constantlyData';
 import { mapConstants } from '../../../services/mapConstant';
-import {changeVideoPosition, changeVideoSize, resetAccessStyle} from "../../../utils/utils";
+import { changeVideoPosition, changeVideoSize, resetAccessStyle } from '../../../utils/utils';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -33,13 +33,13 @@ export default class Analysis extends PureComponent {
   }
   //  处理事件
    onRowClick = (record) => {
-    const { dispatch, videoFooterHeight, videoPosition, rightCollapsed, accessControlShow } = this.props;
-    const { view, accessInfoExtent } = mapConstants;
-    this.props.dispatch({
-      type: 'tabs/del',
-      payload: { key: '/command/emergencyEvent', title: '应急事件' },
-    });
-    setTimeout(() => this.confirm(record, 1, 'command/emergencyEvent', record.eventName), 0);
+     const { dispatch, videoFooterHeight, videoPosition, rightCollapsed, accessControlShow } = this.props;
+     const { view, accessInfoExtent } = mapConstants;
+     this.props.dispatch({
+       type: 'tabs/del',
+       payload: { key: '/command/emergencyEvent', title: '应急事件' },
+     });
+     setTimeout(() => this.confirm(record, 1, 'command/emergencyEvent', record.eventName), 0);
      changeVideoPosition('homePage', rightCollapsed, videoPosition, dispatch);
      // 恢复看板
      if (rightCollapsed) {
@@ -54,7 +54,7 @@ export default class Analysis extends PureComponent {
        changeVideoSize(videoFooterHeight, dispatch, 'show');
        resetAccessStyle(accessControlShow, dispatch, accessInfoExtent);
      }
-  };
+   };
   // 更改事件状态
   confirm = (row, eventStatu, key, title) => {
     const storage = window.localStorage;
@@ -99,6 +99,8 @@ export default class Analysis extends PureComponent {
         tableId: `/${key}`,
       },
     });
+    // 储存当前正在处理的事件
+    window.localStorage.setItem('eventID', row.eventID);
     dispatch({
       type: 'tabs/addTabs',
       payload: { key: `/${key}`, title },

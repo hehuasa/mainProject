@@ -5,6 +5,7 @@ import { Form, Tabs, Button, Row, Col, Input, Icon, Card, Table } from 'antd';
 import EventContent from './EventContent';
 import Casualties from './Casualties';
 import styles from './InfoRecord.less';
+import {emgcIntervalInfo} from "../../../../services/constantlyData";
 
 const { TabPane } = Tabs;
 const columns = [{
@@ -32,13 +33,23 @@ const columns = [{
 }))
 export default class InfoRecord extends PureComponent {
   componentDidMount() {
+    // 查询事件信息记录内容
+    this.queryEventInfo();
+    // 刷新事件信息记录内容
+    emgcIntervalInfo.infoRecord.forEach((item) => {
+      clearInterval(item);
+    });
+    const id = setInterval(this.queryEventInfo, emgcIntervalInfo.timeSpace);
+    emgcIntervalInfo.infoRecord.push(id);
+  }
+  queryEventInfo = () => {
     this.props.dispatch({
       type: 'emergency/queryEventInfo',
       payload: {
         eventID: this.props.emergency.eventId,
       },
     });
-  }
+  };
   render() {
     return (
       <div style={{ padding: '16px 8px' }} >
