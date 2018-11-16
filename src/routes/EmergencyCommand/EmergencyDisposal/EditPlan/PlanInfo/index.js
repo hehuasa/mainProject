@@ -29,9 +29,12 @@ const { TabPane } = Tabs;
   eventExecPlanID: emergency.eventExecPlanID,
   planInfo: emergency.planInfo,
   planAnnexPage: emergency.planAnnexPage,
-  dealCardList: emergency.dealCardList,
-  orgAnnexList: emergency.orgAnnexList,
-  emgcAnnex: emergency.emgcAnnex,
+  // dealCardList: emergency.dealCardList,
+  // orgAnnexList: emergency.orgAnnexList,
+  implOrgAnnexList: emergency.implOrgAnnexList,
+  implDealCardList: emergency.implDealCardList,
+  implEmgcAnnex: emergency.implEmgcAnnex,
+  // emgcAnnex: emergency.emgcAnnex,
   planInfoID: emergency.planInfoID,
 }))
 export default class PlanInfo extends PureComponent {
@@ -276,7 +279,6 @@ export default class PlanInfo extends PureComponent {
   render() {
     const { isEdit, planBaseInfo, emgcResource, emgcCommand, emgcFeature,
       eventFeature, commandInfo, resourceInfo, hideFooter, planInfo } = this.props;
-    console.log(555, emgcFeature)
     const { isAdd } = this.state;
     // 实施方案 基本信息表头
     const columns = [
@@ -408,10 +410,12 @@ export default class PlanInfo extends PureComponent {
           let str = '';
           if (text && text.length > 0) {
             text.forEach((item, index) => {
-              if (index !== text.length - 1) {
-                str = `${str + item.postionName}, `;
-              } else {
-                str += item.postionName;
+              if (item) {
+                if (index !== text.length - 1) {
+                  str = `${str + item.postionName}, `;
+                } else {
+                  str += item.postionName;
+                }
               }
             });
           }
@@ -560,7 +564,7 @@ export default class PlanInfo extends PureComponent {
             <Card title="组织机构">
               <div className={styles.cardExtra}>
                 <Row gutter={16}>
-                  {this.props.orgAnnexList.map((card, index) => {
+                  {this.props.implOrgAnnexList.map((card, index) => {
                     return (
                       <Col span={8} key={card}>
                         <Card
@@ -595,7 +599,7 @@ export default class PlanInfo extends PureComponent {
             <Card title="应急流程">
               <div className={styles.cardExtra}>
                 <Row gutter={16}>
-                  {this.props.emgcAnnex.map((card, index) => {
+                  {this.props.implEmgcAnnex.map((card, index) => {
                     return (
                       <Col span={24}>
                         <Card
@@ -656,7 +660,7 @@ export default class PlanInfo extends PureComponent {
             <Card title="处置卡信息">
               <div className={styles.cardExtra}>
                 <Row gutter={16}>
-                  {this.props.dealCardList.map((card, index) => {
+                  {this.props.implDealCardList.map((card, index) => {
                     return (
                       <Col span={8}>
                         <Card

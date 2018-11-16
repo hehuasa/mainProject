@@ -44,7 +44,7 @@ function checkStatus(response) {
 
 const checkCode = ({ response, resJson }) => {
   const { url } = response;
-  const { code } = resJson;
+  const { code, data } = resJson;
 
   switch (Number(code)) {
     case 0:
@@ -66,7 +66,7 @@ const checkCode = ({ response, resJson }) => {
     case 1001: break;
     case 1002:
       notification.info({
-        description: `${switchCode(code)}`,
+        description: data || `${switchCode(code)}`,
       });
       break;
     case 1005: break;

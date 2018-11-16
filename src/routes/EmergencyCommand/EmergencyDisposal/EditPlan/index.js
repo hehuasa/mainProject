@@ -170,25 +170,23 @@ export default class EditPlan extends PureComponent {
   render() {
     const { hideFooter } = this.props;
     const extra = (
-      <Row>
-        <Col span={20}>
-          <span style={{ marginRight: 16 }}>选择方案</span>
-          <Select
-            placeholder="请选择"
-            value={`${this.props.eventExecPlanID}`}
-            style={{ width: 600 }}
-            onChange={this.onPlanChange}
-          >
-            {this.props.executeList.map(item => (
-              <Option
-                key={item.eventExecPlanID}
-                value={`${item.eventExecPlanID}`}
-              >{item.planName}
-              </Option>
+      <div>
+        <span style={{ marginRight: 16 }}>子方案</span>
+        <Select
+          placeholder="请选择"
+          value={`${this.props.eventExecPlanID}`}
+          style={{ width: 400 }}
+          onChange={this.onPlanChange}
+        >
+          {this.props.executeList.map(item => (
+            <Option
+              key={item.eventExecPlanID}
+              value={`${item.eventExecPlanID}`}
+            >{item.planName}
+            </Option>
 ))}
-          </Select>
-        </Col>
-      </Row>
+        </Select>
+      </div>
     );
     return (
       <div className={styles.extra}>

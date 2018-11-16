@@ -320,7 +320,7 @@ export default class HandAlarmDeal extends PureComponent {
               label="设备位置"
             >
               {form.getFieldDecorator('installPosition', {
-                initialValue: eventInfoReport.installPosition,
+                initialValue: eventInfoReport.resResourceInfo ? eventInfoReport.resResourceInfo.installPosition : null,
               })(
                 <Input disabled />
               )}

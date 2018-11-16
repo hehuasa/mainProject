@@ -632,7 +632,7 @@ export default class TableList extends PureComponent {
       if (values.createTime) {
         delete values.createTime;
       }
-      const search = {};
+      const search = { isQuery: true, fuzzy: true };
       Object.assign(search, commonData.pageInitial, values);
       this.page(search);
     });

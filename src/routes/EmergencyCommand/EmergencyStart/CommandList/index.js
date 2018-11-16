@@ -176,9 +176,9 @@ export default class CommandList extends PureComponent {
               // defaultValue={value ? value.toString() : ''}
               value={value ? value.toString() : ''}
               style={{ width: 100 }}
+              placeholder="请选择"
               onChange={select => this.handleChange(select, record.cmdExecID)}
             >
-              <Option value="">请选择</Option>
               {Object.keys(commandStatus).map(key =>
                 <Option key={key} value={key}>{commandStatus[key]}</Option>
               )}
@@ -188,17 +188,17 @@ export default class CommandList extends PureComponent {
       }, {
         title: '指令类型',
         dataIndex: 'commandModelName',
-        width: 200,
+        width: 100,
         key: 'commandModelName',
       }, {
         title: '指令内容',
         dataIndex: 'commandContent',
-        width: 300,
+        width: 200,
         key: 'commandContent',
       }, {
         title: '执行情况',
         dataIndex: 'executeContent',
-        width: 200,
+        width: 160,
         key: 'executeContent',
       }, {
         title: '执行岗位',
@@ -209,10 +209,12 @@ export default class CommandList extends PureComponent {
           let str = '';
           if (text && text.length > 0) {
             text.forEach((item, index) => {
-              if (index !== text.length - 1) {
-                str = `${str + item.postionName}, `;
-              } else {
-                str += item.postionName;
+              if(item){
+                if (index !== text.length - 1) {
+                  str = `${str + item.postionName}, `;
+                } else {
+                  str += item.postionName;
+                }
               }
             });
           }
@@ -221,16 +223,24 @@ export default class CommandList extends PureComponent {
       }, {
         title: '下发时间',
         dataIndex: 'sendTime',
-        width: 180,
+        width: 160,
         key: 'sendTime',
         render: (text) => {
           return text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : '';
         },
       }, {
-        title: '执行时长',
+        title: '执行时长/分钟',
         dataIndex: 'executeTime',
-        width: 100,
+        width: 140,
         key: 'executeTime',
+      }, {
+        title: '下发时间',
+        dataIndex: 'executeEndTime',
+        width: 160,
+        key: 'executeEndTime',
+        render: (text) => {
+          return text ? moment(text).format('YYYY-MM-DD HH:mm:ss') : '';
+        },
       }, {
         title: '注意事项',
         dataIndex: 'attention',
@@ -275,7 +285,8 @@ export default class CommandList extends PureComponent {
               columns={commandCols}
               dataSource={commandList}
               pagination={{ pageSize: 5 }}
-              scroll={{ x: 1480 }}
+              rowClassName={(record) => record.executeEndTime < moment().valueOf() ? 'styles.endColor' : ''}
+              scroll={{ x: 1420 }}
             />
           </Card>
     ) : (

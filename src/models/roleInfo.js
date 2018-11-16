@@ -72,15 +72,12 @@ export default {
       });
     },
     *delete(payload, { call, put }) {
-      const response = yield call(deleteRoleInfo, payload.payload);
-      checkCode(response);
-      if (response.code === 1001) {
-        const roleInfo = yield call(rolePage, commonData.pageInitial);
-        yield put({
-          type: 'save',
-          payload: roleInfo,
-        });
-      }
+      yield call(deleteRoleInfo, payload.payload);
+      const roleInfo = yield call(rolePage, commonData.pageInitial);
+      yield put({
+        type: 'save',
+        payload: roleInfo,
+      });
     },
     *get(payload, { call, put }) {
       const response = yield call(getRoleInfo, payload.payload);
