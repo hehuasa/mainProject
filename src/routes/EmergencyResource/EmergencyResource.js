@@ -63,6 +63,11 @@ class FromComponent extends PureComponent {
       width: 100,
       key: 'materialUnit',
     }, {
+      title: '数量',
+      dataIndex: 'lastCount',
+      width: 100,
+      key: 'lastCount',
+    }, {
       title: '备注',
       dataIndex: 'remark',
       width: 400,

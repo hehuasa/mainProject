@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Modal } from 'antd';
+import { Form, Input, Card, Row, Col, Modal, InputNumber } from 'antd';
 import styles from './index.less';
 import UserPage from './UserPage';
 
@@ -140,7 +140,18 @@ export default class AddRes extends PureComponent {
                 label="单位"
               >
                 {form.getFieldDecorator('materialUnit')(
-                  <Input placeholder="单位" />
+                  <Input placeholder="请输入单位" />
+                )}
+              </FormItem>
+            </Col>
+            <Col md={12} sm={24}>
+              <FormItem
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 15 }}
+                label="数量"
+              >
+                {form.getFieldDecorator('lastCount')(
+                  <InputNumber style={{ width: '100%' }} min={1} placeholder="请输入数量" />
                 )}
               </FormItem>
             </Col>
