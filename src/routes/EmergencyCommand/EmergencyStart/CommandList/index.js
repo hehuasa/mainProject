@@ -6,7 +6,7 @@ import styles from './index.less';
 import InsertCommand from './InsertCommand/index';
 import { commandType } from '../../../../utils/utils';
 import { commonData } from '../../../../../mock/commonData';
-import {emgcIntervalInfo} from "../../../../services/constantlyData";
+import { emgcIntervalInfo } from '../../../../services/constantlyData';
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -209,7 +209,7 @@ export default class CommandList extends PureComponent {
           let str = '';
           if (text && text.length > 0) {
             text.forEach((item, index) => {
-              if(item){
+              if (item) {
                 if (index !== text.length - 1) {
                   str = `${str + item.postionName}, `;
                 } else {
@@ -285,7 +285,7 @@ export default class CommandList extends PureComponent {
               columns={commandCols}
               dataSource={commandList}
               pagination={{ pageSize: 5 }}
-              rowClassName={(record) => record.executeEndTime < moment().valueOf() ? 'styles.endColor' : ''}
+              rowClassName={record => (record.executeEndTime && record.executeEndTime < moment().valueOf() ? `${styles.endColor}` : '')}
               scroll={{ x: 1420 }}
             />
           </Card>

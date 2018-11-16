@@ -48,7 +48,6 @@ const CreateForm = Form.create()((props) => {
           form.setFields({
             rawCode: {
               value: fieldsValue.rawCode,
-              errors: [],
             },
           });
           handleAdd(fieldsValue);
@@ -150,7 +149,7 @@ const CreateForm = Form.create()((props) => {
               rules: [
                 ],
             })(
-              <Input onChange={onChange} placeholder="请输入物料编码" />
+              <Input placeholder="请输入物料编码" />
             )}
           </FormItem>
         </Col>

@@ -30,8 +30,11 @@ export default class SearchOrgUser extends PureComponent {
       emgcIntervalInfo.userPage.forEach((item) => {
         clearInterval(item);
       });
-      const id = setInterval(() => this.page(pageNum, pageSize),
-        emgcIntervalInfo.timeSpace);
+      const id = setInterval(() => {
+        const { orgUserList } = this.props;
+        this.page(orgUserList.pageNum, orgUserList.pageSize);
+      },
+      emgcIntervalInfo.timeSpace);
       emgcIntervalInfo.userPage.push(id);
     });
   }
@@ -139,11 +142,12 @@ export default class SearchOrgUser extends PureComponent {
         key: 'function',
         render: (value, record) => {
           return (
-            !record.isCommander ? (
+            !(record.eventID === this.props.eventID && record.isCommander) ? (
               <span>
                 <a href="javascript:;" onClick={() => this.setCommander(record.userID)}>设为总指挥</a>
                 <Divider type="vertical" />
-                {!record.signInTime ? <a href="javascript:;" onClick={() => this.signIn(record.userID)}>签到</a> : '已签到'}
+                {!(record.eventID === this.props.eventID && record.signInTime) ?
+                  <a href="javascript:;" onClick={() => this.signIn(record.userID)}>签到</a> : '已签到'}
               </span>
             ) : '总指挥'
           );
