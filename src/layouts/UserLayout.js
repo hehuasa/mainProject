@@ -78,25 +78,34 @@ class UserLayout extends React.PureComponent {
           <div className={styles.login_content}>
             <div className={styles.login_header}>
               <div className={styles.header_logo}>
-                <img alt="logo" src={logo}/>
+                <img alt="logo" src={logo} />
               </div>
             </div>
             <div className={styles.login_body}>
-              <Switch>
-                {getRoutes(match.path, routerData).map(item =>
-                  (
-                    <Route
-                      key={item.key}
-                      path={item.path}
-                      component={item.component}
-                      exact={item.exact}
-                    />
-                  )
-                )}
-              </Switch>
+              <div className={styles.content}>
+                <Switch>
+                  {getRoutes(match.path, routerData).map(item =>
+                    (
+                      <Route
+                        key={item.key}
+                        path={item.path}
+                        component={item.component}
+                        exact={item.exact}
+                      />
+                    )
+                  )}
+                </Switch>
+              </div>
             </div>
             <div className={styles.login_footer}>
-              <div className={styles.footer_desc}>Copyright 2018 成都格理特电子技术有限公司</div>
+              <div className={styles.footer_desc}>
+                <div>
+                  Copyright 2018   中韩（武汉）石油化工有限公司 版权所有
+                </div>
+                <div>
+                  技术支持 成都格理特电子技术有限公司
+                </div>
+              </div>
             </div>
           </div>
         </div>

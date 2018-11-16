@@ -95,7 +95,7 @@ close = () => {
         >
 
           <VideoSocket onmessage={this.onmessage1} />
-          <div key="account" tab="用户登录">
+          <div key="account">
             <div className={styles.loginTitle}>用户登录</div>
             <UserName name="login" placeholder="请输入用户名" onChange={this.close} />
             <Password name="password" placeholder="请输入密码" onChange={this.close} />
