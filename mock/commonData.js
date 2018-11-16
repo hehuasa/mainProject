@@ -706,11 +706,11 @@ export const commonData = {
           },
           {
             title: '所属部门',
-            dataIndex: 'createOrg',
+            dataIndex: 'createOrgName',
             isExport: true,
             isTableItem: true,
             width: 120,
-            key: 'createOrg',
+            key: 'createOrgName',
           },
           {
             title: '演习目的',

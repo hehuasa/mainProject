@@ -921,36 +921,7 @@ export default class TableList extends PureComponent {
   };
   renderSimpleForm() {
     const { getFieldDecorator } = this.props.form;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="计划名称">
-              {getFieldDecorator('drillPlanName')(
-                <Input placeholder="请输入" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <span className={styles.submitButtons}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新增
-              </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} htmlType="submit">查询</Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-              <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                展开 <Icon type="down" />
-              </a>
-            </span>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
-
-  renderAdvancedForm() {
-    const { getFieldDecorator } = this.props.form;
-    const { organization } = this.props;
+    const { orgTree } = this.props;
     const renderDeptTreeNodes = (data) => {
       return data.map((item) => {
         if (item.children) {
@@ -989,7 +960,67 @@ export default class TableList extends PureComponent {
                   allowClear
                   onChange={this.onChange}
                 >
-                  {renderDeptTreeNodes(organization.list)}
+                  {renderDeptTreeNodes(orgTree)}
+                </TreeSelect>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <span className={styles.submitButtons}>
+              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
+                新增
+              </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} htmlType="submit">查询</Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
+            </span>
+          </Col>
+        </Row>
+      </Form>
+    );
+  }
+
+  renderAdvancedForm() {
+    const { getFieldDecorator } = this.props.form;
+    const { orgTree } = this.props;
+    const renderDeptTreeNodes = (data) => {
+      return data.map((item) => {
+        if (item.children) {
+          return (
+            <TreeNode
+              title={item.orgnizationName}
+              key={item.orgID}
+              value={item.orgID}
+            >
+              {renderDeptTreeNodes(item.children)}
+            </TreeNode>
+          );
+        }
+        return <TreeNode title={item.orgnizationName} key={item.orgID} value={item.orgID} />;
+      });
+    };
+    return (
+      <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={6} sm={24}>
+            <FormItem label="计划名称">
+              {getFieldDecorator('drillPlanName')(
+                <Input placeholder="请输入" />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={6} sm={24}>
+            <FormItem label="创建部门">
+              {getFieldDecorator('createOrg')(
+                <TreeSelect
+                  showSearch
+                  treeNodeFilterProp="title"
+                  style={{ width: '100%' }}
+                  dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                  placeholder="请选择所属部门"
+                  allowClear
+                  onChange={this.onChange}
+                >
+                  {renderDeptTreeNodes(orgTree)}
                 </TreeSelect>
               )}
             </FormItem>
