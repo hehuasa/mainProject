@@ -1,15 +1,15 @@
 import React from 'react';
-import {Switch, Route} from 'dva/router';
+import { Switch, Route } from 'dva/router';
 import DocumentTitle from 'react-document-title';
-import {Icon, Tooltip, Modal} from 'antd';
+import { Icon, Tooltip, Modal } from 'antd';
 import styles from './UserLayout.less';
 import GlobalFooter from '../components/GlobalFooter/index';
 // import logo from '../assets/login/logoNew.gif';
 import logo from '../assets/login/login_logo.png';
-import {getRoutes} from '../utils/utils';
-import Login from "../components/Login";
+import { getRoutes } from '../utils/utils';
+import Login from '../components/Login';
 
-const {confirm} = Modal;
+const { confirm } = Modal;
 const links = [{
   key: 'help',
   title: '帮助',
@@ -26,8 +26,8 @@ const links = [{
 
 class UserLayout extends React.PureComponent {
   getPageTitle() {
-    const {routerData, location} = this.props;
-    const {pathname} = location;
+    const { routerData, location } = this.props;
+    const { pathname } = location;
     let title = '中韩石化应急指挥系统';
     if (routerData[pathname] && routerData[pathname].name) {
       title = `${routerData[pathname].name} - 中韩石化应急指挥系统`;
@@ -46,7 +46,7 @@ class UserLayout extends React.PureComponent {
       onOk() {
         that.props.dispatch({
           type: 'video/devTools',
-          payload: {CmdCode: 'EXIT'},
+          payload: { CmdCode: 'EXIT' },
         });
       },
     });
@@ -54,25 +54,25 @@ class UserLayout extends React.PureComponent {
   handleMin = () => {
     this.props.dispatch({
       type: 'video/devTools',
-      payload: {CmdCode: 'MIN'},
+      payload: { CmdCode: 'MIN' },
     });
   };
 
   render() {
-    const {routerData, match} = this.props;
+    const { routerData, match } = this.props;
     return (
       <DocumentTitle title="用户登录">
         <div>
           <div className={styles.tool}>
             <Tooltip placement="bottom" title="关闭">
-            <span className={styles.closeWarp}>
-              <Icon className={styles.close} type="close" style={{fontWeight: 800}} onClick={this.handleClose}/>
-            </span>
+              <span className={styles.closeWarp}>
+                <Icon className={styles.close} type="close" style={{ fontWeight: 800 }} onClick={this.handleClose} />
+              </span>
             </Tooltip>
             <Tooltip placement="bottom" title="最小化">
-            <span className={styles.minWarp}>
-              <Icon className={styles.close} type="minus" style={{fontWeight: 800}} onClick={this.handleMin}/>
-            </span>
+              <span className={styles.minWarp}>
+                <Icon className={styles.close} type="minus" style={{ fontWeight: 800 }} onClick={this.handleMin} />
+              </span>
             </Tooltip>
           </div>
           <div className={styles.login_content}>
