@@ -11,8 +11,10 @@ import { hoveringAlarm, switchAlarmIcon, addEventIcon } from '../../utils/mapSer
 
 const current = {};
 let symboltt = {};
-const mapStateToProps = ({ map, homepage, resourceTree, constantlyData, loading, tabs, global, emergency }) => {
-  const { popupScale, baseLayer, trueMapShow, paPopup, stopPropagation, clusterPopup, infoPops, spaceQueryPop, accessPops, vocsPops } = map;
+const mapStateToProps = ({ map, mapRelation, homepage, resourceTree, constantlyData, loading, tabs, global, emergency }) => {
+  const { popupScale, baseLayer, trueMapShow, stopPropagation } = map;
+  const { infoPops, resourceClusterPopup, clusterPopups, spaceQueryPop, constructMonitorClusterPopup, vocsPopup,
+    alarmClusterPopup } = mapRelation;
   const data = [];
   for (const item of constantlyData.constantlyComponents) {
     data.push(item);
@@ -26,11 +28,12 @@ const mapStateToProps = ({ map, homepage, resourceTree, constantlyData, loading,
     trueMapShow,
     constantlyComponents: data,
     infoPops,
-    clusterPopup,
     spaceQueryPop,
-    paPopup,
-    accessPops,
-    vocsPops,
+    clusterPopups,
+    alarmClusterPopup,
+    vocsPopup,
+    resourceClusterPopup,
+    constructMonitorClusterPopup,
     activeKey: tabs.activeKey,
     resourceInfo: resourceTree.resourceInfo,
     fetchingMapApi: loading.effects['global/fetchUrl'],
@@ -304,7 +307,7 @@ export default class ArcgisMap extends PureComponent {
                             screenPoint, screenPointBefore: screenPoint, mapStyle: { width: mapConstants.view.width, height: mapConstants.view.height }, attributes: graphic.attributes, geometry: graphic.geometry, name,
                           };
                           dispatch({
-                            type: 'map/queryInfoPops',
+                            type: 'mapRelation/queryInfoPops',
                             payload: infoPops,
                           });
                         }
@@ -378,120 +381,26 @@ export default class ArcgisMap extends PureComponent {
                   if (evt.button === 2) {
                     evt.stopPropagation();
                   }
-                  // 开始拖动
-                  // const { spaceQueryPop } = this.props;
-                  // dispatch({
-                  //   type: 'map/contextMenu',
-                  //   payload: { show: false },
-                  // });
-                  //   console.log('evt.action', evt.action);
                   switch (evt.action) {
                     case 'start': {
                       dispatch({
-                        type: 'map/showPopup',
+                        type: 'mapRelation/showPopup',
                         payload: false,
                       });
-                      // dispatch({
-                      //   type: 'map/contextMenu',
-                      //   payload: { show: false },
-                      // });
-                      // // 设备信息气泡窗
-                      // for (const item of this.props.infoPops) {
-                      //   item.show = false;
-                      //   item.uniqueKey = Math.random() * new Date().getTime();
-                      // }
-                      // // 实时数据气泡窗
-                      // for (const item of this.props.constantlyComponents) {
-                      //   item.show = false;
-                      // }
-                      // dispatch({
-                      //   type: 'constantlyData/queryConstantlyComponents',
-                      //   payload: this.props.constantlyComponents,
-                      // });
-                      // // 聚合弹窗处理
-                      // const obj1 = JSON.parse(JSON.stringify(this.props.clusterPopup));
-                      // dispatch({
-                      //   type: 'map/queryClusterPopup',
-                      //   payload: { show: false, load: obj1.load, data: obj1.data },
-                      // });
-                      // // 扩音弹窗处理
-                      // const paObj = this.props.paPopup;
-                      // dispatch({
-                      //   type: 'map/queryPAPopup',
-                      //   payload: { show: false, load: false, data: paObj.data },
-                      // });
-                      // // 空间查询菜单
-                      // if (spaceQueryPop.load) {
-                      //   dispatch({
-                      //     type: 'map/setSpaceQuery',
-                      //     payload: {
-                      //       load: true,
-                      //       show: false,
-                      //       style: { left: 0, top: 0 },
-                      //       point: spaceQueryPop.point,
-                      //       screenPoint: spaceQueryPop.screenPoint,
-                      //     },
-                      //   });
-                      // }
                     }
                       break;
                     default: break;
                   }
                 });
-                // mapConstants.view.on('pointer-move', (evt) => {
-                //   console.log('evt', evt);
-                // });
                 mapConstants.view.on('mouse-wheel', (e) => {
                   if (thisMap.props.stopPropagation) {
                     e.stopPropagation();
                     return false;
                   }
                   dispatch({
-                    type: 'map/showPopup',
+                    type: 'mapRelation/showPopup',
                     payload: false,
                   });
-                  // const { spaceQueryPop } = this.props;
-                  // // 暂时关闭右键
-                  // dispatch({
-                  //   type: 'map/contextMenu',
-                  //   payload: { show: false },
-                  // });
-                  // // 弹窗
-                  // for (const item of this.props.infoPops) {
-                  //   item.show = false;
-                  //   item.uniqueKey = Math.random() * new Date().getTime();
-                  // }
-                  // dispatch({
-                  //   type: 'map/queryInfoPops',
-                  //   payload: this.props.infoPops,
-                  // });
-                  // // 实时专题图弹窗
-                  // for (const item of this.props.constantlyComponents) {
-                  //   item.show = false;
-                  // }
-                  // dispatch({
-                  //   type: 'constantlyData/queryConstantlyComponents',
-                  //   payload: this.props.constantlyComponents,
-                  // });
-                  // // 聚合弹窗处理
-                  // const obj = JSON.parse(JSON.stringify(this.props.clusterPopup));
-                  // dispatch({
-                  //   type: 'map/queryClusterPopup',
-                  //   payload: { show: false, load: obj.load, data: obj.data },
-                  // });
-                  // // 扩音弹窗处理
-                  // const paObj = this.props.paPopup;
-                  // dispatch({
-                  //   type: 'map/queryPAPopup',
-                  //   payload: { show: false, load: false, data: paObj.data },
-                  // });
-                  // // 空间查询菜单
-                  // if (spaceQueryPop.load) {
-                  //   dispatch({
-                  //     type: 'map/setSpaceQuery',
-                  //     payload: { load: true, show: false, style: { left: 0, top: 0 }, point: spaceQueryPop.point, screenPoint: spaceQueryPop.screenPoint },
-                  //   });
-                  // }
                   if (e.deltaY > 0) {
                     mapConstants.view.scale += 1000;
                   } else {
@@ -499,155 +408,14 @@ export default class ArcgisMap extends PureComponent {
                   }
                   e.stopPropagation();
                 });
-                // mapConstants.view.watch('animation', (response) => {
-                //   if (response === null || response.state === 'finished') {
-                //       console.log('response', response);
-                //     // 弹窗处理
-                //     const { spaceQueryPop } = this.props;
-                //     dispatch({
-                //       type: 'map/showPopup',
-                //       payload: true,
-                //     });
-                //     // 弹窗
-                //     for (const item of this.props.infoPops) {
-                //       const screenPoint1 = mapConstants.view.toScreen(infoPopsModal[item.key].geometry);
-                //       infoPopsModal[item.key].screenPointBefore = screenPoint1;
-                //       infoPopsModal[item.key].screenPoint = screenPoint1;
-                //       item.uniqueKey = Math.random() * new Date().getTime();
-                //       item.show = true;
-                //     }
-                //     dispatch({
-                //       type: 'map/queryInfoPops',
-                //       payload: this.props.infoPops,
-                //     });
-                //     // 实时弹窗处理
-                //     for (const item of this.props.constantlyComponents) {
-                //       for (const device of constantlyModal[item.type].mapData) {
-                //         const screenPoint1 = mapConstants.view.toScreen(device.geometry);
-                //         device.currentStyle = { left: screenPoint1.x, top: screenPoint1.y };
-                //         device.style = { left: screenPoint1.x, top: screenPoint1.y };
-                //       }
-                //       item.uniqueKey = Math.random() * new Date().getTime();
-                //       item.show = true;
-                //     }
-                //     dispatch({
-                //       type: 'constantlyData/queryConstantlyComponents',
-                //       payload: this.props.constantlyComponents,
-                //     });
-                //     // 空间查询菜单
-                //     if (spaceQueryPop.load) {
-                //       const style = mapConstants.view.toScreen(spaceQueryPop.point);
-                //       dispatch({
-                //         type: 'map/setSpaceQuery',
-                //         payload: { load: true, show: true, style: { left: style.x, top: style.y }, point: spaceQueryPop.point, screenPoint: style },
-                //       });
-                //     }
-                //   } else {
-                //     // 动画开始时，不渲染弹窗
-                //     dispatch({
-                //       type: 'map/showPopup',
-                //       payload: false,
-                //     });
-                //   }
-                // });
-                mapConstants.view.watch('scale', (a) => {
-                  // if (newVal > oldVal) {
-                  //   mapView.scale += 1000;
+                mapConstants.view.watch('scale', () => {
                   if (mapConstants.view.scale > 13000) {
                     mapConstants.view.scale = 13000;
                   } else if (mapConstants.view.scale < 500) {
                     mapConstants.view.scale = 500;
                   }
-                  // } else {
-                  //   mapView.scale -= 1000;
-                  //   if (mapView.scale < 1000) {
-                  //       mapView.scale = 1000;
-                  //     }
-                  // }
                 });
-                // mapConstants.view.watch('updating', (loading) => {
-                //   if (!loading) {
-                //       console.log('loading', loading);
-                //     if (mapConstants.mainMap.findLayerById('报警动画')) {
-                //       mapConstants.mainMap.reorder(mapConstants.mainMap.findLayerById('报警动画'), mapConstants.mainMap.allLayers.length - 1);
-                //     }
-                //     dispatch({
-                //       type: 'map/showPopup',
-                //       payload: true,
-                //     });
-                //     // 弹窗处理
-                //     const { spaceQueryPop } = this.props;
-                //     // 弹窗
-                //     for (const item of this.props.infoPops) {
-                //       const screenPoint1 = mapConstants.view.toScreen(infoPopsModal[item.key].geometry);
-                //       infoPopsModal[item.key].screenPointBefore = screenPoint1;
-                //       infoPopsModal[item.key].screenPoint = screenPoint1;
-                //       item.uniqueKey = Math.random() * new Date().getTime();
-                //       item.show = true;
-                //     }
-                //     dispatch({
-                //       type: 'map/queryInfoPops',
-                //       payload: this.props.infoPops,
-                //     });
-                //     // 实时弹窗处理
-                //     for (const item of this.props.constantlyComponents) {
-                //       for (const device of constantlyModal[item.type].mapData) {
-                //         const screenPoint1 = mapConstants.view.toScreen(device.geometry);
-                //         device.currentStyle = { left: screenPoint1.x, top: screenPoint1.y };
-                //         device.style = { left: screenPoint1.x, top: screenPoint1.y };
-                //       }
-                //       item.uniqueKey = Math.random() * new Date().getTime();
-                //       item.show = true;
-                //     }
-                //     dispatch({
-                //       type: 'constantlyData/queryConstantlyComponents',
-                //       payload: this.props.constantlyComponents,
-                //     });
-                //     // 聚合弹窗处理
-                //     const obj = JSON.parse(JSON.stringify(this.props.clusterPopup));
-                //     for (const item of obj.data) {
-                //       const screenPoint1 = mapConstants.view.toScreen(item.geometry);
-                //       screenPoint1.x -= 20; screenPoint1.y -= 20;
-                //       // style 的偏移量在css计算会二次渲染，所以在这里一起计算
-                //       item.currentStyle = { left: screenPoint1.x, top: screenPoint1.y };
-                //       item.style = { left: screenPoint1.x, top: screenPoint1.y };
-                //       item.uniqueKey = Math.random() * new Date().getTime();
-                //     }
-                //     const show = (mapConstants.view.scale > this.props.popupScale);
-                //     dispatch({
-                //       type: 'map/queryClusterPopup',
-                //       payload: { show, load: obj.load, data: obj.data },
-                //     });
-                //     // 扩音弹窗处理
-                //     const paObj = this.props.paPopup;
-                //     for (const item of paObj.data) {
-                //       const screenPoint1 = mapConstants.view.toScreen(item.data.geometry);
-                //       item.data.style = { left: screenPoint1.x, top: screenPoint1.y, width: item.data.extent.width / 2, height: item.data.extent.width / 2, lineHeight: `${item.data.extent.width / 2}px` };
-                //       item.uniqueKey = Math.random() * new Date().getTime();
-                //     }
-                //     dispatch({
-                //       type: 'map/queryPAPopup',
-                //       payload: { show: true, load: true, data: paObj.data },
-                //     });
-                //     // 空间查询菜单
-                //     if (spaceQueryPop.load) {
-                //       const style = mapConstants.view.toScreen(spaceQueryPop.point);
-                //       dispatch({
-                //         type: 'map/setSpaceQuery',
-                //         payload: { load: true, show: true, style: { left: style.x, top: style.y }, point: spaceQueryPop.point, screenPoint: style },
-                //       });
-                //     }
-                //   } else {
-                //     dispatch({
-                //       type: 'map/showPopup',
-                //       payload: false,
-                //     });
-                //   }
-                // });
                 mapConstants.view.watch('stationary', (loading, stationary1, target, view) => {
-                  // const loading = newExtent.equals(oldExtent);
-                  // console.log('resizing', stationary)
-                  //   console.log('resizing1', stationary1)
                   if (loading) {
                     if (mapConstants.mainMap.findLayerById('报警动画')) {
                       mapConstants.mainMap.reorder(mapConstants.mainMap.findLayerById('报警选中'), mapConstants.mainMap.allLayers.length - 1);
@@ -658,11 +426,10 @@ export default class ArcgisMap extends PureComponent {
                       mapConstants.currentExtent = view.extent;
                     }
 
-
                     // 弹窗处理
-                    const { spaceQueryPop } = this.props;
+                    const { spaceQueryPop, clusterPopups, infoPops } = this.props;
                     // 弹窗
-                    for (const item of this.props.infoPops) {
+                    for (const item of infoPops) {
                       const screenPoint1 = mapConstants.view.toScreen(infoPopsModal[item.key].geometry);
                       infoPopsModal[item.key].screenPointBefore = screenPoint1;
                       infoPopsModal[item.key].screenPoint = screenPoint1;
@@ -670,7 +437,7 @@ export default class ArcgisMap extends PureComponent {
                       item.show = true;
                     }
                     dispatch({
-                      type: 'map/queryInfoPops',
+                      type: 'mapRelation/queryInfoPops',
                       payload: this.props.infoPops,
                     });
                     // 实时弹窗处理
@@ -687,59 +454,20 @@ export default class ArcgisMap extends PureComponent {
                       type: 'constantlyData/queryConstantlyComponents',
                       payload: this.props.constantlyComponents,
                     });
-                    // 聚合弹窗处理
-                    const obj = JSON.parse(JSON.stringify(this.props.clusterPopup));
-                    for (const item of obj.data) {
-                      const screenPoint1 = mapConstants.view.toScreen(item.geometry);
-                      screenPoint1.x -= 20; screenPoint1.y -= 20;
-                      // style 的偏移量在css计算会二次渲染，所以在这里一起计算
-                      item.currentStyle = { left: screenPoint1.x, top: screenPoint1.y };
-                      item.style = { left: screenPoint1.x, top: screenPoint1.y };
-                      item.uniqueKey = Math.random() * new Date().getTime();
-                    }
-                    const show = (mapConstants.view.scale > this.props.popupScale);
-                    dispatch({
-                      type: 'map/queryClusterPopup',
-                      payload: { show, load: obj.load, data: obj.data },
-                    });
-                    // 扩音弹窗处理
-                    const paObj = this.props.paPopup;
-                    if (paObj.load) {
-                      for (const item of paObj.data) {
-                        const screenPoint1 = mapConstants.view.toScreen(item.data.geometry);
-                        item.data.style = { left: screenPoint1.x, top: screenPoint1.y, width: item.data.extent.width / 2, height: item.data.extent.width / 2, lineHeight: `${item.data.extent.width / 2}px` };
-                        item.uniqueKey = Math.random() * new Date().getTime();
-                      }
-                      dispatch({
-                        type: 'map/queryPAPopup',
-                        payload: { show: true, load: true, data: paObj.data },
-                      });
-                    }
-                    // 门禁弹窗处理
-                    const accessPop = this.props.accessPops;
-                    if (accessPop.load) {
-                      for (const item of accessPop.data) {
-                        const screenPoint = mapConstants.view.toScreen(item.data.geometry);
-                        item.data.style = { left: screenPoint.x, top: screenPoint.y - 48 };
-                        item.uniqueKey = Math.random() * new Date().getTime();
-                      }
-                      dispatch({
-                        type: 'map/queryPAPopup',
-                        payload: { show: true, load: true, data: accessPop.data },
-                      });
-                    }
-                    // Vocs弹窗处理
-                    const vocsPop = this.props.vocsPops;
-                    if (vocsPop.load) {
-                      for (const item of vocsPop.data) {
-                        const screenPoint = mapConstants.view.toScreen(item.attributes.geometry);
-                        item.attributes.style = { left: screenPoint.x, top: screenPoint.y };
-                        item.uniqueKey = Math.random() * new Date().getTime();
-                      }
-                      dispatch({
-                        type: 'map/queryVocsPopup',
-                        payload: { show: true, load: true, data: vocsPop.data },
-                      });
+                    // 聚合弹窗统一更新坐标
+                    for (const popup of clusterPopups) {
+                      const obj = this.props[popup.type];
+                      console.log('obj', obj);
+                        for (const item of obj.data) {
+                          const screenPoint1 = mapConstants.view.toScreen(item.attributes.geometry);
+                          item.attributes.style = { left: screenPoint1.x, top: screenPoint1.y };
+                          item.attributes.uniqueKey = Math.random() * new Date().getTime();
+                        }
+                        const show = (mapConstants.view.scale > this.props.popupScale);
+                        dispatch({
+                          type: `mapRelation/${popup.type}`,
+                          payload: { show, load: true, data: obj.data },
+                        });
                     }
                     // 空间查询菜单
                     if (spaceQueryPop.load) {
@@ -750,12 +478,12 @@ export default class ArcgisMap extends PureComponent {
                       });
                     }
                     dispatch({
-                      type: 'map/showPopup',
+                      type: 'mapRelation/showPopup',
                       payload: true,
                     });
                   } else {
                     dispatch({
-                      type: 'map/showPopup',
+                      type: 'mapRelation/showPopup',
                       payload: false,
                     });
                   }

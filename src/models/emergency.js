@@ -24,7 +24,7 @@ import {
   selectExecutePlanInfo, getPlanInfo, mergeAlarm, ifFromPlan, getCommandStatusList, annexPage,
   annexDelete, getPlanAnnexPage, getDealCard, getImplPicture, getExecuteList, resourcePage,
   materialPage, resMaterialPage,
-  addFeature, getPlansByEventID, findUserPage,
+  addFeature, getPlansByEventID, findUserPage, expandPlanPage,
 } from '../services/api';
 import { checkCode, formatDuring } from '../utils/utils';
 
@@ -120,6 +120,9 @@ export default {
     executeList: [], // 实施方案列表
     eventPlanList: [], // 某事件已关联的预案信息
     templatePlanID: null, // 信息研判阶段设为模板的预案ID
+    expandPlanPage: {
+      result: [],
+    }, // 扩大应急阶段的预案列表
   },
 
   effects: {
@@ -827,6 +830,14 @@ export default {
         payload: response.data,
       });
     },
+    //  获取方案应急流程
+    *getExpandPlanPage({ payload }, { call, put }) {
+      const response = yield call(expandPlanPage, payload);
+      yield put({
+        type: 'saveExpandPlanPage',
+        payload: response.data,
+      });
+    },
     //  通过事件ID获取事件关联的所有预案信息
     *getPlansByEventID({ payload }, { call, put }) {
       const response = yield call(getPlansByEventID, payload);
@@ -1292,6 +1303,12 @@ export default {
       return {
         ...state,
         eventPlanList: payload,
+      };
+    },
+    saveExpandPlanPage(state, { payload }) {
+      return {
+        ...state,
+        expandPlanPage: payload,
       };
     },
     saveTemplatePlanID(state, { payload }) {

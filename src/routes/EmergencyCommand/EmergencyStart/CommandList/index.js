@@ -4,8 +4,6 @@ import { connect } from 'dva';
 import moment from 'moment';
 import styles from './index.less';
 import InsertCommand from './InsertCommand/index';
-import { commandType } from '../../../../utils/utils';
-import { commonData } from '../../../../../mock/commonData';
 import { emgcIntervalInfo } from '../../../../services/constantlyData';
 
 const Option = Select.Option;
@@ -164,7 +162,7 @@ export default class CommandList extends PureComponent {
       {
         title: '状态',
         dataIndex: 'commandStat',
-        width: 160,
+        width: 120,
         key: 'commandStat',
         filters: Object.keys(commandStatus).map((item) => {
           return { text: commandStatus[item], value: item };
@@ -175,7 +173,7 @@ export default class CommandList extends PureComponent {
             <Select
               // defaultValue={value ? value.toString() : ''}
               value={value ? value.toString() : ''}
-              style={{ width: 100 }}
+              style={{ width: 80 }}
               placeholder="请选择"
               onChange={select => this.handleChange(select, record.cmdExecID)}
             >
@@ -278,7 +276,7 @@ export default class CommandList extends PureComponent {
     return (
       <div className={styles.commandList}>
         { !isInsert ? (
-          <Card title={title} extra={extra} bordered={false}>
+          <Card title={title} extra={extra}>
             <Table
               // rowKey={record => record.cmdExecID}
               rowKey="cmdExecID"

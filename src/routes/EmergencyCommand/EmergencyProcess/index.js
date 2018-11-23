@@ -145,7 +145,7 @@ export default class EmergencyCommand extends PureComponent {
         name,
       };
       dispatch({
-        type: 'map/queryInfoPops',
+        type: 'mapRelation/queryInfoPops',
         payload: infoPops,
       });
     }

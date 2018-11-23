@@ -9,11 +9,11 @@ import { commonData } from '../../../../mock/commonData';
 
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 const columns = [
-  { title: '序号', width: '10', dataIndex: 'index', key: 'index' },
-  { title: '接口名', width: '15%', dataIndex: 'pluginCaption', key: 'pluginCaption' },
-  { title: '接口编码', width: '10%', dataIndex: 'pluginCode', key: 'pluginCode' },
-  { title: '接口状态', width: '10%', dataIndex: 'pluginState', key: 'pluginState', render: text => (text ? '已连接' : '未连接') },
-  { title: '接口来源', width: '55%', dataIndex: 'remark', key: 'remark' },
+  { title: '序号', width: 80, dataIndex: 'index', key: 'index' },
+  { title: '接口名', width: 100, dataIndex: 'pluginCaption', key: 'pluginCaption' },
+  { title: '接口编码', width: 100, dataIndex: 'pluginCode', key: 'pluginCode' },
+  { title: '接口状态', width: 100, dataIndex: 'pluginState', key: 'pluginState', render: text => (text ? '已连接' : '未连接') },
+  { title: '接口来源', dataIndex: 'remark', key: 'remark' },
 ];
 
 @connect(({ userList, system }) => ({
@@ -39,6 +39,7 @@ export default class TableList extends PureComponent {
     });
     return (
       <PageHeaderLayout title="系统接口列表">
+        <div className={styles.tableTitle}>
         <Card bordered={false} title="系统接口列表">
           <div className={styles.tableList}>
             <Table
@@ -52,6 +53,7 @@ export default class TableList extends PureComponent {
             />
           </div>
         </Card>
+        </div>
       </PageHeaderLayout>
     );
   }

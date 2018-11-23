@@ -31,6 +31,7 @@ class TreeTitle extends PureComponent {
   organization,
   entityPostion: organization.entityPostion,
   emgcPostion: organization.emgcPostion,
+  emgcOrgTree: organization.emgcOrgTree,
   orgObj: organization.orgObj,
   typeCode,
   resourceTree,
@@ -42,7 +43,7 @@ export default class Orgnization extends PureComponent {
     searchValue: '',
     autoExpandParent: true,
     isAdd: false,
-    isEmergency: false,
+    isEmergency: true,
     mockData: [],
     targetKeys: [],
     visible: false, // 弹窗可见
@@ -54,13 +55,14 @@ export default class Orgnization extends PureComponent {
     const { dispatch } = this.props;
     // 请求部门数据
     dispatch({
-      type: 'organization/list',
+      // type: 'organization/list',
+      type: 'organization/getEmgcOrgTree',
     });
     // 请求机构类别数据
-    dispatch({
-      type: 'typeCode/orgType',
-      payload: 101,
-    });
+    // dispatch({
+    //   type: 'typeCode/orgType',
+    //   payload: 101,
+    // });
     // 请求应急级别
     dispatch({
       type: 'organization/getEmgcLevelList',
@@ -365,7 +367,7 @@ export default class Orgnization extends PureComponent {
   };
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
-    const { list } = this.props.organization;
+    const { emgcOrgTree } = this.props;
     const { getFieldDecorator } = this.props.form;
     const { orgTypeList } = this.props.typeCode;
     const { contextMenu, selectedNodes, emgcLevelList } = this.props.organization;
@@ -373,7 +375,7 @@ export default class Orgnization extends PureComponent {
     return (
       <div className={styles.main} onClick={this.handleClick} onContextMenu={this.handleContextMenu}>
         <div className={styles.content}>
-          <Row gutter={{ md: 8, lg: 24, xl: 48 }} type="flex">
+          <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
             <Col md={6} sm={8} className={styles.nopd}>
               <Scrollbars style={{ width: '100%', height: 768, marginBottom: 50 }}>
                 <div className={styles.tree}>
@@ -387,7 +389,7 @@ export default class Orgnization extends PureComponent {
                     autoExpandParent={autoExpandParent}
                     onRightClick={this.handleRightClick}
                   >
-                    {this.renderTreeNodes(list)}
+                    {this.renderTreeNodes(emgcOrgTree)}
                   </Tree>
                   <TreeContextMenu
                     contextMenu={contextMenu}
@@ -410,56 +412,47 @@ export default class Orgnization extends PureComponent {
                       <Input type="hidden" placeholder="请输入" />
                     )}
                   </FormItem>
-                  <Row gutter={{ md: 8, lg: 24, xl: 48 }} type="flex" >
-                    <Col md={10} sm={20} offset={2}>
+                  <Row>
+                    <Col md={8} sm={12}>
                       <FormItem
-                        labelCol={8}
-                        wrapperCol={16}
-                        label="机构类型"
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                        label="应急级别"
                       >
-                        {getFieldDecorator('orginaztionType')(
-                          <Select placeholder="请选择" onChange={this.orgTypeChange} style={{ width: 174 }}>
+                        {form.getFieldDecorator('emgcLevelID', {
+                          rules: [{ required: true, message: '应急级别必填' }],
+                        })(
+                          <Select placeholder="请选择" style={{ width: '156px' }}>
                             <Option value="">请选择</Option>
-                            {orgTypeList.map(type =>
-                              <Option key={type.codeID} value={type.code}>{type.codeName}</Option>
-                            )}
+                            {emgcLevelList.map(type => (
+                              <Option
+                                key={type.emgcLevelID}
+                                value={type.emgcLevelID}
+                              >{type.levelName}
+                              </Option>
+                            ))}
                           </Select>
                         )}
                       </FormItem>
                     </Col>
-                    <Col md={10} sm={20}>
-                      {this.state.isEmergency ? (
-                        <FormItem
-                          labelCol={8}
-                          wrapperCol={16}
-                          label="应急级别"
-                        >
-                          {getFieldDecorator('emgcLevelID', {
-                            rules: [{ required: true, message: '应急级别必填' }],
-                          })(
-                            <Select placeholder="请选择" style={{ width: 174 }}>
-                              <Option value="">请选择</Option>
-                              {emgcLevelList.map(type => (
-                                <Option
-                                  key={type.emgcLevelID}
-                                  value={type.emgcLevelID}
-                                >{type.levelName}
-                                </Option>
-))}
-                            </Select>
-                        )}
-                        </FormItem>
-) : null}
-                    </Col>
-                    <Col md={10} sm={20} offset={2}>
-                      <FormItem label="上级机构">
-                        {form.getFieldDecorator('parentOrganizationName')(
+                    <Col md={8} sm={12}>
+                      <FormItem
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                        label="上级机构"
+                      >
+                        {form.getFieldDecorator('parentOrganizationName', {
+                        })(
                           <Input disabled placeholder="请输入" />
                         )}
                       </FormItem>
                     </Col>
-                    <Col md={10} sm={20}>
-                      <FormItem label="机构名称">
+                    <Col md={8} sm={12}>
+                      <FormItem
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                        label="机构名称"
+                      >
                         {getFieldDecorator('orgnizationName', {
                           rules: [
                             { require: true, message: '机构名必填' },
@@ -469,8 +462,12 @@ export default class Orgnization extends PureComponent {
                         )}
                       </FormItem>
                     </Col>
-                    <Col md={10} sm={20} offset={2}>
-                      <FormItem label="名称拼音">
+                    <Col md={8} sm={12}>
+                      <FormItem
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                        label="名称拼音"
+                      >
                         {getFieldDecorator('queryKey', {
                           rules: [
                             { pattern: /^[A-Za-z]+$/, message: '只能由英文字母组成' },
@@ -480,15 +477,23 @@ export default class Orgnization extends PureComponent {
                         )}
                       </FormItem>
                     </Col>
-                    <Col md={10} sm={20}>
-                      <FormItem label="机构简称">
+                    <Col md={8} sm={12}>
+                      <FormItem
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                        label="机构简称"
+                      >
                         {getFieldDecorator('shortName')(
                           <Input placeholder="请输入" />
                         )}
                       </FormItem>
                     </Col>
-                    <Col md={10} sm={20} offset={2}>
-                      <FormItem label="是否有效">
+                    <Col md={8} sm={12}>
+                      <FormItem
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                        label="是否有效"
+                      >
                         {getFieldDecorator('enabled')(
                           <RadioGroup name="enabled">
                             <Radio value>是</Radio>
@@ -497,22 +502,34 @@ export default class Orgnization extends PureComponent {
                         )}
                       </FormItem>
                     </Col>
-                    <Col md={10} sm={20}>
-                      <FormItem label="排序序号">
+                    <Col md={8} sm={12}>
+                      <FormItem
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                        label="排序序号"
+                      >
                         {getFieldDecorator('sortIndex')(
                           <Input placeholder="请输入" />
                         )}
                       </FormItem>
                     </Col>
-                    <Col md={10} sm={20} offset={2}>
-                      <FormItem label="机构地址">
+                    <Col md={8} sm={12}>
+                      <FormItem
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                        label="机构地址"
+                      >
                         {getFieldDecorator('address')(
                           <Input placeholder="请输入" />
                         )}
                       </FormItem>
                     </Col>
-                    <Col md={10} sm={20}>
-                      <FormItem label="机构介绍">
+                    <Col md={8} sm={12}>
+                      <FormItem
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                        label="机构介绍"
+                      >
                         {getFieldDecorator('remark')(
                           <TextArea placeholder="请输入" />
                         )}

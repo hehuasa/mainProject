@@ -12,8 +12,9 @@ const optinns = [
   { title: '质量设施', param: 'qua', key: 4 },
   { title: '工业视频', param: 'video', key: 5 },
 ];
-const mapStateToProps = ({ map }) => {
-  const { spaceQueryPop, centerRadius } = map;
+const mapStateToProps = ({ map, mapRelation }) => {
+  const { centerRadius } = map;
+  const { spaceQueryPop } = mapRelation;
   return {
     style: spaceQueryPop.style,
     show: spaceQueryPop.show,

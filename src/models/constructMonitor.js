@@ -1,27 +1,21 @@
-import { constructMonitorList, getAreaByOrgID, orgList } from '../services/api';
+import { constructMonitorList, orgList } from '../services/api';
 
-// 获取组织对应的区域
-const getAreas = (area, item) => {
-  if (area.data[0]) {
-    item.areas.push({ areaId: Number(area.data[0].gISCode), areaName: area.data[0].areaName });
-  }
-};
 // 将数据按照区域分组
 const groupingByAreas = (data) => {
   const array = [];
   for (const item of data) {
-    for (const area of item.areas) {
-      const index = array.findIndex(value => value.area.areaId === area.areaId);
-      if (index !== -1) {
-        array[index].count += 1;
-        array[index].data.push(item);
-      } else {
-        array.push({
-          area,
-          count: 1,
-          data: [item],
-        });
-      }
+    const { gisCode, orgnizationName } = item.baseOrganization;
+    const index = array.findIndex(value => value.gisCode === gisCode);
+    if (index === -1) {
+      array.push({
+        gisCode,
+        area: { areaId: gisCode, areaName: orgnizationName },
+        count: 1,
+        data: [item],
+      });
+    } else {
+      array[index].count += 1;
+      array[index].data.push(item);
     }
   }
   return array;
@@ -41,12 +35,12 @@ export default {
     * fetchConstructMonitorList({ payload }, { call, put }) {
       const { data } = yield call(constructMonitorList, payload);
       // 获取对应的区域
-      for (const item of data) {
-        const { orgID } = item;
-        item.areas = [];
-        const area = yield call(getAreaByOrgID, { orgID });
-        yield getAreas(area, item);
-      }
+      // for (const item of data) {
+      //   const { orgID } = item;
+      //   item.areas = [];
+      //   const area = yield call(getAreaByOrgID, { orgID });
+      //   yield getAreas(area, item);
+      // }
       // 分组
       const groupingList = groupingByAreas(data);
       yield put({

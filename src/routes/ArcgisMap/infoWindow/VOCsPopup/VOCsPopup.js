@@ -1,38 +1,35 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'dva';
-import { Popover, Row, Col } from 'antd';
+import { Row, Col } from 'antd';
+import ClusterPopup from '../../../../components/ClusterPopup/ClusterPopup';
 import styles from './index.less';
-import { addVocsHover } from '../../../../utils/mapService';
+import { addPopupHover } from '../../../../utils/mapService';
 
-const mapStateToProps = ({ map }) => {
-  return {
-    infoPops: map.vocsPops,
-  };
-};
-class ClusterPopup extends PureComponent {
+const circleBackground = '#f0811a';
+export default class VOCsPopup extends PureComponent {
   handleClick = () => {
     const { popValue, dispatch } = this.props;
-    const { list, areaName, keys } = popValue;
+    const { areaName, keys, gisCode } = popValue;
     dispatch({
       type: 'resourceTree/saveCtrlResourceType',
       payload: '',
     });
     dispatch({
-      type: 'resourceTree/saveCtrlResourceType',
-      payload: 'vocsMonitor',
-    });
-    dispatch({
-      type: 'vocsMonitor/queryMapSelectedList',
-      payload: { list, areaName, keys },
+      type: 'vocsMonitor/fetchVocsTasks',
+      payload: { areaName, keys, gisCode },
+    }).then(() => {
+      dispatch({
+        type: 'resourceTree/saveCtrlResourceType',
+        payload: 'vocsMonitor',
+      });
     });
   };
   handleMouseOver = () => {
     const { popValue } = this.props;
     const { attributes } = popValue;
-    addVocsHover(attributes.area);
+    addPopupHover(attributes.area, circleBackground);
   };
   handleMouseOut = () => {
-    addVocsHover();
+    addPopupHover();
   };
   render() {
     const { popValue } = this.props;
@@ -41,30 +38,14 @@ class ClusterPopup extends PureComponent {
     // 弹出式气泡窗内容
     const content = (
       <div className={styles.content}>
-        <Row><Col span={18}>维修点数量</Col><Col span={2}> : </Col><Col span={4}> {data.maintNumber}</Col></Row>
-        <Row><Col span={18}>已维修点数量</Col><Col span={2}> : </Col><Col span={4}> {data.alreadyMaintNumber}</Col></Row>
-        <Row><Col span={18}>无法维修点数量</Col><Col span={2}> : </Col><Col span={4}> {data.notMaintNumber}</Col></Row>
-        <Row><Col span={18}>待维修点数量</Col><Col span={2}> : </Col><Col span={4}> {data.waitMaintNumber}</Col></Row>
+        <Row><Col span={18}>维修点数量</Col><Col span={2}> : </Col><Col span={4}> {data.maintNumbers}</Col></Row>
+        <Row><Col span={18}>已维修点数量</Col><Col span={2}> : </Col><Col span={4}> {data.alreadyMaintNumbers}</Col></Row>
+        <Row><Col span={18}>无法维修点数量</Col><Col span={2}> : </Col><Col span={4}> {data.notMaintNumbers}</Col></Row>
+        <Row><Col span={18}>待维修点数量</Col><Col span={2}> : </Col><Col span={4}> {data.waitMaintNumbers}</Col></Row>
       </div>
-    );
-    // 聚合气泡窗内容
-    const count = (
-      <div>
-        <div className={styles.blueCircleOnly}>{popValue.count}</div>
-      </div>
-    );
-    const warp = (
-      <Popover content={content} placement="rightTop" overlayClassName={styles.pop}>
-        <div className={styles.warp} style={style} onClick={this.handleClick} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
-          { count }
-        </div>
-      </Popover>
     );
     return (
-      <div>
-        { warp }
-      </div>
+      <ClusterPopup count={popValue.count} circleBackground={circleBackground} content={content} style={style} handleClick={this.handleClick} handleMouseOver={this.handleMouseOver} handleMouseOut={this.handleMouseOut} />
     );
   }
 }
-export default connect(mapStateToProps)(ClusterPopup);

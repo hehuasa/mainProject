@@ -369,7 +369,7 @@ export default class CommonQuery extends PureComponent {
                     </Col>
                     <Col >
                       <Button type="primary" onClick={this.onHandleSearch}>搜索</Button>
-                      <Button style={{ marginLeft: 8 }} onClick={this.onHandleFormReset}>重置</Button>
+                      {/*<Button style={{ marginLeft: 8 }} onClick={this.onHandleFormReset}>重置</Button>*/}
                     </Col>
                   </Row>
                 </Form>
@@ -392,7 +392,7 @@ export default class CommonQuery extends PureComponent {
                     </Col>
                     <Col >
                       <Button type="primary" onClick={this.onSearchMaterial}>搜索</Button>
-                      <Button style={{ marginLeft: 8 }} onClick={this.onHandleFormReset}>重置</Button>
+                      {/*<Button style={{ marginLeft: 8 }} onClick={this.onHandleFormReset}>重置</Button>*/}
                     </Col>
                   </Row>
                 </Form>

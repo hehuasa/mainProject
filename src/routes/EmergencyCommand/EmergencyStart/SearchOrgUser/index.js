@@ -202,6 +202,7 @@ export default class SearchOrgUser extends PureComponent {
         </div>
         <Table
           columns={orgCols}
+          // size="small"
           pagination={{
             onChange: this.page,
             current: this.state.pageNum,

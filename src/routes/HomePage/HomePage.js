@@ -15,7 +15,7 @@ import { mapConstants } from '../../services/mapConstant';
 const dragEvent = {
   isDrag: false,
 };
-@connect(({ homepage, map, alarmDeal, flow, accessControl, sysFunction }) => {
+@connect(({ homepage, map, alarmDeal, flow, accessControl, sysFunction, mapRelation }) => {
   return {
     trueMapShow: map.trueMapShow,
     deviceMonitor: homepage.deviceMonitor,
@@ -28,7 +28,7 @@ const dragEvent = {
     mapHeight: homepage.mapHeight,
     modalType: homepage.modalType,
     accessControl,
-    spaceQueryPop: map.spaceQueryPop,
+    spaceQueryPop: mapRelation.spaceQueryPop,
     ztreeObj: sysFunction.ztreeObj,
   };
 })

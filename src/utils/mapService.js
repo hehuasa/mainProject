@@ -605,7 +605,7 @@ export const spaceQuery = async ({ map, view, searchText, ids, dispatch, point, 
             delLayer(map, ['空间查询', '地图搜索结果'], dispatch);
             mapConstants.spaceQueryPolygon = {};
             dispatch({
-              type: 'map/queryToolsBtnIndex',
+              type: 'mapRelation/queryToolsBtnIndex',
               payload: -1,
             });
             dispatch({
@@ -871,7 +871,7 @@ export const measure = async (map, view, para, dispatch) => {
                 map.remove(popLayer);
                 closeMeasure.remove();
                 dispatch({
-                  type: 'map/queryToolsBtnIndex',
+                  type: 'mapRelation/queryToolsBtnIndex',
                   payload: -1,
                 });
               }
@@ -1359,6 +1359,82 @@ export const clustering = async ({ view, dispatch, alarms, graphics, overviewSho
     payload: { show: (view.scale > popupScale), load: true, data },
   });
 };
+// 报警聚合
+export const alarmClustering = async ({ view, dispatch, alarms, graphics, overviewShow, popupScale }) => {
+  const data = [];
+  for (const graphic of graphics) {
+    const obj = {};
+    // 位置、地理信息
+    const geometry = graphic.geometry.centroid;
+    const { extent } = graphic.geometry;
+    const screenPoint = view.toScreen(geometry);
+    const style = { left: screenPoint.x, top: screenPoint.y };
+    const key = Math.random() * new Date().getTime();
+    obj.attributes = { geometry, extent, style, key, uniqueKey: key, area: graphic.geometry };
+    // 报警统计信息筛查
+    const areaAlarms = alarms.filter((value) => {
+      return Number(value.areaGisCode) === Number(graphic.attributes.ObjCode);
+    });
+    obj.attributes.alarms = {};
+    obj.attributes.alarms.count = areaAlarms.length;
+    if (obj.attributes.alarms.count > 0) {
+      const { count } = groupingByOverview({ para: overviewShow, alarms: areaAlarms });
+      obj.attributes.alarms.data = [{ name: '安全报警', value: count.safetyCount }, { name: '环保报警', value: count.envCount }, { name: '故障报警', value: count.faultCount }];
+      data.push(obj);
+    }
+  }
+  dispatch({
+    type: 'mapRelation/addClusterPopup',
+    payload: { type: 'alarmClusterPopup', data: { show: (view.scale > popupScale), load: true, data } },
+  });
+};
+// 资源聚合
+export const resourceClustering = async ({ view, dispatch, graphics, clusterRes, popupScale, resourceGroupByArea }) => {
+  // 按区域将设备统计信息转为对象,并做统计
+  const deviceObj = {};
+  if (clusterRes.length > 0) {
+    for (const item of resourceGroupByArea) {
+      // const type = deviceCtrlType[item.ctrlType];
+      const type = clusterRes.find(value => value.ctrlType === item.ctrlType);
+      if (type) {
+        if (deviceObj[item.gISCode]) {
+          deviceObj[item.gISCode].count += item.num;
+          deviceObj[item.gISCode].data.push({
+            name: type.name,
+            value: item.num,
+          });
+        } else {
+          deviceObj[item.gISCode] = { count: 0, data: [] };
+          deviceObj[item.gISCode].count += item.num;
+          deviceObj[item.gISCode].data.push({
+            name: type.name,
+            value: item.num,
+          });
+        }
+      }
+    }
+  }
+  const data = [];
+  for (const graphic of graphics) {
+    // 取出该区域的设备
+    if (deviceObj[Number(graphic.attributes.ObjCode)]) {
+      // 位置、地理信息
+      const obj = {};
+      const geometry = graphic.geometry.centroid;
+      const { extent } = graphic.geometry;
+      const screenPoint = view.toScreen(geometry);
+      const style = { left: screenPoint.x, top: screenPoint.y };
+      const key = Math.random() * new Date().getTime();
+      obj.attributes = { geometry, extent, style, key, uniqueKey: key, area: graphic.geometry };
+      obj.attributes.devices = deviceObj[Number(graphic.attributes.ObjCode)];
+      data.push(obj);
+    }
+  }
+  dispatch({
+    type: 'mapRelation/addClusterPopup',
+    payload: { type: 'resourceClusterPopup', data: { show: (view.scale > popupScale), load: true, data } },
+  });
+};
 // 实时专题图
 // export const constantlyInfo = async (map, view, dispatch, devices, type, constantlyComponents, domType, scale, disablePop) => {
 //   esriLoader.loadModules([
@@ -1757,114 +1833,42 @@ export const addDoorIcon = async ({ map, view, data, graphics, dispatch }) => {
       }
     }
     dispatch({
-      type: 'map/queryAccessPops',
-      payload: { show: true, load: true, data: datas },
+      type: 'mapRelation/addClusterPopup',
+      payload: { type: 'accessPops', data: { show: true, load: true, data: datas } },
     });
   });
 };
 // 作业监控专题
-export const addConstructIcon = ({ map, layer, list, dispatch }) => {
-  esriLoader.loadModules([
-    'esri/layers/GraphicsLayer',
-    'esri/Graphic',
-  ]).then(([GraphicsLayer, Graphic]) => {
-    if (map.findLayerById('作业监控专题图')) {
-      delLayer(map, ['作业监控专题图', '作业监控选中专题图'], dispatch);
-      return false;
-    }
-    const markerSymbol = {
-      type: 'simple-marker', // autocasts as new SimpleMarkerSymbol()
-      style: 'circle',
-      color: '#27afff',
-      size: '40px', // pixels
-      outline: { // autocasts as new SimpleLineSymbol()
-        color: '#fff',
-        width: '1px',
-      },
-    };
-    const textSymbol = {
-      type: 'text',
-      color: 'white',
-      angle,
-      text: 0,
-      xoffset: '-5px',
-      yoffset: '-2px',
-      font: {
-        size: '12px',
-        family: '微软雅黑',
-      },
-    };
-    const constructLayer = new GraphicsLayer({ id: '作业监控专题图' });
-    const constructHoverLayer = new GraphicsLayer({ id: '作业监控选中专题图' });
-    map.add(constructHoverLayer);
-    map.add(constructLayer);
-    let a;
-    const graphics = [];
-    const query = layer.createQuery();
-    query.outFields = ['*'];
-    const hoverSy = {
-      type: 'simple-fill',
-      color: 'rgba(255, 255, 255, 0.8)',
-      style: 'solid',
-      outline: {
-        color: '#27afff',
-        width: 1,
-      },
-    };
-    layer.queryFeatures(query).then((res) => {
-      graphics.push(...res.features);
-      for (const graphic of graphics) {
-        const item = list.find(value => value.area.areaId === graphic.attributes.ObjCode);
-        if (item) {
-          const keys = []; // map 循环时用的key
-          for (const data of item.data) {
-            keys.push(String(data.jobMonitorID));
-          }
-          const point = graphic.geometry.centroid;
-
-          const cirGraphic = new Graphic({
-            geometry: point,
-            symbol: markerSymbol,
-            attributes: { isConstructMonitor: true, list: item.data, area: item.area, keys, geometry: graphic.geometry, index: graphic.attributes.ObjCode },
-          });
-          textSymbol.text = item.count;
-          const textGraphic = new Graphic({
-            geometry: point,
-            symbol: textSymbol,
-            attributes: { isConstructMonitor: true, list: item.data, area: item.area, keys, geometry: graphic.geometry, index: graphic.attributes.ObjCode },
-          });
-          constructLayer.addMany([cirGraphic, textGraphic]);
+export const addConstructIcon = ({ layer, list, dispatch }) => {
+  const { view } = mapConstants;
+  const graphics = [];
+  const query = layer.createQuery();
+  query.outFields = ['*'];
+  layer.queryFeatures(query).then((res) => {
+    graphics.push(...res.features);
+    const data = [];
+    for (const graphic of graphics) {
+      const item = list.find(value => Number(value.gisCode) === Number(graphic.attributes.ObjCode));
+      if (item) {
+        const keys = []; // map 循环时用的key
+        for (const data of item.data) {
+          keys.push(String(data.jobMonitorID));
         }
+        const point = graphic.geometry.centroid;
+        const obj = {};
+        const geometry = point;
+        const { extent } = graphic.geometry;
+        const screenPoint = view.toScreen(geometry);
+        const style = { left: screenPoint.x, top: screenPoint.y };
+        const key = Math.random() * new Date().getTime();
+        const { area } = item;
+        obj.attributes = { geometry, extent, style, key, uniqueKey: key, area: graphic.geometry, data: { list: item.data, area, keys } };
+        data.push(obj);
       }
-    });
-    // 鼠标事件
-    constructLayer.on('layerview-create', () => {
-      a = mapConstants.view.on('pointer-move', (evt) => {
-        mapConstants.view.hitTest(evt).then(({ results }) => {
-          const item = results.filter(value => value.graphic.layer === constructLayer)[0];
-          if (item) {
-            constructHoverLayer.graphics.removeAll();
-            // 模拟实现hover时元素浮至最上层的效果
-            const { attributes } = item.graphic;
-            const delGraphics = constructLayer.graphics.items.filter(value => value.attributes.index === attributes.index);
-            constructLayer.removeMany(delGraphics);
-            const newCirGraphic = new Graphic(item.graphic.geometry, markerSymbol, attributes);
-            textSymbol.text = attributes.list.length;
-            const newTextGraphic = new Graphic(item.graphic.geometry, textSymbol, attributes);
-            constructLayer.addMany([newCirGraphic, newTextGraphic]);
-            // 修改鼠标样式、添加背景图效果
-            evt.native.target.style.cursor = 'pointer';
-            const hoverGraphic = new Graphic(item.graphic.attributes.geometry, hoverSy);
-            constructHoverLayer.add(hoverGraphic);
-          } else {
-            constructHoverLayer.graphics.removeAll();
-            evt.native.target.style.cursor = 'default';
-          }
-        });
-      });
-    });
-    constructLayer.on('layerview-destroy', () => {
-      a.remove();
+    }
+    dispatch({
+      type: 'mapRelation/addClusterPopup',
+      payload: { type: 'constructMonitorClusterPopup', data: { show: true, load: true, data } },
     });
   });
 };
@@ -1886,20 +1890,11 @@ export const addVocsIcon = ({ map, layer, list, dispatch }) => {
     layer.queryFeatures(query).then((res) => {
       graphics.push(...res.features);
       for (const graphic of graphics) {
-        const items = list.filter(value => Number(value.gisCode) === Number(graphic.attributes.ObjCode));
+        const item = list.find(value => Number(value.gisCode) === Number(graphic.attributes.ObjCode));
         const keys = [];
-        const obj = { count: 0, data: { maintNumber: 0, alreadyMaintNumber: 0, notMaintNumber: 0, waitMaintNumber: 0 }, uniqueKey: new Date() * Math.random(), list: items, keys, areaName: graphic.attributes['分区名称'] };
-
-        if (items.length > 0) {
-          for (const item of items) {
-            keys.push(String(item.ldarSceneDetectID));
-            const { maintNumber, alreadyMaintNumber, notMaintNumber, waitMaintNumber } = item;
-            obj.count += maintNumber;
-            obj.data.maintNumber += maintNumber;
-            obj.data.alreadyMaintNumber += alreadyMaintNumber;
-            obj.data.notMaintNumber += notMaintNumber;
-            obj.data.waitMaintNumber += waitMaintNumber;
-          }
+        if (item) {
+          const { maintNumbers, alreadyMaintNumbers, notMaintNumbers, waitMaintNumbers, gisCode } = item;
+          const obj = { count: maintNumbers, data: { maintNumbers, alreadyMaintNumbers, notMaintNumbers, waitMaintNumbers }, gisCode, uniqueKey: new Date() * Math.random(), keys, areaName: graphic.attributes['分区名称'] };
           const screenPoint = mapConstants.view.toScreen(graphic.geometry.centroid);
           const style = { left: screenPoint.x, top: screenPoint.y };
           obj.attributes = { geometry: graphic.geometry.centroid, area: graphic.geometry, style };
@@ -1907,22 +1902,22 @@ export const addVocsIcon = ({ map, layer, list, dispatch }) => {
         }
       }
       dispatch({
-        type: 'map/queryVocsPopup',
-        payload: { show: true, load: true, data },
+        type: 'mapRelation/addClusterPopup',
+        payload: { type: 'vocsPopup', data: { show: true, load: true, data } },
       });
     });
   });
 };
 // Vocs监控--鼠标进入效果
-export const addVocsHover = (geometry) => {
+export const addPopupHover = (geometry, color) => {
   esriLoader.loadModules([
     'esri/layers/GraphicsLayer',
     'esri/Graphic',
   ]).then(([GraphicsLayer, Graphic]) => {
     const map = mapConstants.mainMap;
-    let vocsLayer = map.findLayerById('Vocs监控鼠标效果');
+    let vocsLayer = map.findLayerById('聚合气泡窗监控鼠标效果');
     if (!vocsLayer) {
-      vocsLayer = new GraphicsLayer({ id: 'Vocs监控鼠标效果' });
+      vocsLayer = new GraphicsLayer({ id: '聚合气泡窗监控鼠标效果' });
       map.add(vocsLayer);
     }
     const hoverSy = {
@@ -1930,7 +1925,7 @@ export const addVocsHover = (geometry) => {
       color: 'rgba(255, 255, 255, 0.8)',
       style: 'solid',
       outline: {
-        color: '#f0811a',
+        color,
         width: 1,
       },
     };
@@ -2487,7 +2482,7 @@ export const hoveringAlarm = ({ layer, geometry, alarm, infoPops, screenPoint, d
         screenPoint, screenPointBefore: screenPoint, mapStyle: { width: mapConstants.view.width, height: mapConstants.view.height }, attributes: alarm, geometry, name: alarm.resourceName,
       };
       dispatch({
-        type: 'map/queryInfoPops',
+        type: 'mapRelation/queryInfoPops',
         payload: infoPops,
       });
       const obj = mapConstants.alarmGraphics.find(value => value.attributes.resourceCode === alarm.resourceCode);

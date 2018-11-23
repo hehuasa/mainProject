@@ -1,9 +1,8 @@
-
-@header-gradient-background:linear-gradient(to bottom, #fff 0%, #d4d4d4 100%);
-@map-tools-background:linear-gradient(to bottom, #fff 0%, #000 100%);
-@tab-background:#f4f7fc;
-@split-color:#e4e9ee;
-@border-color:#dcdfe4;
+@header-gradient-background: linear-gradient(to bottom, #fff 0%, #d4d4d4 100%);
+@map-tools-background: linear-gradient(to bottom, #fff 0%, #000 100%);
+@tab-background: #f4f7fc;
+@split-color: #e4e9ee;
+@border-color: #dcdfe4;
 @backgrounds-panel-zoom: rgba(230, 230, 230, 0.7);
 //rgba(102,101,100,0.4);
 @mapPop-box-shadow: 1px 1px 7px #c3c3c3 !important;
@@ -30,6 +29,7 @@ body,
 :global(.ant-layout) {
   min-height: 100%;
 }
+
 //:global(.close) {
 
 //}
@@ -43,6 +43,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: @tab-background;
 }
+
 .globalSpin {
   width: 100%;
   margin: 40px 0 !important;
@@ -56,11 +57,11 @@ body {
   // 报表插件样式
   .-gr-section3 {
     height: 13px;
-    & td{
+    & td {
       position: relative;
       padding: 1px 1px 1px 2px;
       vertical-align: middle;
-      overflow: hidden;;
+      overflow: hidden;
       white-space: nowrap;
       border-right: 1px solid #000;
       text-align: center;
@@ -69,14 +70,14 @@ body {
     //  border-left: 1px solid #000;
     //}
   }
+}
 
+.header-gradient-background {
+  background: linear-gradient(to bottom, #fff 0%, #d3d3d3 100%);
 }
-.header-gradient-background{
-  background: linear-gradient(to bottom,  #fff 0%,#d3d3d3 100%);
-}
-.panel-zoom-in-columns{
+
+.panel-zoom-in-columns {
   color: #fff;
   background: #000;
   opacity: .6;
 }
-

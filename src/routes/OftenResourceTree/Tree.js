@@ -65,7 +65,6 @@ const ajaxDataFilter = (treeId, parentNode, responseData) => {
     resourceInfo: resourceTree.resourceInfo,
     scale: map.scale,
     baseLayer: map.baseLayer,
-    alarmCountsPopup: map.alarmCountsPopup,
     visiblePanel: sidebar.visiblePanel,
     ztreeObj: resourceTree.ztreeOftenObj,
     groupByArea: alarm.groupByArea,

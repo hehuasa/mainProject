@@ -74,7 +74,7 @@ export default class MapTools extends PureComponent {
         //   return false;
         // }
         dispatch({
-          type: 'map/queryToolsBtnIndex',
+          type: 'mapRelation/queryToolsBtnIndex',
           payload: toolsBtnIndex === 0 ? -1 : 0,
         });
         if (toolsBtnIndex !== 0) {
@@ -87,7 +87,7 @@ export default class MapTools extends PureComponent {
         //   return false;
         // }
         dispatch({
-          type: 'map/queryToolsBtnIndex',
+          type: 'mapRelation/queryToolsBtnIndex',
           payload: toolsBtnIndex === 1 ? -1 : 1,
         });
           if (toolsBtnIndex !== 1) {
@@ -100,7 +100,7 @@ export default class MapTools extends PureComponent {
         //   return false;
         // }
         dispatch({
-          type: 'map/queryToolsBtnIndex',
+          type: 'mapRelation/queryToolsBtnIndex',
           payload: toolsBtnIndex === 2 ? -1 : 2,
         });
           if (toolsBtnIndex !== 2) {

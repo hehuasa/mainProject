@@ -24,7 +24,7 @@ const setStyle = (node, array) => {
     node.style[item[0]] = item[1];
   }
 };
-@connect(({ sysFunction, user, accessControl, loading, tabs, resourceTree, vocsMonitor, emergency, panelBoard, homepage, video, alarm, map, constructMonitor, paSystem, global }) => {
+@connect(({ sysFunction, user, accessControl, loading, tabs, resourceTree, vocsMonitor, emergency, panelBoard, homepage, video, alarm, map, constructMonitor, paSystem, global, mapRelation }) => {
   return {
     treeData: sysFunction.treeData,
     contextMenu: sysFunction.contextMenu,
@@ -35,7 +35,6 @@ const setStyle = (node, array) => {
     rightCollapsed: global.rightCollapsed,
     resourceGroupByArea: resourceTree.resourceGroupByArea,
     clusterRes: resourceTree.clusterRes,
-    clusterPopup: map.clusterPopup,
     groupByArea: alarm.groupByArea,
     alarmDrawing: alarm.drawing,
     groupByOverview: alarm.groupByOverview,
@@ -49,6 +48,7 @@ const setStyle = (node, array) => {
     constantlyValue: map.constantlyValue,
     searchDeviceArray: map.searchDeviceArray,
     load: map.load,
+    infoPops: mapRelation.infoPops,
     vocsMonitor,
     fetchingAlarm: loading.effects['alarm/fetch'],
     loading,

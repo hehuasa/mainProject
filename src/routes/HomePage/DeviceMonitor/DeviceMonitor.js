@@ -141,7 +141,7 @@ export default class DeviceMonitor extends PureComponent {
               <Col xs={12} sm={21} md={12} lg={12} xl={12} xxl={8} style={{ textAlign: 'center' }} key={Math.random() * new Date().getTime()}>
                 <div className={styles.card} key={item.processNumber}>
                   <div className={styles.title}>
-                    <span className={styles.left}>{item.processNumber}</span><span className={styles.right}>运行天数：{item.dayCount ? item.dayCount : '/'}</span>
+                   <span className={styles.left}>{item.processNumber}</span> {item.dayCount ? <span className={styles.right}>运行天数：{item.dayCount ? item.dayCount : '/'}</span> : null}
                   </div>
                   <div className={styles.text}>
                     { item[0] ? (

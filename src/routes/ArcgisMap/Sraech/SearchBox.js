@@ -244,7 +244,7 @@ class SearchBox extends PureComponent {
       }
     }
     dispatch({
-      type: 'map/queryToolsBtnIndex',
+      type: 'mapRelation/queryToolsBtnIndex',
       payload: -1,
     });
     clearTimeout(onblur);

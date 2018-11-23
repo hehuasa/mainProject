@@ -59,6 +59,7 @@ const SearchForm = Form.create()((props) => {
   planInfoPage: emergency.planInfoPage,
   planTypeList: emergency.planTypeList,
   eventInfo: emergency.eventInfo,
+  expandPlanPage: emergency.expandPlanPage,
 }))
 export default class SelectPlan extends PureComponent {
   state = {
@@ -91,19 +92,18 @@ export default class SelectPlan extends PureComponent {
     });
   }
   page = (pageNum, pageSize) => {
-    const { dispatch, eventInfo } = this.props;
+    const { dispatch, eventInfo, eventID } = this.props;
     const { eventLevel } = eventInfo;
-    const { isQuery, fuzzy } = this.state;
     // 获取预案列表
     dispatch({
-      type: 'emergency/getPlanInfoPage',
-      payload: { pageNum, pageSize, isQuery, planLevelID: eventLevel, fuzzy, statu: 0 },
+      type: 'emergency/getExpandPlanPage',
+      payload: { pageNum, pageSize, planLevelID: eventLevel, statu: 0, eventID },
     }).then(() => {
-      const { planInfoPage } = this.props;
+      const { expandPlanPage } = this.props;
       this.setState({
-        pageNum: planInfoPage.pageNum,
-        pageSize: planInfoPage.pageSize,
-        total: planInfoPage.sumCount,
+        pageNum: expandPlanPage.pageNum,
+        pageSize: expandPlanPage.pageSize,
+        total: expandPlanPage.sumCount,
       });
     });
   };
@@ -143,33 +143,32 @@ export default class SelectPlan extends PureComponent {
     this.page(1, 5);
   };
   handleSearch = (form) => {
-    const { dispatch, eventInfo } = this.props;
+    const { dispatch, eventInfo, eventID } = this.props;
     const { eventLevel } = eventInfo;
     const { isQuery, fuzzy } = this.state;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       dispatch({
-        type: 'emergency/getPlanInfoPage',
+        type: 'emergency/getExpandPlanPage',
         payload: {
           pageNum: 1,
           pageSize: 5,
-          isQuery,
-          fuzzy: true,
           statu: 0,
           planLevelID: eventLevel,
+          eventID,
           ...fieldsValue },
       }).then(() => {
-        const { planInfoPage } = this.props;
+        const { expandPlanPage } = this.props;
         this.setState({
-          pageNum: planInfoPage.pageNum,
-          pageSize: planInfoPage.pageSize,
-          total: planInfoPage.sumCount,
+          pageNum: expandPlanPage.pageNum,
+          pageSize: expandPlanPage.pageSize,
+          total: expandPlanPage.sumCount,
         });
       });
     });
   };
   render() {
-    const { current, viewNode, planInfoPage, planTypeList, planLevelList } = this.props;
+    const { current, viewNode, expandPlanPage, planTypeList, planLevelList } = this.props;
     const columns = [
       {
         title: '预案名称',
@@ -232,7 +231,7 @@ export default class SelectPlan extends PureComponent {
         />
         <div className={styles.planList}>
           <Table
-            dataSource={planInfoPage.result}
+            dataSource={expandPlanPage.result}
             columns={columns}
             rowSelection={rowSelection}
             rowKey={record => record.planInfoID}

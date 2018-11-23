@@ -83,7 +83,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
     },
     '/homePage': {
-      component: dynamicWrapper(app, ['homepage', 'panelBoard', 'map', 'tabs', 'resourceTree', 'websocket', 'paSystem', 'alarm', 'video', 'combustibleGas', 'outerDrain', 'vocsMonitor', 'constantlyData', 'flow', 'accessControl', 'constructMonitor', 'organization'], () => import('../routes/HomePage/HomePage')),
+      component: dynamicWrapper(app, ['homepage', 'panelBoard', 'map', 'mapRelation', 'tabs', 'resourceTree', 'websocket', 'paSystem', 'alarm', 'video', 'combustibleGas', 'outerDrain', 'vocsMonitor', 'constantlyData', 'flow', 'accessControl', 'constructMonitor', 'organization'], () => import('../routes/HomePage/HomePage')),
     },
     '/monitorWarning/evr': {
       component: dynamicWrapper(app, ['homepage', 'sidebar', 'map'], () => import('../routes/MonitorWarning/evr')),
@@ -191,7 +191,7 @@ export const getRouterData = (app) => {
     '/system/role': {
       component: dynamicWrapper(app, ['error', 'roleInfo', 'typeCode', 'sysFunction'], () => import('../routes/System/User/RoleInfo')),
     },
-    '/system/org': {
+    '/emgcManage/emgcOrg': {
       component: dynamicWrapper(app, ['error', 'organization'], () => import('../routes/System/Orgnization/Orgnization')),
     },
     '/system/systemInterface': {

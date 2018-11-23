@@ -55,7 +55,9 @@ export default class EquipmentProductInfo extends PureComponent {
     const { limisRawMaterial } = this.props;
     const arr = limisRawMaterial.filter(item =>
       record.sampleSearchValue.findIndex(value => value === item.sampleName) !== -1
-    && record.nameSearchValue.findIndex(value => value === item.nameContent) !== -1);
+      && record.nameSearchValue.findIndex(value => value === item.nameContent) !== -1
+      && item.samplingPoint !== '储运轻烃汽车槽车'
+      && item.samplingPoint !== '驳船');
     const { length } = arr;
     if (length > 0) {
       return arr[0].mplDesc;
@@ -73,7 +75,9 @@ export default class EquipmentProductInfo extends PureComponent {
     if (length > 0) {
       const pointObj = {};
       arr.forEach((item, index) => {
-        pointObj[item.samplingPoint] = index;
+        if (item.samplingPoint !== '储运轻烃汽车槽车' && item.samplingPoint !== '驳船') {
+          pointObj[item.samplingPoint] = index;
+        }
       });
       for (const key in pointObj) {
         str += `${key}<br>`;

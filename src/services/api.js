@@ -746,9 +746,16 @@ export async function getAllDoorCountArea() {
 export async function getAllDoorCount() {
   return request(`${path}/resource/door/getAllDoorCountAreaOfDoor`);
 }
-// Vocslist
+// Vocs区域聚合
 export async function vocsList() {
   return request(`${path}/vocs/ldarSceneDetectInfo/selectLadrInfo`);
+}
+// Vocs具体List
+export async function vocsTasks(params) {
+  return request(`${path}/vocs/ldarSceneDetectInfo/getTasks`, {
+    method: 'POST',
+    body: params,
+  });
 }
 // 作业监控list
 export async function constructMonitorList() {
@@ -2365,6 +2372,13 @@ export async function getPluginList() {
 // 账户启用停用
 export async function accountEnable(params) {
   return request(`${path}/system/accountInfo/updateState`, {
+    method: 'POST',
+    body: params,
+  });
+}
+// 扩大应急阶段的实施方案
+export async function expandPlanPage(params) {
+  return request(`${path}/plan/planPlanInfo/expandPlanPage`, {
     method: 'POST',
     body: params,
   });

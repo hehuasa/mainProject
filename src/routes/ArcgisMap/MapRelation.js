@@ -5,13 +5,14 @@ import MapTools from './MapTools/index';
 import ContextMenu from './ContextMenu/ContextMenu';
 import MeasurePop from './infoWindow/MeasurePop/MeasurePop';
 import SpaceQuery from './infoWindow/spaceQuery/SpaceQuery';
-import AlarmCount from './infoWindow/AlarmCount';
-import ConstantlyTemplate from './infoWindow/ConstantlyTem/ConstantlyTemplate';
 import InfoPops from './infoWindow/Template/InfoPops';
 import ClusterPopup from './infoWindow/ClusterPopup/ClusterPopup';
 import AccessPopup from './infoWindow/AccessPopup/AccessPopup';
 import VOCsPopup from './infoWindow/VOCsPopup/VOCsPopup';
+import ResourceClusterPopup from './infoWindow/ResourceClusterPopup/ResourceClusterPopup';
+import AlarmClusterPopup from './infoWindow/AlarmClusterPopup/AlarmClusterPopup';
 import PAPopup from './infoWindow/PApopup/PApopup';
+import ConstructMonitorPopup from './infoWindow/ConstructMonitorPopup/ConstructMonitorPopup';
 import { constantlyModal, infoPopsModal } from '../../services/constantlyModal';
 import { mapLayers, mapConstants } from '../../services/mapConstant';
 import styles from './index.less';
@@ -21,18 +22,20 @@ import {
   trueMapLocate,
 } from '../../utils/mapService';
 import trueMap from '../../assets/map/truemap.jpg';
-import map from '../../assets/map/map.jpg';
+import map_ from '../../assets/map/map.jpg';
 import weix from '../../assets/map/weix.png';
 import Legend from './Legend/Legend';
 
 const current = {};
 
-const mapStateToProps = ({ map, homepage, websocket, alarm, resourceTree, constantlyData, loading, global }) => {
-  const { infoWindow, scale, popupScale, baseLayer, trueMapShow, locateTrueMap, mapPoint, screenBeforePoint, searchDeviceArray, screenPoint, popupShow,
-    constantlyValue, doorConstantlyValue, doorAreaConstantlyValue, gasConstantlyValue, envConstantlyValue, paPopup, stopPropagation, accessPops,
-    vocConstantlyValue, waterConstantlyValue, steamConstantlyValue, contextPosition, clusterPopup, isDraw,
-    crackingConstantlyValue, generatorConstantlyValue, largeUnitConstantlyValue, boilerConstantlyValue, infoPops, spaceQueryPop, vocsPops,
-  } = map;
+const mapStateToProps = ({ map, mapRelation, homepage, websocket, alarm, resourceTree, constantlyData, loading, global }) => {
+  const { infoWindow, scale, popupScale, baseLayer, trueMapShow, locateTrueMap, mapPoint, screenBeforePoint, searchDeviceArray, screenPoint,
+    constantlyValue, doorConstantlyValue, doorAreaConstantlyValue, gasConstantlyValue, envConstantlyValue, stopPropagation,
+    vocConstantlyValue, waterConstantlyValue, steamConstantlyValue, contextPosition, isDraw,
+    crackingConstantlyValue, generatorConstantlyValue, largeUnitConstantlyValue, boilerConstantlyValue,
+    } = map;
+  const { infoPops, vocsPopup, resourceClusterPopup, accessPops, paPopup, popupShow, clusterPopups, constructMonitorClusterPopup,
+    alarmClusterPopup } = mapRelation;
   const data = [];
   for (const item of constantlyData.constantlyComponents) {
     data.push(item);
@@ -75,10 +78,12 @@ const mapStateToProps = ({ map, homepage, websocket, alarm, resourceTree, consta
     boilerConstantlyValue,
     constantlyComponents: data,
     steamConstantlyValue,
+    clusterPopups,
+    resourceClusterPopup,
+    constructMonitorClusterPopup,
     infoPops,
-    clusterPopup,
-    spaceQueryPop,
-    vocsPops,
+    vocsPopup,
+    alarmClusterPopup,
     accessPops: newAccessPops,
     paPopup,
     resourceTree,
@@ -148,33 +153,68 @@ export default class MapRelation extends PureComponent {
   };
 
   render() {
-    const { stopPropagation, popupShow, trueMapShow, dispatch, serviceUrl, contextPosition, screenPoint, mapPoint, constantlyComponents, infoPops, clusterPopup, vocsPops, accessPops, baseLayer, paPopup, mapHeight } = this.props;
+    const { stopPropagation, popupShow, trueMapShow, dispatch, serviceUrl, contextPosition, screenPoint, mapPoint, resourceClusterPopup, constructMonitorClusterPopup, clusterPopups, infoPops, vocsPopup, alarmClusterPopup, accessPops, baseLayer, paPopup, mapHeight } = this.props;
     const { legendIndex } = this.state;
     const { allSublayers } = baseLayer;
-    // 实时专题图气泡窗
-    const ConstantlyComponents = constantlyComponents.map(item =>
-      (item.show && constantlyModal[item.type].mapData.length > 0 ? <ConstantlyTemplate key={Math.random() * new Date().getTime()} uniqueKey={item.uniqueKey} constantlyValue={constantlyModal[item.type].mapData} /> : null)
-    );
+    const getCurrentPopups = () => {
+      if (clusterPopups.length === 0) {
+        return null;
+      }
+      const getType = () => {
+        let index = 0;
+        let success = false;
+        while (!success) {
+          if (this.props[clusterPopups[index].type].data.length > 0 || index === clusterPopups.length - 1) {
+            success = true;
+          } else {
+            index += 1;
+          }
+        }
+        return clusterPopups[index].type;
+      };
+      const type = getType();
+      switch (type) {
+        case 'resourceClusterPopup':
+          return resourceClusterPopup.show && resourceClusterPopup.load ? resourceClusterPopup.data.map(item => <ResourceClusterPopup key={item.key} uniqueKey={item.uniqueKey} popValue={item} popKey={item.key} />) : null;
+        case 'alarmClusterPopup':
+          return alarmClusterPopup.show && alarmClusterPopup.load ? alarmClusterPopup.data.map(item => <AlarmClusterPopup key={item.uniqueKey} uniqueKey={item.uniqueKey} popValue={item} popKey={item.uniqueKey} dispatch={dispatch} />) : null;
+        case 'vocsPopup':
+          return vocsPopup.show && vocsPopup.load ? vocsPopup.data.map(item => <VOCsPopup key={item.uniqueKey} uniqueKey={item.uniqueKey} popValue={item} popKey={item.uniqueKey} dispatch={dispatch} />) : null;
+        case 'paPopup':
+          return paPopup.show && paPopup.load ? paPopup.data.map(item => <PAPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null;
+        case 'accessPops':
+          return accessPops.show && accessPops.load ? accessPops.data.map(item => <AccessPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null;
+        case 'constructMonitorClusterPopup':
+          return constructMonitorClusterPopup.show && constructMonitorClusterPopup.load ? constructMonitorClusterPopup.data.map(item => <ConstructMonitorPopup dispatch={dispatch} key={item.uniqueKey}  popValue={item} uniqueKey={item.uniqueKey} />) : null;
+          default:
+          return null;
+      }
+      // // 资源聚合气泡窗 constructMonitorClusterPopup
+      // const resourceClusterPopupComponents = () => {
+      //   return resourceClusterPopup.show && resourceClusterPopup.load ? resourceClusterPopup.data.map(item => <ResourceClusterPopup key={item.key} uniqueKey={item.uniqueKey} popValue={item} popKey={item.key} />) : null;
+      // };
+      // // 报警气泡窗 alarmClusterPopup
+      // const alarmComponents = () => {
+      //   return alarmClusterPopup.show && alarmClusterPopup.load ? alarmClusterPopup.data.map(item => <AlarmClusterPopup key={item.uniqueKey} uniqueKey={item.uniqueKey} popValue={item} popKey={item.uniqueKey} dispatch={dispatch} />) : null;
+      // };
+      // // Vocs聚合气泡窗
+      // const VOCsComponents = () => {
+      //   return vocsPops.show && vocsPops.load ? vocsPops.data.map(item => <VOCsPopup key={item.uniqueKey} uniqueKey={item.uniqueKey} popValue={item} popKey={item.uniqueKey} dispatch={dispatch} />) : null;
+      // };
+
+      // // 门禁气泡窗
+      // const accessPopupComponents = () => {
+      //   return accessPops.show && accessPops.load ? accessPops.data.map(item => <AccessPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null;
+      // };
+    };
+    //  扩音对讲气泡窗
+    const paPopupComponents = () => {
+      return paPopup.show && paPopup.load ? paPopup.data.map(item => <PAPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null;
+    };
     // 资源气泡窗
     const infoPropComponents = infoPops.map(item =>
       (item.show ? <InfoPops key={item.key} uniqueKey={item.uniqueKey} popValue={infoPopsModal[item.key]} popKey={item.key} /> : null)
     );
-    // 聚合气泡窗
-    const clusterPropComponents = () => {
-      return clusterPopup.show && clusterPopup.load ? clusterPopup.data.map(item => <ClusterPopup key={item.key} uniqueKey={item.uniqueKey} popValue={item} popKey={item.key} />) : null;
-    };
-    // Vocs气泡窗
-    const VOCsComponents = () => {
-      return vocsPops.show && vocsPops.load ? vocsPops.data.map(item => <VOCsPopup key={item.uniqueKey} uniqueKey={item.uniqueKey} popValue={item} popKey={item.uniqueKey} />) : null;
-    };
-    // 扩音对讲气泡窗
-    const paPopupComponents = () => {
-      return paPopup.show && paPopup.load ? paPopup.data.map(item => <PAPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null;
-    };
-    // 门禁气泡窗
-    const accessPopupComponents = () => {
-      return accessPops.show && accessPops.load ? accessPops.data.map(item => <AccessPopup dispatch={dispatch} key={item.uniqueKey} uniqueKey={item.uniqueKey} data={item.data} />) : null;
-    };
     const mapStyle = { height: mapHeight };
     return (
       serviceUrl.mapApiUrl === '' ? null : (
@@ -198,17 +238,18 @@ export default class MapRelation extends PureComponent {
             <MapTools stopPropagation={stopPropagation} showLegend={this.showLegend} />
             {popupShow && contextPosition.show ? <ContextMenu map={mapConstants.mainMap} dispatch={dispatch} position={contextPosition} screenPoint={screenPoint} mapPoint={mapPoint} /> : null}
             { popupShow ? infoPropComponents : null }
-            { popupShow ? ConstantlyComponents : null }
+            { popupShow ? getCurrentPopups() : null }
+            {/*{ popupShow ? ConstantlyComponents : null }*/}
             { popupShow ? paPopupComponents() : null }
-            { popupShow ? clusterPropComponents() : null }
-            { popupShow ? accessPopupComponents() : null }
-            { popupShow ? VOCsComponents() : null }
-            <AlarmCount />
+            {/*{ popupShow ? alarmComponents() : null }*/}
+            {/*{ popupShow ? accessPopupComponents() : null }*/}
+            {/*{ popupShow ? VOCsComponents() : null }*/}
+            {/*{ popupShow ? resourceClusterPopupComponents() : null }*/}
             <MeasurePop />
             <SpaceQuery />
           </div>
           <div className={styles.switch}>
-            <div className={styles.arcMap} onClick={() => { this.switchMap(1); }} ><img src={map} alt="切换至地图" /></div>
+            <div className={styles.arcMap} onClick={() => { this.switchMap(1); }} ><img src={map_} alt="切换至地图" /></div>
             <div className={styles.arcMapHide} onClick={() => { this.switchMap(2); }}><img src={weix} alt="切换至卫星图" /></div>
             <div className={styles.arcMapHide} onClick={() => { this.switchMap(3); }} ><img src={trueMap} alt="切换至实景" /></div>
           </div>

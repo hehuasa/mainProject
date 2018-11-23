@@ -631,49 +631,17 @@ class BasicLayout extends React.PureComponent {
       });
     }
     // 播放其关联设备
-      if (item.externalMaps[0].length === 0) {
-        return false;
-      }
-      // 同样判断有无父级
-      if (item.parentCode) {
-        this.props.dispatch({
-          type: 'resourceTree/getResInfoByGISCode',
-          payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, resourceCode: item.parentCode },
-        }).then(() => {
-          const { extendFields } = this.props.resourceTree.resInfo;
-          const { externalMaps } = this.props.resourceTree.resourceInfo;
-          this.props.dispatch({
-            type: 'video/play',
-            payload: {
-              CmdCode: '10004',
-              Pos: '',
-              PlatForm: {
-                strGRTGUID: '',
-                strUserName: extendFields.loginUser || 0,
-                strPwd: extendFields.loginPWD || 0,
-                strIPAddr: extendFields.visitAddr || 0,
-                sPort: extendFields.visitPort || 0,
-                strDevFactory: extendFields.factoryCode || 0,
-                strDevVersion: extendFields.version || 0,
-              },
-              Device: {
-                SerialNumber: item.gISCode,
-                nDevID: item.extendFields.nDevID || 0,
-                strGRTGUID: '',
-                strDeviceCode: item.externalMaps[0].otherCode || 0,
-                strDevIP: extendFields.visitAddr || 0,
-                sDevPort: extendFields.visitPort || 0,
-                nChannelIdx: '0',
-              },
-            },
-          });
-        });
-      } else {
-        const { extendFields } = item.resourceInfo;
-        const { externalMaps } = item.resourceInfo;
-        if (externalMaps.length === 0) {
-          return false;
-        }
+    if (item.externalMaps[0].length === 0) {
+      return false;
+    }
+    // 同样判断有无父级
+    if (item.parentCode) {
+      this.props.dispatch({
+        type: 'resourceTree/getResInfoByGISCode',
+        payload: { pageNum: 1, pageSize: 1, isQuery: true, fuzzy: false, resourceCode: item.parentCode },
+      }).then(() => {
+        const { extendFields } = this.props.resourceTree.resInfo;
+        const { externalMaps } = this.props.resourceTree.resourceInfo;
         this.props.dispatch({
           type: 'video/play',
           payload: {
@@ -692,14 +660,46 @@ class BasicLayout extends React.PureComponent {
               SerialNumber: item.gISCode,
               nDevID: item.extendFields.nDevID || 0,
               strGRTGUID: '',
-              strDeviceCode: externalMaps[0].otherCode || 0,
+              strDeviceCode: item.externalMaps[0].otherCode || 0,
               strDevIP: extendFields.visitAddr || 0,
               sDevPort: extendFields.visitPort || 0,
               nChannelIdx: '0',
             },
           },
         });
+      });
+    } else {
+      const { extendFields } = item.resourceInfo;
+      const { externalMaps } = item.resourceInfo;
+      if (externalMaps.length === 0) {
+        return false;
       }
+      this.props.dispatch({
+        type: 'video/play',
+        payload: {
+          CmdCode: '10004',
+          Pos: '',
+          PlatForm: {
+            strGRTGUID: '',
+            strUserName: extendFields.loginUser || 0,
+            strPwd: extendFields.loginPWD || 0,
+            strIPAddr: extendFields.visitAddr || 0,
+            sPort: extendFields.visitPort || 0,
+            strDevFactory: extendFields.factoryCode || 0,
+            strDevVersion: extendFields.version || 0,
+          },
+          Device: {
+            SerialNumber: item.gISCode,
+            nDevID: item.extendFields.nDevID || 0,
+            strGRTGUID: '',
+            strDeviceCode: externalMaps[0].otherCode || 0,
+            strDevIP: extendFields.visitAddr || 0,
+            sDevPort: extendFields.visitPort || 0,
+            nChannelIdx: '0',
+          },
+        },
+      });
+    }
   };
   // 处理视频插件的通讯
   onmessage1 = ({ data }) => {
@@ -741,7 +741,7 @@ class BasicLayout extends React.PureComponent {
               screenPoint, screenPointBefore: screenPoint, mapStyle: { width: view.width, height: view.height }, attributes: res[0].feature.attributes, geometry: res[0].feature.geometry, name: res[0].feature.attributes['设备位置'],
             };
             dispatch({
-              type: 'map/queryInfoPops',
+              type: 'mapRelation/queryInfoPops',
               payload: infoPops,
             });
             if (res.length > 0) {

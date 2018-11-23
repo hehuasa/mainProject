@@ -1,5 +1,5 @@
 import {
-  addLayer, delLayer, addVocsIcon, transToPoint, clustering, addConstructIcon,
+  addLayer, delLayer, addVocsIcon, transToPoint, addConstructIcon, alarmClustering,
   solidWarehouseDetail, paSystemDetail, addMapAlarms, getBordStyle,
 } from '../../utils/mapService';
 import {changeVideoPosition, changeVideoSize, resetAccessStyle, returnHome} from '../../utils/utils';
@@ -208,7 +208,7 @@ export const handleSelected = (treeId, treeNode, that) => {
             screenPoint, screenPointBefore: screenPoint, mapStyle: { width: view.width, height: view.height }, attributes: searchDeviceArray[0].feature.attributes, geometry: newGeometry, name: treeNode.name,
           };
           dispatch({
-            type: 'map/queryInfoPops',
+            type: 'mapRelation/queryInfoPops',
             payload: infoPops,
           });
           view.goTo({ center: newGeometry, scale: popupScale - 10 }).then(() => { });
@@ -242,7 +242,7 @@ export const handleSelected = (treeId, treeNode, that) => {
   }
 };
 export const handleCheck = (event, treeId, treeNode, that) => {
-  const { dispatch, ztreeObj, popupScale, resourceGroupByArea, videoFooterHeight, video } = that.props;
+  const { dispatch, ztreeObj, popupScale, videoFooterHeight, video } = that.props;
   const { mainMap, view, baseLayer } = mapConstants;
   const deviceArrayIndex = treeNode.checkClickFunTemplate + treeNode.treeID;
   const { treeID } = treeNode;
@@ -289,13 +289,12 @@ export const handleCheck = (event, treeId, treeNode, that) => {
     switch (treeNode.checkClickFunTemplate) {
       // 'AlarmCounting', '报警统计看板'
       case 'AlarmMaping': // 聚合
-        {
           if (treeNode.checkFunctionCode === '') {
             return false;
           }
 
           if (treeNode.checked) {
-            const { overviewShow, clusterRes, alarmIconObj } = that.props;
+            const { overviewShow, alarmIconObj } = that.props;
             switch (Number(treeNode.checkFunctionCode)) {
               case 1:
                 overviewShow.showSafety = true; break;
@@ -318,7 +317,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
               const query = subLayer.createQuery();
               query.outFields = ['*'];
               subLayer.queryFeatures(query).then((res) => {
-                clustering({ view, dispatch, alarms: that.props.groupByOverview.list, graphics: res.features, overviewShow: that.props.overviewShow, clusterRes, popupScale, resourceGroupByArea });
+                alarmClustering({ view, dispatch, alarms: that.props.groupByOverview.list, graphics: res.features, overviewShow: that.props.overviewShow, popupScale });
               });
               // 地图报警图标
               if (that.props.groupByOverview.list.length > 0) {
@@ -330,7 +329,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
             }
             );
           } else {
-            const { overviewShow, clusterRes, alarmIconObj } = that.props;
+            const { overviewShow, alarmIconObj } = that.props;
             switch (Number(treeNode.checkFunctionCode)) {
               case 1:
                 overviewShow.showSafety = false; break;
@@ -353,7 +352,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
               const query = subLayer.createQuery();
               query.outFields = ['*'];
               subLayer.queryFeatures(query).then((res) => {
-                clustering({ view, dispatch, alarms: that.props.groupByOverview.list, graphics: res.features, overviewShow: that.props.overviewShow, popupScale, clusterRes, resourceGroupByArea });
+                alarmClustering({ view, dispatch, alarms: that.props.groupByOverview.list, graphics: res.features, overviewShow: that.props.overviewShow, popupScale });
               });
               // 地图报警图标
               if (that.props.groupByOverview.list.length > 0) {
@@ -365,7 +364,6 @@ export const handleCheck = (event, treeId, treeNode, that) => {
             }
             );
           }
-        }
         return false;
       // case 'ConstantlyMap': // 实时数据图
       //   {
@@ -416,69 +414,6 @@ export const handleCheck = (event, treeId, treeNode, that) => {
           });
         }
         break;
-      // 资源聚合
-      case 'ClusterPopup': // 聚合
-        if (treeNode.checked) {
-          const { overviewShow, clusterRes } = that.props;
-          if (!clusterRes.find(value => value.ctrlType === treeNode.checkFunctionCode)) {
-            clusterRes.push({ ctrlType: treeNode.checkFunctionCode, name: treeNode.name });
-            that.props.dispatch({
-              type: 'resourceTree/getClusterRes',
-              payload: clusterRes,
-            }).then(() => {
-              // 聚合图标
-              const subLayer = baseLayer.findSublayerById(mapLayers.FeatureLayers.find(value => value.isArea).id);
-              subLayer.visiable = true;
-              const query = subLayer.createQuery();
-              query.outFields = ['*'];
-              subLayer.queryFeatures(query).then((res) => {
-                clustering({
-                  view,
-                  dispatch,
-                  alarms: that.props.groupByOverview.list,
-                  graphics: res.features,
-                  overviewShow,
-                  clusterRes,
-                  popupScale,
-                  resourceGroupByArea,
-                });
-              });
-              // // 地图报警图标
-              // for (const alarm of that.props.groupByOverview.list) {
-              //   searchByAttr({ searchText: alarm.resourceGisCode, searchFields: ['ObjCode'] }).then(
-              //     (res) => {
-              //       if (res.length > 0) {
-              //         if (that.props.groupByOverview.list.length === 1) {
-              //           view.goTo({ center: res[0].feature.geometry, scale: popupScale - 10 }).then(() => {
-              //             alarmAnimation(mainMap, alarm.alarmType, res[0].feature.geometry, alarm, {}, dispatch, popupScale);
-              //           });
-              //         } else {
-              //           alarmAnimation(mainMap, alarm.alarmType, res[0].feature.geometry, alarm, {}, dispatch, popupScale);
-              //         }
-              //       }
-              //     }
-              //   );
-              // }
-            }
-            );
-          }
-        } else {
-          const { overviewShow, clusterRes } = that.props;
-          clusterRes.splice(clusterRes.findIndex(value => value.ctrlType === treeNode.checkFunctionCode), 1);
-          that.props.dispatch({
-            type: 'resourceTree/getClusterRes',
-            payload: clusterRes,
-          }).then(() => {
-            const subLayer = baseLayer.findSublayerById(mapLayers.FeatureLayers.find(value => value.isArea).id);
-            const query = subLayer.createQuery();
-            query.outFields = ['*'];
-            subLayer.queryFeatures(query).then((res) => {
-              clustering({ view, dispatch, alarms: that.props.groupByOverview.list, graphics: res.features, overviewShow, clusterRes, popupScale, resourceGroupByArea });
-            });
-          }
-          );
-        }
-        return false;
       // 门禁专题
       case 'AccessControlConstantly':
         {
@@ -545,7 +480,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
           } else {
             delLayer(mainMap, ['门禁专题图'], dispatch);
             dispatch({
-              type: 'map/queryAccessPops',
+              type: 'mapRelation/queryAccessPops',
               payload: { show: false, load: false, data: [] },
             });
             // 恢复地图事件
@@ -561,6 +496,10 @@ export const handleCheck = (event, treeId, treeNode, that) => {
             loopObj[treeNode.checkClickFunTemplate + treeNode.treeID] = null;
             // 清除实时专题组件及数据
             delete constantlyModal[treeNode.checkClickFunTemplate + treeNode.treeID];
+            dispatch({
+              type: 'mapRelation/delClusterPopup',
+              payload: { type: 'accessPops', data: { show: false, load: false, data: [] } },
+            });
           }
         }
         return false;
@@ -574,10 +513,13 @@ export const handleCheck = (event, treeId, treeNode, that) => {
             type: 'constructMonitor/fetchConstructMonitorList',
           }).then(() => {
             const list = that.props.constructMonitor.groupingList;
-            addConstructIcon({ map: mainMap, layer: subLayers[0], scale: popupScale, list });
+            addConstructIcon({ map: mainMap, layer: subLayers[0], scale: popupScale, list, dispatch });
           });
         } else {
-          addConstructIcon({ map: mainMap, dispatch });
+          dispatch({
+            type: 'mapRelation/delClusterPopup',
+            payload: { type: 'constructMonitorClusterPopup', data: { show: false, load: false, data: [] } },
+          });
         }
         break;
       // 设备监测
@@ -669,8 +611,8 @@ export const handleCheck = (event, treeId, treeNode, that) => {
         } else {
           addVocsIcon({ map: mainMap, dispatch });
           dispatch({
-            type: 'map/queryVocsPopup',
-            payload: { show: false, load: false, data: [] },
+            type: 'mapRelation/delClusterPopup',
+            payload: { type: 'vocsPopup', data: { show: false, load: false, data: [] } },
           });
         }
         break;

@@ -33,7 +33,7 @@ class InfoPops extends PureComponent {
     infoPops.splice(index, 1);
     delete infoPopsModal[popKey];
     dispatch({
-      type: 'map/queryInfoPops',
+      type: 'mapRelation/queryInfoPops',
       payload: infoPops,
     });
   };

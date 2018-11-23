@@ -243,7 +243,7 @@ class AlarmInfo extends PureComponent {
         screenPoint, screenPointBefore: screenPoint, mapStyle: { width: mapView.width, height: mapView.height }, attributes: res[0].feature.attributes, geometry: res[0].feature.geometry, name: resourceName,
       };
       dispatch({
-        type: 'map/queryInfoPops',
+        type: 'mapRelation/queryInfoPops',
         payload: infoPops,
       });
     });
@@ -574,7 +574,7 @@ class AlarmInfo extends PureComponent {
           screenPoint, screenPointBefore: screenPoint, mapStyle: { width: mapView.width, height: mapView.height }, attributes: res[0].feature.attributes, geometry: newGeometry, name,
         };
         dispatch({
-          type: 'map/queryInfoPops',
+          type: 'mapRelation/queryInfoPops',
           payload: infoPops,
         });
       });

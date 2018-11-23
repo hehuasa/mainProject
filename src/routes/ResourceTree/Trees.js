@@ -128,7 +128,7 @@ export const handleBeforeAsync = (treeId, parentNode) => {
     }
   }
 };
-@connect(({ resourceTree, map, sidebar, loading, alarm, panelBoard, homepage, user, constantlyData, global, constructMonitor, paSystem, video }) => {
+@connect(({ resourceTree, map, sidebar, loading, alarm, panelBoard, homepage, user, constantlyData, global, constructMonitor, paSystem, video, mapRelation }) => {
   return {
     treeData: resourceTree.treeData,
     appendData: resourceTree.appendData,
@@ -142,9 +142,7 @@ export const handleBeforeAsync = (treeId, parentNode) => {
     checkedNodesObj: resourceTree.checkedNodesObj,
     resourceGroupByArea: resourceTree.resourceGroupByArea,
     clusterRes: resourceTree.clusterRes,
-    clusterPopup: map.clusterPopup,
     load: map.load,
-    alarmCountsPopup: map.alarmCountsPopup,
     visiblePanel: sidebar.visiblePanel,
     ztreeObj: resourceTree.ztreeObj,
     groupByArea: alarm.groupByArea,
@@ -163,7 +161,7 @@ export const handleBeforeAsync = (treeId, parentNode) => {
     guardAreaCounting: homepage.guardAreaCounting,
     guardDoorCounting: homepage.guardDoorCounting,
     constantlyComponents: constantlyData.constantlyComponents,
-    infoPops: map.infoPops,
+    infoPops: mapRelation.infoPops,
     paSystemInfo: map.paSystemInfo,
     paSystem,
     rightCollapsed: global.rightCollapsed,

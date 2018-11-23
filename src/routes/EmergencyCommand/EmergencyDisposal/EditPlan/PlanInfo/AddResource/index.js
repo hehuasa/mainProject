@@ -138,7 +138,7 @@ export default class AddResource extends PureComponent {
                   resourceInfo.resResourceInfo.resourceName :
                   (resourceInfo.resToolMaterialInfo ? resourceInfo.resToolMaterialInfo.materialName : '')),
               })(
-                <Input disabled addonAfter={<Icon type="search" onClick={() => this.handleSearch()} />} defaultValue="请选择资源" />
+                <Input disabled addonAfter={<Icon type="search" onClick={() => this.handleSearch()} />} />
               )}
             </FormItem>
           </Col>

@@ -288,7 +288,7 @@ export default class ArcgisMap extends PureComponent {
                             screenPoint, screenPointBefore: screenPoint, mapStyle: { width: mapConstants.view.width, height: mapConstants.view.height }, attributes: graphic.attributes, geometry: graphic.geometry, name,
                           };
                           dispatch({
-                            type: 'map/queryInfoPops',
+                            type: 'mapRelation/queryInfoPops',
                             payload: infoPops,
                           });
                         }
@@ -401,7 +401,7 @@ export default class ArcgisMap extends PureComponent {
                     item.uniqueKey = Math.random() * new Date().getTime();
                   }
                   dispatch({
-                    type: 'map/queryInfoPops',
+                    type: 'mapRelation/queryInfoPops',
                     payload: this.props.infoPops,
                   });
                   // 实时专题图弹窗
@@ -451,7 +451,7 @@ export default class ArcgisMap extends PureComponent {
                       item.show = true;
                     }
                     dispatch({
-                      type: 'map/queryInfoPops',
+                      type: 'mapRelation/queryInfoPops',
                       payload: this.props.infoPops,
                     });
                     // 实时弹窗处理
@@ -483,7 +483,7 @@ export default class ArcgisMap extends PureComponent {
                       item.uniqueKey = Math.random() * new Date().getTime();
                     }
                     dispatch({
-                      type: 'map/queryInfoPops',
+                      type: 'mapRelation/queryInfoPops',
                       payload: this.props.infoPops,
                     });
                     for (const item of this.props.constantlyComponents) {
@@ -526,7 +526,7 @@ export default class ArcgisMap extends PureComponent {
                       item.show = true;
                     }
                     dispatch({
-                      type: 'map/queryInfoPops',
+                      type: 'mapRelation/queryInfoPops',
                       payload: this.props.infoPops,
                     });
                     // 实时弹窗处理

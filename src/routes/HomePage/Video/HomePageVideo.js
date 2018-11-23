@@ -13,10 +13,11 @@ import { mapConstants } from '../../../services/mapConstant';
 import { getBordStyle } from '../../../utils/mapService';
 
 let winScrollHandle = null; let winResizeHandle = null;
-@connect(({ homepage, video }) => {
+@connect(({ homepage, video, accessControl }) => {
   return {
     videoFooterHeight: homepage.videoFooterHeight,
     video,
+    accessControl,
   };
 })
 export default class HomePageVideo extends PureComponent {
@@ -69,35 +70,35 @@ export default class HomePageVideo extends PureComponent {
         }, 500);
       });
       // 键盘事件（开发用）
-      const keyPress = document.addEventListener('keydown', (e) => {
-        switch (e.code) {
-          case 'NumpadDivide':
-            if (e.ctrlKey) {
-              this.props.dispatch({
-                type: 'video/devTools',
-                payload: { CmdCode: 'F12' },
-              });
-            }
-            break;
-          case 'NumpadMultiply':
-            if (e.ctrlKey) {
-              this.props.dispatch({
-                type: 'video/devTools',
-                payload: { CmdCode: 'MIN' },
-              });
-            }
-            break;
-          case 'NumpadSubtract':
-            if (e.ctrlKey) {
-              this.props.dispatch({
-                type: 'video/devTools',
-                payload: { CmdCode: 'EXIT' },
-              });
-            }
-            break;
-          default: break;
-        }
-      });
+      // const keyPress = document.addEventListener('keydown', (e) => {
+      //   switch (e.code) {
+      //     case 'NumpadDivide':
+      //       if (e.ctrlKey) {
+      //         this.props.dispatch({
+      //           type: 'video/devTools',
+      //           payload: { CmdCode: 'F12' },
+      //         });
+      //       }
+      //       break;
+      //     case 'NumpadMultiply':
+      //       if (e.ctrlKey) {
+      //         this.props.dispatch({
+      //           type: 'video/devTools',
+      //           payload: { CmdCode: 'MIN' },
+      //         });
+      //       }
+      //       break;
+      //     case 'NumpadSubtract':
+      //       if (e.ctrlKey) {
+      //         this.props.dispatch({
+      //           type: 'video/devTools',
+      //           payload: { CmdCode: 'EXIT' },
+      //         });
+      //       }
+      //       break;
+      //     default: break;
+      //   }
+      // });
     }, 1000);
   }
   componentWillUnmount() {
@@ -321,7 +322,7 @@ export default class HomePageVideo extends PureComponent {
     });
   };
   toggle= () => {
-    const { videoFooterHeight, dispatch, video } = this.props;
+    const { videoFooterHeight, dispatch, accessControl } = this.props;
     if (videoFooterHeight.current === 0) {
       // this.reset();
       dispatch({
@@ -382,16 +383,18 @@ export default class HomePageVideo extends PureComponent {
         payload: { domType: 'map', changingType: 'evrVideo' },
       });
     }
-    const { view, extent } = mapConstants;
-    if (view.height) {
-      view.goTo({ extent }).then(() => {
-        getBordStyle(view).then((style) => {
-          dispatch({
-            type: 'accessControl/queryStyle',
-            payload: style,
+    if (accessControl.show) {
+      const { view, extent } = mapConstants;
+      if (view.height) {
+        view.goTo({ extent }).then(() => {
+          getBordStyle(view).then((style) => {
+            dispatch({
+              type: 'accessControl/queryStyle',
+              payload: style,
+            });
           });
         });
-      });
+      }
     }
   };
   render() {
@@ -403,7 +406,7 @@ export default class HomePageVideo extends PureComponent {
         style={{ height: current }}
         ref={(ref) => { this.warp = ref; }}
       >
-        {/*<div style={{ background: 'blue', position: 'fixed', whiteSpace: 'pre', top: video.position.y, left: video.position.x, width: video.size.width, height: video.size.height, lineHeight: `${video.size.height}px`, textAlign: 'center', fontSize: 32, color: '#fff', fontWeight: 900 }}>视    频    示    意    窗    口</div>*/}
+        {/* <div style={{ background: 'blue', position: 'fixed', whiteSpace: 'pre', top: video.position.y, left: video.position.x, width: video.size.width, height: video.size.height, lineHeight: `${video.size.height}px`, textAlign: 'center', fontSize: 32, color: '#fff', fontWeight: 900 }}>视    频    示    意    窗    口</div> */}
         <img src={current === 0 ? toggleDown : toggleUp} alt="toggle" style={{ top: current === 0 ? -11 : -8 }} onClick={this.toggle} className={styles.toggle} />
         {current === 0 ? null : (
           <div className={styles['video-header']} >

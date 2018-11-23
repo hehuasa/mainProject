@@ -134,7 +134,6 @@ export default {
     center: [114.53302201076804, 30.642714242082587],
     scale: 0,
     popupScale: 0,
-    popupShow: true,
     extent: {},
     baseLayer: {},
     searchHistory: [],
@@ -169,21 +168,10 @@ export default {
       show: false,
       style: { x: 0, y: 0 },
     },
-    spaceQueryPop: {
-      load: false,
-      show: false,
-      point: {},
-      screenPoint: {},
-      style: { left: 0, top: 0 },
-    },
     contextPosition: {
       left: 0,
       top: 0,
       show: false,
-    },
-    alarmCountsPopup: {
-      show: false,
-      data: [],
     },
     mapBoardShow: {
       // searchResult: false,
@@ -198,13 +186,8 @@ export default {
     isRecenter: false, // 地图是否需要进行缩放或重定位
     centerRadius: 50,
     constantlyComponents: {},
-    infoPops: [],
-    clusterPopup: { show: false, load: false, data: [] },
     // 扩音分区
     paSystemInfo: [],
-    paPopup: { show: false, load: false, data: [] },
-    accessPops: { show: false, load: false, data: [] },
-    vocsPops: { show: false, load: false, data: [] },
     paBordInfo: {},
     resourceInfo: {}, // 报警对应的资源信息
   },
@@ -458,13 +441,6 @@ export default {
         measurePop: payload,
       };
     },
-    // 周边查询
-    setSpaceQuery(state, { payload }) {
-      return {
-        ...state,
-        spaceQueryPop: payload,
-      };
-    },
     breathStart(state, { payload }) {
       return {
         ...state,
@@ -548,12 +524,6 @@ export default {
         searchHistory: payload,
       };
     },
-    queryAlarmCounts(state, { payload }) {
-      return {
-        ...state,
-        alarmCountsPopup: payload,
-      };
-    },
     mapBoardShow(state, { payload }) {
       return {
         ...state,
@@ -571,34 +541,6 @@ export default {
       return {
         ...state,
         isRecenter: payload,
-      };
-    },
-    // 弹窗组
-    queryInfoPops(state, { payload }) {
-      return {
-        ...state,
-        infoPops: payload,
-      };
-    },
-    // 门禁的popup
-    queryAccessPops(state, { payload }) {
-      return {
-        ...state,
-        accessPops: payload,
-      };
-    },
-    // 聚合的popup
-    queryClusterPopup(state, { payload }) {
-      return {
-        ...state,
-        clusterPopup: payload,
-      };
-    },
-    // vocs的popup
-    queryVocsPopup(state, { payload }) {
-      return {
-        ...state,
-        vocsPops: payload,
       };
     },
     // 地图搜索半径
@@ -630,20 +572,6 @@ export default {
       return {
         ...state,
         stopPropagation: payload,
-      };
-    },
-    // 统一控制气泡显示
-    showPopup(state, { payload }) {
-      return {
-        ...state,
-        popupShow: payload,
-      };
-    },
-    // 地图工具栏，控制点击样式与事件的index
-    queryToolsBtnIndex(state, { payload }) {
-      return {
-        ...state,
-        toolsBtnIndex: payload,
       };
     },
   },

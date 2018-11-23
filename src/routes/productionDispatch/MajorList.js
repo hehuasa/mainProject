@@ -458,7 +458,7 @@ export default class MajorList extends PureComponent {
                 initialValue: 1,
               })(
                 <Select placeholder="请选择">
-                  <Select.Option value="" defaultValue={1} >请选择</Select.Option>
+                  <Select.Option value="">请选择</Select.Option>
                   {statuData.map(item => (
                     <Select.Option
                       key={item.id}

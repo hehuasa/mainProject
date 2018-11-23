@@ -1,6 +1,6 @@
 import {
   addItem, addPolygonItem, delPolygonItem, addLayer, delItem, delLayer, searchByAttr, transToPoint, clustering, addConstructIcon,
-  solidWarehouseDetail, paSystemDetail, addMapAlarms, getBordStyle,
+  solidWarehouseDetail, paSystemDetail, addMapAlarms, getBordStyle, resourceClustering,
 } from '../../utils/mapService';
 import { constantlyModal, infoConstantly, infoPopsModal } from '../../services/constantlyModal';
 import { mapConstants, mapLayers } from '../../services/mapConstant';
@@ -209,7 +209,7 @@ export const handleSelected = (treeId, treeNode, d, that) => {
               screenPoint, screenPointBefore: screenPoint, mapStyle: { width: view.width, height: view.height }, attributes: searchDeviceArray[0].feature.attributes, geometry: newGeometry, name: treeNode.name,
             };
             dispatch({
-              type: 'map/queryInfoPops',
+              type: 'mapRelation/queryInfoPops',
               payload: infoPops,
             });
           });
@@ -280,7 +280,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
       if (node.children !== undefined || node.isParent) {
         // 展开node
         ztreeObj.expandNode(node, true, false, false, true);
-        if (treeNode.checkClickFunTemplate !== 'ClusterPopup') {
+        if (treeNode.checkClickFunTemplate !== 'ResourceClusterPopup') {
           const getChildren = setInterval(() => {
             if (node.children) {
               if (node.children.length > 0) {
@@ -312,7 +312,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
       infoPops.splice(index1, 1);
       delete infoPopsModal.deviceInfo;
       dispatch({
-        type: 'map/queryInfoPops',
+        type: 'mapRelation/queryInfoPops',
         payload: infoPops,
       });
     }
@@ -324,7 +324,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
         //   ztreeObj.checkNode(child, false, false, true);
         // }
         ztreeObj.expandNode(node, false, false, false, true);
-        if (treeNode.checkClickFunTemplate !== 'ClusterPopup') {
+        if (treeNode.checkClickFunTemplate !== 'ResourceClusterPopup') {
           const getChildren = setInterval(() => {
             if (node.children) {
               if (node.children.length > 0) {
@@ -363,86 +363,6 @@ export const handleCheck = (event, treeId, treeNode, that) => {
     subLayers.push(subLayer);
   }
   switch (treeNode.checkClickFunTemplate) {
-    // 'AlarmCounting', '报警统计看板'
-    case 'AlarmMaping': // 聚合
-      {
-        if (treeNode.checkFunctionCode === '') {
-          return false;
-        }
-
-        if (treeNode.checked) {
-          const { overviewShow, clusterRes, alarmIconObj } = that.props;
-          switch (Number(treeNode.checkFunctionCode)) {
-            case 1:
-              overviewShow.showSafety = true; break;
-            case 2:
-              overviewShow.showEnv = true; break;
-            case 3:
-              overviewShow.showFault = true; break;
-            default: break;
-          }
-          that.props.dispatch({
-            type: 'alarm/filter',
-            payload: {
-              historyList: that.props.groupByOverview.list,
-              alarms: that.props.listWithFault,
-              para: overviewShow,
-            },
-          }).then(() => {
-            const subLayer = subLayers[0];
-            subLayer.visiable = true;
-            const query = subLayer.createQuery();
-            query.outFields = ['*'];
-            subLayer.queryFeatures(query).then((res) => {
-              clustering({ view, dispatch, alarms: that.props.groupByOverview.list, graphics: res.features, overviewShow: that.props.overviewShow, clusterRes, popupScale, resourceGroupByArea });
-            });
-            // 地图报警图标
-            if (that.props.groupByOverview.list.length > 0) {
-              ztreeObj.setChkDisabled(treeNode, true);
-            }
-            addMapAlarms({ map: mainMap, view, iconObj: alarmIconObj, dispatch, scale: popupScale, alarms: that.props.groupByOverview.list, historyList: that.props.groupByOverview.historyList }).then(() => {
-              ztreeObj.setChkDisabled(treeNode, false);
-            });
-          }
-          );
-        } else {
-          const { overviewShow, clusterRes, alarmIconObj } = that.props;
-          switch (Number(treeNode.checkFunctionCode)) {
-            case 1:
-              overviewShow.showSafety = false; break;
-            case 2:
-              overviewShow.showEnv = false; break;
-            case 3:
-              overviewShow.showFault = false; break;
-            default: break;
-          }
-          dispatch({
-            type: 'alarm/filter',
-            payload: {
-              historyList: that.props.groupByOverview.list,
-              alarms: that.props.listWithFault,
-              para: overviewShow,
-            },
-          }).then(() => {
-            const subLayer = subLayers[0];
-            subLayer.visiable = true;
-            const query = subLayer.createQuery();
-            query.outFields = ['*'];
-            subLayer.queryFeatures(query).then((res) => {
-              clustering({ view, dispatch, alarms: that.props.groupByOverview.list, graphics: res.features, overviewShow: that.props.overviewShow, popupScale, clusterRes, resourceGroupByArea });
-            });
-            // 地图报警图标
-            if (that.props.groupByOverview.list.length > 0) {
-              ztreeObj.setChkDisabled(treeNode, true);
-            }
-            addMapAlarms({ map: mainMap, view, iconObj: alarmIconObj, dispatch, scale: popupScale, alarms: that.props.groupByOverview.list, historyList: that.props.groupByOverview.historyList }).then(() => {
-              ztreeObj.setChkDisabled(treeNode, false);
-            });
-          }
-          );
-        }
-      }
-      return false;
     case 'ConstantlyMap': // 实时数据图
       {
         const searchFields = ['ObjCode'];
@@ -493,7 +413,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
       }
       break;
       // 资源聚合
-    case 'ClusterPopup': // 聚合
+    case 'ResourceClusterPopup': // 聚合
       if (treeNode.checked) {
         const { overviewShow, clusterRes } = that.props;
         if (!clusterRes.find(value => value.ctrlType === treeNode.checkFunctionCode)) {
@@ -508,10 +428,9 @@ export const handleCheck = (event, treeId, treeNode, that) => {
             const query = subLayer.createQuery();
             query.outFields = ['*'];
             subLayer.queryFeatures(query).then((res) => {
-              clustering({
+              resourceClustering({
                 view,
                 dispatch,
-                alarms: that.props.groupByOverview.list,
                 graphics: res.features,
                 overviewShow,
                 clusterRes,
@@ -519,22 +438,6 @@ export const handleCheck = (event, treeId, treeNode, that) => {
                 resourceGroupByArea,
               });
             });
-            // // 地图报警图标
-            // for (const alarm of that.props.groupByOverview.list) {
-            //   searchByAttr({ searchText: alarm.resourceGisCode, searchFields: ['ObjCode'] }).then(
-            //     (res) => {
-            //       if (res.length > 0) {
-            //         if (that.props.groupByOverview.list.length === 1) {
-            //           view.goTo({ center: res[0].feature.geometry, scale: popupScale - 10 }).then(() => {
-            //             alarmAnimation(mainMap, alarm.alarmType, res[0].feature.geometry, alarm, {}, dispatch, popupScale);
-            //           });
-            //         } else {
-            //           alarmAnimation(mainMap, alarm.alarmType, res[0].feature.geometry, alarm, {}, dispatch, popupScale);
-            //         }
-            //       }
-            //     }
-            //   );
-            // }
           }
           );
         }
@@ -549,7 +452,7 @@ export const handleCheck = (event, treeId, treeNode, that) => {
           const query = subLayer.createQuery();
           query.outFields = ['*'];
           subLayer.queryFeatures(query).then((res) => {
-            clustering({ view, dispatch, alarms: that.props.groupByOverview.list, graphics: res.features, overviewShow, clusterRes, popupScale, resourceGroupByArea });
+            resourceClustering({ view, dispatch, alarms: that.props.groupByOverview.list, graphics: res.features, overviewShow, clusterRes, popupScale, resourceGroupByArea });
           });
         }
         );

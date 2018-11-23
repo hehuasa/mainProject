@@ -308,6 +308,7 @@ const CreateForm = Form.create()((props) => {
                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                 placeholder="请选择所属部门"
                 allowClear
+                treeNodeFilterProp="title"
                 onChange={this.onChange}
               >
                 {renderDeptTreeNodes(depList)}

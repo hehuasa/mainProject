@@ -298,8 +298,8 @@ export default class SelectPlan extends PureComponent {
         width: '15%',
         dataIndex: 'action',
         render: (text, record) => {
-          return this.props.templatePlanID === record.planInfoID ? '已设为方案' : (
-            current === viewNode ? <a onClick={() => this.setTemplete(record)} href="javascript:;">设为方案</a> : ''
+          return this.props.templatePlanID === record.planInfoID ? '已设为实施方案' : (
+            current === viewNode ? <a onClick={() => this.setTemplete(record)} href="javascript:;">设为实施方案</a> : ''
           );
         },
       }];
